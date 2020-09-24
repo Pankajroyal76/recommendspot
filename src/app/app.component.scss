@@ -1,0 +1,32 @@
+ion-list
+{padding:0px;
+&[menutop]
+{
+padding:0px;
+ion-item
+{
+ ion-avatar
+ {
+ height: 70px;
+    width: 70px;
+    border: 2px solid var(--ion-color-white);
+ }
+ ion-label
+ {
+   margin-left:20px;
+ }
+}
+}
+ion-menu-toggle{
+ ion-item
+ {  border-bottom: 1px solid var(--ion-color-ltgrey);
+    padding: 5px 0px;
+    font-size: 15px;  
+    ion-icon
+	{
+	color:  var(--ion-color-secondary);
+    margin-right: 10px;
+	}
+ }
+}
+}

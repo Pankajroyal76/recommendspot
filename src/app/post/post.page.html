@@ -1,0 +1,99 @@
+<ion-header>
+  <ion-toolbar color="secondary">   
+    <ion-title class="ion-text-center"><img src="assets/img/logo-white.png" alt="" ></ion-title>
+
+  </ion-toolbar>
+	<div  class="dropdown-dots">
+         <a  href="javascript:void(0)" class="rift-flt" (click)="hide()"> <ion-icon name="ellipsis-vertical-outline"></ion-icon> </a>
+		<ul class="list-post-fl" *ngIf="hideMe">
+		<!-- <li> <a href="javascript:void(0)" (click)="gotoLogin()">Add Recommendations</a> </li> -->
+		<li> <a href="javascript:void(0)" routerLink="/login">Add Recommendation</a> </li>
+		<li> <a  href="javascript:void(0)" routerLink="/login">Login</a> </li>
+		<li> <a routerLink="/signup" href="javascript:void(0)">Sign Up</a> </li>
+		</ul>
+	</div>  
+</ion-header>
+<ion-content>
+<div class="home-sec">
+<div class="mn-heading">
+<h2><ion-icon name="receipt-outline"></ion-icon> recommend anything you find meaningful to anyone that might find it useful</h2>
+<p>Look at what these people are recommending</p>
+</div>
+
+<form [formGroup]="authForm" (ngSubmit)="search()"  >
+  <ion-searchbar placeholder="Search here..."  formControlName="keyword">
+  	 
+  </ion-searchbar>
+  </form>
+
+	<ion-card post-sec-mn *ngFor="let item of posts; let i = index;">
+		<div class="post-name">	
+			<ion-item lines="none">
+				 <ion-avatar  (click)="viewUser(item)">
+				   	<img *ngIf="errors.indexOf(item.user_image) == -1 && getimage(item.user_image) == true" src="{{item.user_image}}">
+					 <img *ngIf="errors.indexOf(item.user_image) == -1 && getimage(item.user_image) == false" src="{{IMAGES_URL + '/images/' + item.user_image}}">
+				 <img *ngIf="errors.indexOf(item.user_image) >= 0" src="assets/img/default.png">
+				 </ion-avatar>
+				<ion-label  (click)="viewUser(item)">
+				<h2>{{item.user_name}}</h2>
+				<p>{{item.created_at  | timeAgo}}</p>
+				</ion-label>
+				<span (click)="viewPost(item)" class="servcs-badge">{{item.category}}</span>
+			</ion-item>
+		</div>
+		<div class="cart-mn-pd">
+			<div class="post-content" (click)="viewPost(item)">
+				<p>{{item.description}}<!-- <a class="readmore" href="javascript:void(0)">Read More</a> --></p>
+			</div>
+
+			<div *ngIf="errors.indexOf(item.web_link) == -1">
+
+			<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
+				<span style="color: blue;font-style: oblique;" (click)="openLink(item.web_link)">{{item.web_link}}</span>
+			</div>
+			<div class="post-img" *ngIf="errors.indexOf(item.image) == -1 || item.image">
+				<img (click)="viewPost(item)"  src="{{IMAGES_URL + '/images/' +  item.image}}">
+				
+				<!-- <ion-icon class="heart-icon" name="heart-outline"></ion-icon> -->
+			</div>	
+			<div class="post-share">
+				<ion-row>
+					<ion-col size="3">
+					<ion-button class="socl-btn" ><ion-icon name="thumbs-up-outline"></ion-icon>  {{item.likes.length}}</ion-button>
+					</ion-col>
+					<ion-col size="9" class="ion-text-right">
+					<ion-button class="socl-btn" (click)="viewPost(item)"><ion-icon name="chatbubble-outline"></ion-icon> {{item.comments.length}}</ion-button>
+					<ion-button class="socl-btn"><ion-icon name="share-social-outline"></ion-icon></ion-button>		
+					</ion-col>
+				</ion-row>
+			</div>	
+
+
+			<div class="post-coment" *ngIf="item.comments.length > 0" (click)="viewPost(item)">	
+				<ion-item lines="none">
+					 <ion-avatar>
+					    <img *ngIf="errors.indexOf(item.comments[item.comments.length - 1].image) == -1 && getimage(item.comments[item.comments.length - 1].image) == true" src="{{item.comments[item.comments.length - 1].image}}">
+					    <img *ngIf="errors.indexOf(item.comments[item.comments.length - 1].image) == -1 && getimage(item.comments[item.comments.length - 1].image) == false" src="{{IMAGES_URL + '/images/' + item.comments[item.comments.length - 1].image}}">
+					 	<img *ngIf="errors.indexOf(item.comments[item.comments.length - 1].image) >= 0" src="assets/img/default.png">
+					 </ion-avatar>
+					<ion-label>
+					<h2><b>{{item.comments[item.comments.length - 1].user}}</b>  </h2>
+					<p>{{item.comments[item.comments.length - 1].comment}}</p>
+					</ion-label>
+				</ion-item>
+			</div>
+			
+		</div>
+	</ion-card>
+		
+</div>
+
+ <div class="no-record" *ngIf="posts?.length == 0 && is_response == true">
+		No Record Found
+		</div>
+
+<ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="is_response == true">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

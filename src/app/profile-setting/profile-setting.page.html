@@ -1,0 +1,132 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+  <!--ion-menu-button slot="start">
+    <img height="15px" src="assets/img/menu.png"/>
+  </ion-menu-button-->
+  <ion-back-button slot="start" defaultHref="/tabs/profile">
+   </ion-back-button>   
+    <ion-title class="ion-text-center">Edit Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div profileinfo>
+    <div profileimg [style.backgroundImage]="'url(' + bgImage + ')'">
+    <label  (click)="selectImage('cover')" class="cover-label">
+         <ion-icon name="create-outline" class="cover"></ion-icon>
+      </label>
+      <!-- <img src="assets/img/bg-profile.jpg"/> -->
+    </div>
+    <div userimg>
+      <label for="editphoto" (click)="selectImage('profile')">
+         <ion-icon name="create-outline"></ion-icon>
+      </label>
+      <!-- <input type="file" id="editphoto"  name="editphoto" style="display:none;"/> -->
+      <img *ngIf="errors.indexOf(profile?.image) == -1 && getimage(profile?.image) == false && is_live_image_updated == false" src="{{IMAGES_URL + '/images/' + profile?.image}}">
+      <img *ngIf="errors.indexOf(profile?.image) == -1 && getimage(profile?.image) == true  && is_live_image_updated == false" src="{{profile?.image}}">
+      <img *ngIf="image_type == 'profile'  && is_live_image_updated == true" [src]="win.Ionic.WebView.convertFileSrc(live_image_url)">
+      <img *ngIf="errors.indexOf(profile?.image) >= 0" src="assets/img/default.png">
+      <h2>{{profile?.name}}</h2>
+    </div>
+  </div>
+  <div profilesetting>
+    <ion-segment [(ngModel)]="profiletab">
+  		<ion-segment-button value="Basic">
+  		   Basic Info
+  		</ion-segment-button>
+			<ion-segment-button value="pwd">
+		   Change Password
+		  </ion-segment-button>
+    </ion-segment>
+  
+    <div [ngSwitch]="profiletab">
+
+    	<ion-list *ngSwitchCase="'Basic'">
+
+        <div form-group>
+          <label>Full Name</label>
+          <ion-item lines="none">
+            <ion-label>
+              <ion-icon name="person-outline"></ion-icon>
+            </ion-label>
+            <ion-input clearOnEdit="false" type="text"  placeholder="Enter Name" [(ngModel)]="name"></ion-input>
+          </ion-item>
+          <span error *ngIf="errors.indexOf(name) >= 0 && is_submit == true">Please enter your full name</span>
+        </div>
+
+        <div form-group>
+          <label>Email</label>
+          <ion-item lines="none">
+            <ion-label>
+            <ion-icon name="mail-outline"></ion-icon>
+            </ion-label>
+            <ion-input clearOnEdit="false" type="email"  placeholder="Enter Email"  [(ngModel)]="email"></ion-input>
+          </ion-item>
+          <span error *ngIf="errors.indexOf(email) >= 0 && is_submit == true">Please enter your email</span>
+          <span error *ngIf="errors.indexOf(email) == -1 && is_submit == true && !reg_exp.test(email.toLowerCase())">Please enter valid email</span>
+        </div>
+
+        <div form-group>
+          <label>Phone Number</label>
+          <ion-item lines="none">
+            <ion-label>
+            <ion-icon name="call-outline"></ion-icon>
+            </ion-label>
+            <ion-input clearOnEdit="false" type="text"  placeholder="Enter Contact Number"  [(ngModel)]="contact"></ion-input>
+          </ion-item>
+
+          <span error *ngIf="errors.indexOf(contact) >= 0 && is_submit == true">Please enter your phone number</span>
+          <span error *ngIf="!reg_exp_digits.test(contact) && errors.indexOf(contact) == -1 && is_submit == true">Phone number should consist only of 10 digits</span>
+        </div>
+
+        <ion-button  color="secondary"  expand="full" shape="round" (click)="update_profile()">Submit</ion-button>
+
+      </ion-list>
+      
+      <ion-list *ngSwitchCase="'pwd'">
+    	  <div form-group>
+          <label>Current Password</label>
+          <ion-item lines="none">
+            <ion-label>
+            <ion-icon name="lock-closed-outline"></ion-icon>
+            </ion-label>
+            <ion-input clearOnEdit="false" type="password"  placeholder="Enter Current Password" [(ngModel)]="password"></ion-input>
+          </ion-item>
+          <span error *ngIf="profile?.medium == 'simple' && errors.indexOf(password) >= 0 && is_submit_pass == true">Please enter your current password</span>  
+          <span error *ngIf="errors.indexOf(password) == -1 && is_submit_pass == true && password.length < 6 && withoutspace.test(password)">Please enter atleast 6 digits password</span>
+           <span error *ngIf="errors.indexOf(password) == -1 && is_submit_pass == true && !withoutspace.test(password)">Please enter valid password containing no space</span>
+        </div>
+
+      	<div form-group>
+          <label>New Password</label>
+          <ion-item lines="none">
+            <ion-label>
+            <ion-icon name="lock-closed-outline"></ion-icon>
+            </ion-label>
+            <ion-input clearOnEdit="false" type="password"  placeholder="Enter New Password" [(ngModel)]="confirm_password"></ion-input>
+          </ion-item>
+          <span error *ngIf="errors.indexOf(confirm_password) >= 0 && is_submit_pass == true">Please enter your new password</span>  
+          <span error *ngIf="errors.indexOf(confirm_password) == -1 && is_submit_pass == true && confirm_password.length < 6 && withoutspace.test(confirm_password)">Please enter atleast 6 digits password</span>
+           <span error *ngIf="errors.indexOf(confirm_password) == -1 && is_submit_pass == true && !withoutspace.test(confirm_password)">Please enter valid confirm password containing no space</span>
+        </div>
+
+      	<div form-group>
+          <label>Confirm New Password</label>
+          <ion-item lines="none">
+            <ion-label>
+            <ion-icon name="lock-closed-outline"></ion-icon>
+            </ion-label>
+            <ion-input clearOnEdit="false" type="password"  placeholder="Enter Confirm New Password" [(ngModel)]="confirm_new_password"></ion-input>
+          </ion-item>
+          <span error *ngIf="errors.indexOf(confirm_new_password) >= 0 && is_submit_pass == true">Please enter your confirm new password</span>  
+          <span error *ngIf="errors.indexOf(confirm_new_password) == -1 && is_submit_pass == true && confirm_new_password.length < 6 && withoutspace.test(confirm_new_password)">Please enter atleast 6 digits password</span>
+          <span error *ngIf="errors.indexOf(confirm_new_password) == -1 && is_submit_pass == true && confirm_password!=confirm_new_password && withoutspace.test(confirm_new_password)">Please enter correct password</span>
+           <span error *ngIf="errors.indexOf(confirm_new_password) == -1 && is_submit_pass == true && !withoutspace.test(confirm_new_password)">Please enter valid confirm new password containing no space</span>
+        </div>
+
+        <ion-button color="secondary"  expand="full" shape="round" (click)="update_password()">Submit</ion-button>
+    	</ion-list>
+    
+    </div>
+  </div>
+</ion-content>

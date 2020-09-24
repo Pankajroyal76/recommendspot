@@ -1,0 +1,63 @@
+<ion-header>
+
+  <ion-toolbar color="secondary">
+  <ion-back-button slot="start" (click)="dismiss()">
+   </ion-back-button>
+    <ion-title class="ion-text-center">Edit Recommendation</ion-title>
+	
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+<div form-group>
+	    <label>Type</label>
+	<ion-item lines="none">
+		<ion-label>
+			<ion-icon name="keypad-outline"></ion-icon>
+		</ion-label>
+		<ion-select [interfaceOptions]="customAlertOptions" interface="alert" [(ngModel)]="type">
+			<ion-select-option value="Photo"> Photo/Image </ion-select-option>
+			<ion-select-option value="Website"> Website Link </ion-select-option>
+			<ion-select-option value="Words"> Text Only   </ion-select-option>
+		</ion-select>
+	</ion-item>
+</div>
+<div form-group>
+	    <label>Category</label>
+	<ion-item lines="none">
+		<ion-label>
+			<ion-icon name="layers-outline"></ion-icon>
+		</ion-label>
+		<ion-select [interfaceOptions]="customAlertOptions" interface="alert"  placeholder="Select" [(ngModel)]="category">
+			<ion-select-option value="{{doc._id}}" *ngFor="let doc of categories; let i = index;"> {{doc.name}} </ion-select-option>
+		</ion-select>
+	</ion-item>
+	<span error *ngIf="errors.indexOf(category) >= 0 && is_submit == true">Please choose category</span>
+</div>
+<div form-group>
+	    <label>Description</label>
+	<ion-item lines="none">
+			<ion-textarea rows="3" placeholder="Enter Any Description Here..." [(ngModel)]="description"></ion-textarea>
+	</ion-item>
+	<span error *ngIf="errors.indexOf(description) >= 0 && is_submit == true">Please enter description</span>
+</div>
+<div form-group  uploadimg *ngIf="type == 'Photo'">
+	    <label>Image</label>
+	<div add-recc>
+		<label for="resume" (click)="selectImage()"><ion-icon name="cloud-upload-outline"></ion-icon><span>Upload Image Here</span></label>
+		<!-- <input type="file" name="resume" id="resume" style="display:none"/> -->
+		<img *ngIf="errors.indexOf(image) == -1 && is_live_image_updated == false" src="{{IMAGES_URL + '/images/' + image}}" />
+		<img *ngIf="errors.indexOf(live_image_url) == -1 && is_live_image_updated == true" [src]="win.Ionic.WebView.convertFileSrc(live_image_url)" />
+	</div>
+	<span error *ngIf="errors.indexOf(live_image_url) >= 0 && is_submit == true">Please select image</span>
+</div>
+<div form-group  uploadimg *ngIf="type == 'Website'">
+	    <label>Web Link</label>
+	
+	<ion-item lines="none">
+			<ion-textarea placeholder="Enter Website Link" [(ngModel)]="web_link"></ion-textarea>
+	</ion-item>
+	<span error *ngIf=" type == 'Website' && errors.indexOf(web_link) >= 0 && is_submit == true">Please enter web link</span>
+	<span error *ngIf=" type == 'Website' && errors.indexOf(web_link) == -1 && !expression.test(web_link) && is_submit == true">Please enter web link</span>
+</div>
+<ion-button color="secondary" expand="full" shape="round" (click)="add_recc()">Submit</ion-button>
+</ion-content>

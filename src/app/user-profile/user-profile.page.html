@@ -1,0 +1,120 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+  <!--ion-menu-button slot="start">
+<img height="15px" src="assets/img/menu.png"/>
+  </ion-menu-button-->
+  <ion-back-button slot="start" defaultHref="/tabs/profile">
+   </ion-back-button>   
+    <ion-title class="ion-text-center">{{profile?.name}}</ion-title>
+	
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+<div profileinfo>
+<div profileimg [style.backgroundImage]="'url(' + bgImage + ')'">
+  <!-- <img src="assets/img/bg-profile.jpg"/> -->
+</div>
+<!--div userimg>
+<img src="assets/img/profile_user.jpg">
+<h2>John Smith</h2>
+</div-->
+<div class="folow-sec">
+	<ion-row class="ion-align-items-center">
+		<ion-col size="4">
+			<!-- <div class="folow-mn">
+			    <ion-icon name="people-outline"></ion-icon>
+			    <h3><span>12k</span><br/>Followers</h3>
+			</div> -->
+		</ion-col>
+		<ion-col size="4">
+			<div userimg>
+			<img *ngIf="errors.indexOf(profile?.image) == -1 && getimage(profile?.image) == true" src="{{profile?.image}}">
+			 <img *ngIf="errors.indexOf(profile?.image) == -1 && getimage(profile?.image) == false" src="{{IMAGES_URL + '/images/' + profile?.image}}">
+			<img *ngIf="errors.indexOf(profile?.image) >= 0" src="assets/img/default.png">
+			<h2>{{profile?.name}}</h2>
+			<ion-button class="socl-btn" (click)="follow()" *ngIf="joined == 'false' && loggedUserId != userId && errors.indexOf(loggedUserId) == -1" >Follow</ion-button>
+			<ion-button class="socl-btn" (click)="remove()" *ngIf="joined == 'true' && loggedUserId != userId && errors.indexOf(loggedUserId) == -1">Following</ion-button>
+			
+			</div>
+		</ion-col>
+		<ion-col size="4">
+			<!-- <div class="folow-mn">
+			    <ion-icon name="person-add-outline"></ion-icon>
+			    <h3><span>300</span><br/>Following</h3>			
+			</div> -->
+		</ion-col>
+	</ion-row>
+</div>
+</div>
+ 
+<div class="home-sec">
+
+
+
+	<ion-card post-sec-mn  *ngFor="let item of data?.post; let i = index;">
+			<div class="post-name">	
+				<ion-item lines="none">
+					 <ion-avatar (click)="viewUser(item)">
+					 <img *ngIf="errors.indexOf(item.user_image) == -1 && getimage(item.user_image) == true" src="{{item.user_image}}">
+					 <img *ngIf="errors.indexOf(item.user_image) == -1 && getimage(item.user_image) == false" src="{{IMAGES_URL + '/images/' + item.user_image}}">
+					 <img *ngIf="errors.indexOf(item.user_image) >= 0" src="assets/img/default.png">
+					 </ion-avatar>
+					<ion-label>
+					<h2 (click)="viewUser(item)">{{item.user_name}}</h2>
+					<p (click)="viewUser(item)">{{item.created_at  | timeAgo}}</p>
+					</ion-label>
+					<!-- <ion-icon class="icon-dots" name="ellipsis-vertical"></ion-icon> -->
+					<span (click)="viewPost(item)" class="servcs-badge">{{item.category}}</span>
+				</ion-item>
+			</div>
+			<div class="post-content" (click)="viewPost(item)">
+				<p>{{item.description}}</p>
+			</div>
+
+			<div *ngIf="errors.indexOf(item.web_link) == -1">
+
+			<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
+				<span style="color: blue;font-style: oblique;" (click)="openLink(item.web_link)">{{item.web_link}}</span>
+			</div>
+			<div class="post-img" *ngIf="errors.indexOf(item.image) == -1 || item.image" (click)="viewPost(item)">
+				<img   src="{{IMAGES_URL + '/images/' + item.image}}">
+				
+				
+			</div>	
+			<div class="post-share">
+				<ion-row>
+					<ion-col size="6">
+					<ion-button class="socl-btn" *ngIf="item.fav == '0' && errors.indexOf(loggedUserId) == -1" (click)="addRemoveReccomdation(item, '1', i)">
+					<ion-icon class="heart-icon" name="heart-outline" ></ion-icon>
+					</ion-button>
+
+					<ion-button class="socl-btn" *ngIf="item.fav == '1' && errors.indexOf(loggedUserId) == -1" (click)="addRemoveReccomdation(item, '0', i)">
+
+					<ion-icon class="heart-icon" name="heart" ></ion-icon>
+					</ion-button>
+
+					<ion-button class="socl-btn" (click)="like(item.likes, i)"><ion-icon name="{{isLikedPost(item.likes)}}"></ion-icon>{{item.likes.length}}</ion-button>
+					</ion-col>
+					<ion-col size="6" class="ion-text-right">
+					<ion-button class="socl-btn"><ion-icon name="chatbubble-outline"></ion-icon> {{item.comments.length}} </ion-button>
+					<ion-button class="socl-btn" (click)="share()"><ion-icon name="share-social-outline"></ion-icon></ion-button>		
+					</ion-col>
+				</ion-row>
+			</div>	
+			<div class="post-coment" *ngIf="item.comments.length > 0" (click)="viewPost(item)">	
+				<ion-item lines="none">
+					 <ion-avatar>
+					      <img *ngIf="errors.indexOf(item.comments[item.comments.length - 1].user.image) == -1 && getimage(item.comments[item.comments.length - 1].user.image) == true" src="{{item.comments[item.comments.length - 1].user.image}}">
+					    <img *ngIf="errors.indexOf(item.comments[item.comments.length - 1].user.image) == -1 && getimage(item.comments[item.comments.length - 1].user.image) == false" src="{{IMAGES_URL + '/images/' + item.comments[item.comments.length - 1].user.image}}">
+					 	<img *ngIf="errors.indexOf(item.comments[item.comments.length - 1].user.image) >= 0" src="assets/img/default.png">
+					 </ion-avatar>
+					<ion-label>
+					<h2><b>{{item.comments[item.comments.length - 1].user.name}}</b> </h2>
+					<p>{{item.comments[item.comments.length - 1].comment}}</p>
+					</ion-label>
+				</ion-item>
+			</div>
+		</ion-card>
+
+</div>
+</ion-content>

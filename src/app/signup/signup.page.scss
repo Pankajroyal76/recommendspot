@@ -1,0 +1,137 @@
+ion-header
+{
+ion-back-button
+{
+color:var(--ion-color-primary);
+font-size:20px;
+}
+&::after
+{
+display:none!important
+}
+}
+ion-content
+{--padding-top: 0px;
+[loginform]
+{
+[logo]
+{
+    margin-bottom: 40px;
+    margin-top: 40px;
+	img
+	{
+	    height: 28px; 
+	}
+	h2
+	{ 
+	color: var(--ion-color-grey2);
+    font-size: 20px;
+    font-weight: 400;
+	}
+}
+[login-btn]
+{margin-top: 25px;
+ ion-button
+ { /*--ion-color-base: var(--ion-color-bggradient)!important;*/
+    min-height: 48px;--box-shadow: none;
+   /* --border-radius: 6px;*/
+    font-weight: 500;
+    font-size: 15px;
+ }
+}
+[btn-facebook]
+{
+    margin-top: 20px;
+	 ion-button
+	 {min-height: 48px;
+	 --box-shadow:none;
+    /*--border-radius: 6px;*/
+    font-weight: 500;
+    font-size: 15px;
+    text-transform: Capitalize;
+    --ion-color-base: var(--ion-color-fb)!important;
+	[fb-icon] {
+    background: #334d82;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    position: absolute;
+    left: -19px;
+	img
+	{
+	height: 20px;
+    margin-top: 7px;
+	}
+}
+	}
+}
+[btn-google]
+{
+    margin-top: 20px;
+	 ion-button
+	 {min-height: 48px;
+	 --box-shadow:none;
+    /*--border-radius: 6px;*/
+    font-weight: 500;
+    font-size: 15px;
+    text-transform: Capitalize;
+    --background: #d9534f;
+	[fb-icon] {
+    background: #e66458;
+    width: 36px;
+    height: 36px;
+    line-height: 46px;	
+    border-radius: 50%;
+    position: absolute;
+    left: -19px;
+ion-icon 
+{
+    font-size: 20px;
+}
+}
+	}
+}
+[btn-signup ]
+{
+    color: var(--ion-color-grey);
+    font-weight: 500;
+    margin-top: 25px;
+    margin-bottom: 25px;
+ a
+ {
+ color:var(--ion-color-black4);font-weight: 500;
+ }
+}
+[form-group]
+ {       margin-bottom: 12px;
+
+    label {
+   font-size: 15px;
+    margin-bottom: 9px;
+    display: block;
+    padding: 0px 0px;
+    color: var(--ion-color-black);
+    font-weight: 500;
+}
+
+ion-item{
+       border: 2px solid var(--ion-color-ltgrey);
+    border-radius: 35px;
+    --padding-start: 18px;
+    --min-height: 48px;
+	ion-icon
+	{color:var(--ion-color-secondary);font-size: 22px;
+	}
+	ion-select
+	{
+	min-width: calc(100% - 30px);
+    padding-left: 0px;
+	}
+	ion-input
+	{
+	color:var( --ion-color-dgrey);
+	}
+}
+ }
+ }
+}

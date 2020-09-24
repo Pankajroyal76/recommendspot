@@ -1,0 +1,97 @@
+<ion-header>
+  <ion-toolbar>
+  
+    <!--ion-title>signup</ion-title-->
+  </ion-toolbar>
+</ion-header>
+<ion-content  class="ion-padding">
+<div loginform>
+<div logo  class="ion-text-center">
+ <img src="assets/img/logo.png"/>
+  <h2>Create a new account</h2>
+</div>
+<div form-group>
+<label>Full Name</label>
+<ion-item lines="none">
+<ion-label>
+<ion-icon name="person-outline"></ion-icon>
+</ion-label>
+<ion-input type="text"  placeholder="Enter Name" [(ngModel)]="name"></ion-input>
+</ion-item>
+
+ <span error *ngIf="errors.indexOf(name) >= 0 && is_submit == true">Please enter your name</span>
+
+  <span error *ngIf="errors.indexOf(name) == -1  && !reg_exp_letters.test(name) && is_submit == true">Please enter valid name</span>
+</div>
+<div form-group>
+<label>Email</label>
+<ion-item lines="none">
+<ion-label>
+<ion-icon name="mail-outline"></ion-icon>
+</ion-label>
+<ion-input clearOnEdit="false" type="email"  placeholder="Enter Email" [(ngModel)]="email"></ion-input>
+</ion-item>
+
+<span error *ngIf="errors.indexOf(email) >= 0 && is_submit == true">Please enter your email</span>
+<span error *ngIf="errors.indexOf(email) == -1 && is_submit == true && !reg_exp.test(email.toLowerCase())">Please enter valid email</span>
+</div>
+<div form-group>
+<label>Phone Number</label>
+<ion-item lines="none">
+<ion-label>
+<ion-icon name="call-outline"></ion-icon>
+</ion-label>
+<ion-input clearOnEdit="false" type="text"  placeholder="Enter Phone Number" [(ngModel)]="contact"></ion-input>
+</ion-item>
+<span error *ngIf="errors.indexOf(contact) >= 0 && is_submit == true">Please enter your phone number</span>
+<span error *ngIf="!reg_exp_digits.test(contact) && errors.indexOf(contact) == -1 && is_submit == true">Phone number should consist only of 10 digits</span>
+</div>
+<div form-group>
+<label>Password</label>
+<ion-item lines="none">
+<ion-label>
+<ion-icon name="lock-closed-outline"></ion-icon>
+</ion-label>
+<ion-input clearOnEdit="false" type="password"  placeholder="Enter Password" [(ngModel)]="password"></ion-input>
+
+</ion-item>
+
+<span error *ngIf="errors.indexOf(password) >= 0 && is_submit == true">Please enter your password</span>  
+<span error *ngIf="errors.indexOf(password) == -1 && is_submit == true && password.length < 6">Please enter atleast 6 digits password</span>
+<span error *ngIf="errors.indexOf(password) == -1 && is_submit == true && !withoutspace.test(password)">Please enter valid password containing no space</span>
+</div>
+<div form-group>
+<label>Confirm Password</label>
+<ion-item lines="none">
+<ion-label>
+<ion-icon name="lock-closed-outline"></ion-icon>
+</ion-label>
+<ion-input clearOnEdit="false" type="password"  placeholder="Enter Confirm Password" [(ngModel)]="confirm_password"></ion-input>
+
+</ion-item>
+
+<span error *ngIf="errors.indexOf(confirm_password) >= 0 && is_submit == true">Please enter your confirm password</span>  
+<span error *ngIf="errors.indexOf(confirm_password) == -1 && is_submit == true && confirm_password.length < 6">Please enter atleast 6 digits password</span>
+<span error *ngIf="errors.indexOf(confirm_password) == -1 && is_submit == true && password!=confirm_password">Please enter correct password</span>
+</div>
+<div login-btn>
+<ion-button expand="full" color="secondary"  shape="round" (click)="register()">
+Sign Up
+</ion-button>
+</div>
+<div btn-signup class="ion-text-center">
+<p>Alreay have an account ? <a routerLink="/login" href="javascript:void(0)">Login Here</a></p>
+
+</div>
+<div btn-facebook class="ion-text-center">
+<ion-button expand="full" color="primary"  shape="round" (click)="facebookLogin()">
+<span fb-icon><img src="assets/img/fb.png"/></span> Login With Facebook
+</ion-button>
+</div>
+<div btn-google class="ion-text-center">
+<ion-button expand="full" shape="round" (click)="googleLogin()">
+<span fb-icon><ion-icon name="logo-google"></ion-icon></span> Login With Google
+</ion-button>
+</div>
+</div>
+</ion-content>
