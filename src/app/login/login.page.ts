@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { GlobalFooService } from '../services/globalFooService.service';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { FCM } from '@ionic-native/fcm/ngx';
 
 @Component({
   selector: 'app-login',
@@ -19,10 +20,12 @@ export class LoginPage implements OnInit {
 	errors = config.errors;
 	reg_exp: any;
 	fcm_token: any;
+	withoutspace: any;
 
-  	constructor(public apiService: ApiserviceService, public router: Router,private globalFooService: GlobalFooService, private fb: Facebook, private googlePlus: GooglePlus) { 
+  	constructor(private fcm: FCM,public apiService: ApiserviceService, public router: Router,private globalFooService: GlobalFooService, private fb: Facebook, private googlePlus: GooglePlus) { 
 
   		this.reg_exp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  		this.withoutspace = /^\S*$/;
   	}
 
   	ngOnInit() {
@@ -30,15 +33,15 @@ export class LoginPage implements OnInit {
 
   	ionViewDidEnter(){
 
-  		// this.fcm.getToken().then(token => {
-  		// 	this.fcm_token = token;
-  		// });
+  		this.fcm.getToken().then(token => {
+  			this.fcm_token = token;
+  		});
   	}
 
   	login(){
 
 	    this.is_submit = true;
-	    if(this.errors.indexOf(this.email) >= 0 || this.errors.indexOf(this.password) >= 0 || !this.reg_exp.test(String(this.email))){
+	    if(this.errors.indexOf(this.email) >= 0 || this.errors.indexOf(this.password) >= 0 || !this.reg_exp.test(String(this.email)) || !this.withoutspace.test(this.password) ){
 	      return false;
 	    }
 
@@ -66,7 +69,8 @@ export class LoginPage implements OnInit {
   			this.globalFooService.publishSomeData({
             	foo: {'data': result.data, 'page': 'profile'}
         	});
-	      	this.router.navigate(['tabs/home'])
+	      	// this.router.navigate(['tabs/home'])
+	      	this.apiService.navCtrl.navigateRoot('tabs/home');
 	      }else{
 
 	      	this.apiService.presentToast(result.error, 'danger');
@@ -95,18 +99,6 @@ export class LoginPage implements OnInit {
 	          		console.log('dict', dict);
 	          		this.finalSignup(dict); 
 
-			        // var check_user = {
-			        //     medium: 'facebook',
-			        //     social_id: profile['id']
-			        // }
-	          // 		this.apiService.postData(check_user,'check_user_existance').subscribe((result) => {
-	          //   		console.log(result);
-			        //     if(result.status == 0){
-			              
-			        //     }else{
-			        //       this.finalSignup(dict); 
-			        //     }
-			        //  });
         	}else{
           		this.apiService.presentToast('Error,Please try after some time', 'danger')
         	}
@@ -138,19 +130,7 @@ export class LoginPage implements OnInit {
 	          	};
 	          	console.log('dict', dict);
 
-	          	// var check_user = {
-	           //  	medium: 'google',
-	           //  	social_id: profile['id']
-	          	// }
-	          	// this.apiService.postData(check_user,'check_user_existance').subscribe((result) => {
-	           //  	console.log(result);
-		          //   if(result.status == 0){
-		            	
-		          //   }else{
-		              
-		          //   }
-	          	// });
-	            
+	          	
 	         	this.finalSignup(dict);             
 	      	}
 
@@ -169,11 +149,19 @@ export class LoginPage implements OnInit {
 
 	      if(result.status == 1){
 	        this.apiService.presentToast('Login successfully!', 'success');
-	      	this.router.navigate(['/tabs/home']);
+	      	
 
-	   		localStorage.setItem('userId', result.data._id);
-	      	localStorage.setItem('user_name', result.data.name);
-	  	 	localStorage.setItem('profile', JSON.stringify(result.data));
+	  	 	localStorage.setItem('userId', result.data._id);
+        	localStorage.setItem('IsLoggedIn', 'true');
+        	localStorage.setItem('profile',JSON.stringify(result.data));
+        	localStorage.setItem('user_name', result.data.name);
+  			localStorage.setItem('user_image', result.data.image);
+  			localStorage.setItem('user_email', result.data.email);
+  			localStorage.setItem('user_medium', dict.medium);
+  			this.globalFooService.publishSomeData({
+            	foo: {'data': result.data, 'page': 'profile'}
+        	});
+        	this.apiService.navCtrl.navigateRoot('tabs/home');
 	      }
 	      else{
 	        this.apiService.presentToast('Error while signing up! Please try later', 'danger');

@@ -4,7 +4,7 @@ import { config } from '../services/config';
 import { Router } from '@angular/router';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx'
-
+import { FCM } from '@ionic-native/fcm/ngx';
 
 import { GlobalFooService } from '../services/globalFooService.service';
 
@@ -34,21 +34,27 @@ export class SignupPage implements OnInit {
 	withoutspace: any;
 
 
-  	constructor(public apiService: ApiserviceService, public router: Router,private globalFooService: GlobalFooService, private fb: Facebook, private googlePlus: GooglePlus) { 
+  	constructor(private fcm: FCM,public apiService: ApiserviceService, public router: Router,private globalFooService: GlobalFooService, private fb: Facebook, private googlePlus: GooglePlus) { 
 
   		this.reg_exp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      	this.reg_exp_letters =  /^[a-zA-Z\s]*$/;
-      	this.reg_exp_digits = /^\d{10}$/;
-      	this.withoutspace = /^\S+$/g;
+      	this.reg_exp_letters =  /^[a-zA-Z].*$/;;
+      	this.reg_exp_digits = /^\d{6,10}$/;
+      	this.withoutspace = /^\S*$/;
   	}
 
   	ngOnInit() {
   	}
 
+  	ionViewDidEnter(){
+  		this.fcm.getToken().then(token => {
+		  this.fcm_token = token;
+		});
+  	}
+
   	register(){
 	    this.is_submit = true;
-
-	    if(this.errors.indexOf(this.name) >= 0 || this.errors.indexOf(this.contact) >= 0 || this.errors.indexOf(this.email) >= 0 || !this.reg_exp.test(String(this.email).toLowerCase()) || this.errors.indexOf(this.password) >= 0 || this.password.length < 6 || !this.withoutspace.test(this.password) || this.errors.indexOf(this.confirm_password) >= 0 || this.confirm_password.length < 6 || !this.withoutspace.test(this.confirm_password) || !this.reg_exp_digits.test(String(this.contact))){
+	    console.log('signup')
+	    if(this.errors.indexOf(this.name) >= 0 || !this.reg_exp_letters.test(String(this.name)) || this.errors.indexOf(this.contact) >= 0 || this.errors.indexOf(this.email) >= 0 || !this.reg_exp.test(String(this.email).toLowerCase()) || this.errors.indexOf(this.password) >= 0 || this.password.length < 6 || this.errors.indexOf(this.confirm_password) >= 0 || this.confirm_password.length < 6 || !this.reg_exp_digits.test(String(this.contact))){
 	      return false;
 	    };
 
@@ -76,7 +82,8 @@ export class SignupPage implements OnInit {
 	      	this.globalFooService.publishSomeData({
             	foo: {'data': result.data, 'page': 'profile'}
         	});
-	      	this.router.navigate(['tabs/home']);
+        	this.apiService.presentToast('Register successfully!', 'success');
+	      	this.apiService.navCtrl.navigateRoot('tabs/home');
 	      };
 	    });
 	};
@@ -162,12 +169,22 @@ export class SignupPage implements OnInit {
 	      this.apiService.stopLoading();
 
 	      if(result.status == 1){
-	        this.apiService.presentToast('Login successfully!', 'success');
-	      	this.router.navigate(['/tabs/home']);
+	        
 
-	   		localStorage.setItem('userId', result.data._id);
-	      	localStorage.setItem('user_name', result.data.name);
-	  	 	localStorage.setItem('profile', JSON.stringify(result.data));
+	   		
+
+	  	 	localStorage.setItem('userId', result.data._id);
+        	localStorage.setItem('IsLoggedIn', 'true');
+        	localStorage.setItem('profile',JSON.stringify(result.data));
+        	localStorage.setItem('user_name', result.data.name);
+  			localStorage.setItem('user_image', result.data.image);
+  			localStorage.setItem('user_email', result.data.email);
+  			localStorage.setItem('user_medium', dict.medium);
+  			this.globalFooService.publishSomeData({
+            	foo: {'data': result.data, 'page': 'profile'}
+        	});
+        	this.apiService.presentToast('Login successfully!', 'success');
+	      	this.apiService.navCtrl.navigateRoot('tabs/home');
 	      }
 	      else{
 	        this.apiService.presentToast('Error while signing up! Please try later', 'danger');

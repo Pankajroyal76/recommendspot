@@ -3,13 +3,14 @@ import { ApiserviceService } from '../services/apiservice.service';
 import { GlobalFooService } from '../services/globalFooService.service';
 import { config } from '../services/config';
 import { Router } from '@angular/router';
+import { Location } from "@angular/common";
 
 @Component({
-  selector: 'app-following',
-  templateUrl: './following.page.html',
-  styleUrls: ['./following.page.scss'],
+  selector: 'app-followingfollowers',
+  templateUrl: './followingfollowers.page.html',
+  styleUrls: ['./followingfollowers.page.scss'],
 })
-export class FollowingPage implements OnInit {
+export class FollowingfollowersPage implements OnInit {
 	
 	listing: any;
 	IMAGES_URL: any = config.IMAGES_URL;
@@ -17,10 +18,24 @@ export class FollowingPage implements OnInit {
 	is_response = false;
 	str = 'Following';
 
-  	constructor(public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService) { 
 
-  		
+  	constructor(public location: Location,public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService) { 
 
+
+  		if(localStorage.getItem('friend') == 'follower'){
+    		this.str = 'Follower';
+	    }else{
+	    	this.str = 'Following';
+	    }
+
+  		this.globalFooService.getObservable().subscribe((data) => {
+          console.log('Data received', data);
+          	if(localStorage.getItem('friend') == 'follower'){
+	    		this.str = 'Follower';
+		    }else{
+		    	this.str = 'Following';
+		    }
+      	});
   	}
 
   	ngOnInit() {
@@ -29,6 +44,11 @@ export class FollowingPage implements OnInit {
   	ionViewDidEnter(){
   		this.getData();
   	}
+
+  	dismiss(){
+      this.location.back();
+
+    }
 
   	getimage(img){
   		if(this.errors.indexOf(img) == -1){
@@ -48,8 +68,13 @@ export class FollowingPage implements OnInit {
 	    };
 	    this.apiService.presentLoading();
 	    var apiname;
+	    if(localStorage.getItem('friend') == 'follower'){
+	    	apiname = 'followersListingTab';
+	    }else{
+	    	apiname = 'followingListingTab';
+	    }
 	    
-	    this.apiService.postData(dict,'followingListingTab').subscribe((result) => {
+	    this.apiService.postData(dict,apiname).subscribe((result) => {
 	      this.apiService.stopLoading();
 	      if(result.status == 1){
 	         this.listing = result.data;
@@ -121,6 +146,5 @@ export class FollowingPage implements OnInit {
     	localStorage.setItem('clicked_user_id', item._id);
     	this.router.navigate(['/user-profile'])
     }
-
 
 }

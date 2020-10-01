@@ -61,6 +61,12 @@
 					<h2>{{item.user_name}}</h2>
 					<p>{{item.created_at  | timeAgo}}</p>
 					</ion-label>
+					<ion-icon class="icon-dots" name="ellipsis-vertical" *ngIf="userId == item.user_id" (click)="openUpdate(i)"></ion-icon>
+					<ul class="list-post-fl displaynonediv" id="doc{{i}}" *ngIf="userId == item.user_id" [class.displaydiv]="selectedItemm == i">
+						
+					<li> <a href="javascript:void(0)" (click)="editPost(item, i)">Edit</a> </li>
+					<li> <a  (click)="presentAlertConfirm(item, i)" href="javascript:void(0)">Delete</a> </li>
+					</ul>
 					<span (click)="viewPost(item)" class="servcs-badge">{{item.category}}</span>
 					<!-- <ion-icon class="icon-dots" name="ellipsis-vertical"></ion-icon> -->
 				</ion-item>
@@ -72,7 +78,7 @@
 			<div *ngIf="errors.indexOf(item.web_link) == -1">
 
 			<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
-				<span style="color: blue;font-style: oblique;" (click)="openLink(item.web_link)">{{item.web_link}}</span>
+				<span style="color: blue;font-style: oblique;"><a style="color: blue;font-style: oblique;" (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
 			</div>
 			<div class="post-img" *ngIf="errors.indexOf(item.image) == -1 || item.image" (click)="viewPost(item)" >
 				<img   src="{{IMAGES_URL + '/images/' + item.image}}">
@@ -88,14 +94,14 @@
 
 					<ion-button class="socl-btn" *ngIf="item.fav == '1' && errors.indexOf(loggedUserId) == -1" (click)="addRemoveReccomdation(item, '0', i)">
 
-					<ion-icon class="heart-icon" name="heart" ></ion-icon>
+					<ion-icon class="heart-icon" name="heart" class="liked" ></ion-icon>
 					</ion-button>
 
-					<ion-button class="socl-btn" (click)="like(item.likes, i)"><ion-icon name="{{isLikedPost(item.likes)}}"></ion-icon>{{item.likes.length}}</ion-button>
+					<ion-button class="socl-btn" (click)="like(item.likes, i)"><ion-icon name="{{isLikedPost(item.likes)}}" [ngClass]="{'liked': isLikedPost(item.likes) == 'thumbs-up'}"></ion-icon>{{item.likes.length}}</ion-button>
 					</ion-col>
 					<ion-col size="6" class="ion-text-right">
-					<ion-button class="socl-btn"><ion-icon name="chatbubble-outline"></ion-icon> {{item.comments.length}} </ion-button>
-					<ion-button class="socl-btn" (click)="share()"><ion-icon name="share-social-outline"></ion-icon></ion-button>		
+					<ion-button class="socl-btn" (click)="viewPost(item)"><ion-icon name="chatbubble-outline"></ion-icon> {{item.comments.length}} </ion-button>
+					<ion-button class="socl-btn" (click)="socialsharebranch(item)"><ion-icon name="share-social-outline"></ion-icon></ion-button>		
 					</ion-col>
 				</ion-row>
 			</div>	
@@ -104,10 +110,10 @@
 					 <ion-avatar>
 					     <img *ngIf="errors.indexOf(item.comments[item.comments.length - 1].image) == -1 && getimage(item.comments[item.comments.length - 1].image) == true" src="{{item.comments[item.comments.length - 1].image}}">
 					    <img *ngIf="errors.indexOf(item.comments[item.comments.length - 1].image) == -1 && getimage(item.comments[item.comments.length - 1].image) == false" src="{{IMAGES_URL + '/images/' + item.comments[item.comments.length - 1].image}}">
-					 	<img *ngIf="errors.indexOf(item.comments[item.comments.length - 1].user.image) >= 0" src="assets/img/default.png">
+					 	<img *ngIf="errors.indexOf(item.comments[item.comments.length - 1].image) >= 0" src="assets/img/default.png">
 					 </ion-avatar>
 					<ion-label>
-					<h2><b>{{item.comments[item.comments.length - 1].user.name}}</b> </h2>
+					<h2><b>{{item.comments[item.comments.length - 1].user}}</b> </h2>
 					<p>{{item.comments[item.comments.length - 1].comment}}</p>
 					</ion-label>
 				</ion-item>

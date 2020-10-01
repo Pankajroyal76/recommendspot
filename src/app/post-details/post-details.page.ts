@@ -6,6 +6,7 @@ import { ApiserviceService } from '../services/apiservice.service';
 import { GlobalFooService } from '../services/globalFooService.service';
 import { config } from '../services/config';
 import { Location } from "@angular/common";
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 @Component({
   selector: 'app-post-details',
   templateUrl: './post-details.page.html',
@@ -20,13 +21,16 @@ export class PostDetailsPage implements OnInit {
   	IMAGES_URL: any = config.IMAGES_URL;
     errors: any = config.errors;
   	userId: any = localStorage.getItem('userId');
-  	constructor(public location: Location, public toastController: ToastController, public apiService: ApiserviceService, public loadingController: LoadingController, public router: Router, private globalFooService: GlobalFooService) { 
-      this.getData();
+  	constructor(public location: Location, public toastController: ToastController, public apiService: ApiserviceService, public loadingController: LoadingController, public router: Router, private globalFooService: GlobalFooService, private iab: InAppBrowser) { 
+      
     }
 
   	ngOnInit() {
   		this.profile = JSON.parse(localStorage.getItem('profile'));
   	}
+    ionViewDidEnter(){
+        this.getData();
+    }
 
     getimage(img){
       if(this.errors.indexOf(img) == -1){
@@ -44,6 +48,7 @@ export class PostDetailsPage implements OnInit {
       let dict = {
         'postId': localStorage.getItem('postId'),
         'user_id': localStorage.getItem('userId'),
+        'add_user_type': JSON.parse(localStorage.getItem('item')).add_user_type
       };
 
       this.presentLoading();
@@ -81,6 +86,7 @@ export class PostDetailsPage implements OnInit {
 
     dismiss(){
       this.location.back();
+
     }
 
     async stopLoading() {
@@ -245,7 +251,11 @@ export class PostDetailsPage implements OnInit {
 
 
     openLink(web_link){
-    	window.open(web_link, '_system');
+      if(web_link.includes('http') == false  || web_link.includes('https') == false){
+
+        web_link = 'http://'  + web_link;
+      }
+      this.iab.create(web_link, '_system', {location: 'yes', closebuttoncaption: 'done'});
     }
 
   	addRemoveReccomdation(item, type, index){
@@ -262,6 +272,9 @@ export class PostDetailsPage implements OnInit {
 	      	this.apiService.stopLoading();
 	      	console.log(result);
 	      	this.post.fav = type;
+           this.globalFooService.publishSomeData({
+            foo: {'data': '', 'page': 'add-post'}
+          });
 	      	this.apiService.presentToast(result.msg, 'success');
 	    });
   	};

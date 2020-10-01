@@ -10,9 +10,13 @@
 <div notifications>
   <ion-item lines="none" *ngFor="let item of listing;let i = index;" (click)="readNoti(item, i)" [ngClass]="{'unread': item.read == 0}">
 	 <ion-avatar>
-	   <img *ngIf="errors.indexOf(item.sender_image) == -1 && item.sender_medium == 'simple'" src="{{IMAGES_URL + '/images/' + item.sender_image}}">
+	<!--    <img *ngIf="errors.indexOf(item.sender_image) == -1 && item.sender_medium == 'simple'" src="{{IMAGES_URL + '/images/' + item.sender_image}}">
 	   <img *ngIf="errors.indexOf(item.sender_image) == -1 && item.sender_medium != 'simple'" src="{{item.sender_image}}">
 	 	<img *ngIf="errors.indexOf(item.sender_image) >= 0 " src="assets/img/default.png">
+	 	 -->
+	 	<img *ngIf="errors.indexOf(item.sender_image) == -1 && getimage(item.sender_image) == true" src="{{item.sender_image}}">
+		 <img *ngIf="errors.indexOf(item.sender_image) == -1 && getimage(item.sender_image) == false" src="{{IMAGES_URL + '/images/' + item.sender_image}}">
+		 <img *ngIf="errors.indexOf(item.sender_image) >= 0" src="assets/img/default.png">
 	 </ion-avatar>
 	 <ion-label>
 	 <p *ngIf="item.noti_type == 'add post'">{{item.sender_name}} added a new post.</p>
@@ -26,6 +30,6 @@
 	</div>
 
 	  <div class="no-record" *ngIf="listing?.length == 0 && is_response == true">
-		No Record Found
+		No notification(s) yet
 		</div>
 </ion-content>

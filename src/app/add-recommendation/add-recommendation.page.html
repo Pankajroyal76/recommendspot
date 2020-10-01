@@ -12,9 +12,10 @@
 	    <label>Type</label>
 	<ion-item lines="none">
 		<ion-label>
-			<ion-icon name="keypad-outline"></ion-icon>
+			<ion-icon name="keypad-outline"></ion-icon> 
+			<span style="display: none;">Type</span>
 		</ion-label>
-		<ion-select [interfaceOptions]="customAlertOptions" interface="alert" [(ngModel)]="type">
+		<ion-select [interfaceOptions]="customAlertOptions" interface="alert" [(ngModel)]="type" (ionChange)="typeChange(type)">
 			<ion-select-option value="Photo"> Photo/Image </ion-select-option>
 			<ion-select-option value="Website"> Website Link </ion-select-option>
 			<ion-select-option value="Words"> Text Only   </ion-select-option>
@@ -22,10 +23,11 @@
 	</ion-item>
 </div>
 <div form-group>
-	    <label>Category</label>
+	 <label>Category</label>
 	<ion-item lines="none">
 		<ion-label>
 			<ion-icon name="layers-outline"></ion-icon>
+			<span style="display: none;">Category</span>
 		</ion-label>
 		<ion-select [interfaceOptions]="customAlertOptions" interface="alert"  placeholder="Select" [(ngModel)]="category">
 			<ion-select-option value="{{doc._id}}" *ngFor="let doc of categories; let i = index;"> {{doc.name}} </ion-select-option>
@@ -56,7 +58,7 @@
 			<ion-textarea placeholder="Enter Website Link" [(ngModel)]="web_link"></ion-textarea>
 	</ion-item>
 	<span error *ngIf=" type == 'Website' && errors.indexOf(web_link) >= 0 && is_submit == true">Please enter web link</span>
-	<span error *ngIf=" type == 'Website' && errors.indexOf(web_link) == -1 && !expression.test(web_link) && is_submit == true">Please enter valid web link(i.e. www.google.com)</span>
+	<span error *ngIf=" type == 'Website' && errors.indexOf(web_link) == -1 && !expression.test(web_link) && is_submit == true">Please enter valid web link (i.e. http://www.example.com, https://www.example.com, www.example.com, example.com)</span>
 </div>
 <ion-button color="secondary" expand="full" shape="round" (click)="add_recc()">Submit</ion-button>
 </ion-content>

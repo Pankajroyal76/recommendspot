@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, Response,RequestOptions, RequestOptionsArgs } from '@angular/http';
-import { ModalController, ToastController, LoadingController , ActionSheetController, Platform, AlertController} from '@ionic/angular';
+import { ModalController, ToastController, LoadingController , ActionSheetController, Platform, AlertController,NavController} from '@ionic/angular';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import * as CryptoJS from 'crypto-js';
@@ -15,7 +15,12 @@ export class ApiserviceService {
   loading:any;
   isLoggedIn:Boolean;
 
-  constructor(public modalController: ModalController, private http: Http, public router: Router, public toastController: ToastController, public loadingController: LoadingController,  public actionSheetController: ActionSheetController, public platform: Platform, public alertController: AlertController) { }
+  constructor(public modalController: ModalController, private http: Http, public router: Router, public toastController: ToastController, public loadingController: LoadingController,  public actionSheetController: ActionSheetController, public platform: Platform, public alertController: AlertController, public navCtrl: NavController) { }
+
+
+  gettoken() {
+    return !!localStorage.getItem('userId');
+  }
 
   checkUserToken(){
     var token = localStorage.getItem('apart_auth_token');

@@ -25,6 +25,18 @@ export class NotificationPage implements OnInit {
   		this.getData();
   	}
 
+  	getimage(img){
+  		if(this.errors.indexOf(img) == -1){
+  		if(img.includes('https') == true){
+  		  			return true;
+  		  		}else{
+  		  			return false;
+  		  		}
+  		}else{
+  			return false;
+  		}
+  	}
+
   	getData(){
 	    let dict = {
 	      userId: localStorage.getItem('userId')

@@ -3,7 +3,10 @@ import { ApiserviceService } from '../services/apiservice.service';
 import { GlobalFooService } from '../services/globalFooService.service';
 import { config } from '../services/config';
 import { Router } from '@angular/router';
-
+declare var Branch;
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { MenuController, AlertController } from '@ionic/angular';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
@@ -20,8 +23,9 @@ export class ProfilePage implements OnInit {
 	loggedUserId: any = localStorage.getItem('userId');
 	is_response = false;
   counter = 0;
+  selectedItemm = -1;
 
-  	constructor(private globalFooService: GlobalFooService,public apiService: ApiserviceService, public router: Router) { 
+  	constructor(private globalFooService: GlobalFooService,public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private iab: InAppBrowser, public alertController: AlertController) { 
 
       this.globalFooService.getObservable().subscribe((data) => {
           console.log('Data received', data);
@@ -33,6 +37,12 @@ export class ProfilePage implements OnInit {
   	ngOnInit() {
   	}
 
+    openUpdate(i){
+
+      this.selectedItemm = i;
+
+    }
+
   	ionViewDidEnter(){
       this.counter = 0;
   		this.userId = localStorage.getItem('userId');
@@ -41,12 +51,23 @@ export class ProfilePage implements OnInit {
   		this.get_profile();
   	}
 
+
+    openLink(web_link){
+      //window.open(web_link, '_system');
+      if(web_link.includes('http') == false  || web_link.includes('https') == false){
+
+        web_link = 'http://'  + web_link;
+      }
+      this.iab.create(web_link, '_system', {location: 'yes', closebuttoncaption: 'done'});
+    }
+
     gotoFollowersFollowings(str){
       localStorage.setItem('friend', str);
       this.globalFooService.publishSomeData({
           foo: {'data': '', 'page': 'updateprofile'}
       });
-      this.router.navigate(['/tabs/following'])
+      this.router.navigate(['/followingfollowers'])
+      //this.apiService.navCtrl.navigateRoot('tabs/following');
     }
 
     getimage(img){
@@ -64,7 +85,8 @@ export class ProfilePage implements OnInit {
   	get_profile(){
 
 	 	let dict ={
-	      _id: this.userId
+	      _id: this.userId,
+        add_user_type: 'user'
 	    };
 	    console.log(dict)
 
@@ -88,7 +110,7 @@ export class ProfilePage implements OnInit {
 
   	getData(){
      
-      this.apiService.postData({'userId': localStorage.getItem('userId'), 'loggedUserId': localStorage.getItem('userId')},'influencerProfile').subscribe((result) => {
+      this.apiService.postData({'userId': localStorage.getItem('userId'), 'loggedUserId': localStorage.getItem('userId'), add_user_type: 'user'},'influencerProfile').subscribe((result) => {
         this.apiService.stopLoading();
         console.log(result)
         if(result.status == 1){
@@ -124,7 +146,7 @@ export class ProfilePage implements OnInit {
       let dict = {
         userId: this.userId,
         _id: likeId,
-        postId: this.data[index]._id
+        postId: this.data.post[index]._id
       };
 
       let ApiEndPoint = IsLiked == true ? 'deleteLike' : 'addLike';
@@ -134,12 +156,12 @@ export class ProfilePage implements OnInit {
         this.apiService.stopLoading();
         if(result.status == 1){
           if(!IsLiked){
-            this.data[index].likes.push(result.data);
+            this.data.post[index].likes.push(result.data);
           }else{
             for(var i=0; i < likesArray.length; i++)
             {
               if(likesArray[i].userId == this.userId){
-                this.data[index].likes.splice(i, 1);
+                this.data.post[index].likes.splice(i, 1);
               }
             }
           }
@@ -179,13 +201,145 @@ export class ProfilePage implements OnInit {
 
 
  	viewPost(post){
+  this.selectedItemm = -1;
       localStorage.setItem('item', JSON.stringify(post));
       localStorage.setItem('postId', post._id);
       this.router.navigate(['/post-details']);
     }
 
 
-    
+       //scoial share 
+  socialsharebranch(post){
+      const Branch = window['Branch'];
+        const self = this;
 
+        var properties = {
+          canonicalIdentifier: 'content/123',
+          contentMetadata: {
+                userId: post.user_id,
+                postId: post._id,
+                post: JSON.stringify(post)
+          }
+        };
+
+        // create a branchUniversalObj variable to reference with other Branch methods
+        var branchUniversalObj = null;
+
+      Branch.createBranchUniversalObject(properties).then(function(res) {
+      
+          branchUniversalObj = res;
+
+            // optional fields
+            var analytics = {
+              channel: 'facebook',
+              feature: 'onboarding'
+            }
+
+            var properties1 = {
+              $og_title: "Favreet",
+              $deeplink_path: 'content/123',
+              $match_duration: 2000,
+              custom_string: 'data',
+              custom_integer: Date.now(),
+              custom_boolean: true
+            }
+
+
+          branchUniversalObj.generateShortUrl(analytics, properties1).then(function(res) {
+          
+                var sendlink = res.url;
+                console.log(sendlink);
+                var imgUrl = self.errors.indexOf(post.image) >= 0 ? null :  (self.IMAGES_URL + '/images/' + post.image);
+                self.socialSharing.share('Check out the link: ', 'Favreet App', imgUrl, sendlink);
+              
+    
+          }).catch(function(err) {
+          });
+
+      }).catch(function(err) {
+          alert('Error: ' + JSON.stringify(err))
+      });
+  }
+
+
+  addRemoveReccomdation(item, type, index){
+
+      let dict ={
+        user_id: localStorage.getItem('userId'),
+        recc_id: item._id, 
+        type: type,
+      }
+      console.log(dict)
+
+      this.apiService.presentLoading();
+      this.apiService.postData(dict,'addRemoveRecc').subscribe((result) => {
+          this.apiService.stopLoading();
+          console.log(result);
+          this.data.post[index].fav = type;
+
+          this.apiService.presentToast(result.msg, 'success');
+      });
+    };
+
+
+    //edit post
+  editPost(item, i){
+    console.log(item, i);
+    this.selectedItemm = -1;
+    localStorage.setItem('postId', item._id);
+    localStorage.setItem('route', '/tabs/profile');
+    this.router.navigate(['/edit-reccomendation'])
+  }
+
+
+  //delete post
+  deletePost(item, i){
+    console.log(item, i);
+    this.selectedItemm = -1;
+    let dict = {
+          _id: item._id
+        };
+
+
+        this.apiService.presentLoading();
+        this.apiService.postData(dict,'deleteRecc').subscribe((result) => {
+          this.apiService.stopLoading();
+          if(result.status == 1){
+            this.data.post.splice(i, 1);
+            this.apiService.presentToast(result.msg,'success');
+          }
+          else{
+            this.apiService.presentToast('Technical error,Please try after some time.','danger');
+          }
+        },
+        err => {
+          this.apiService.stopLoading();
+            this.apiService.presentToast('Technical error,Please try after some time.','danger');
+        });
+  }
+
+  async presentAlertConfirm(item, i) {
+      const alert = await this.alertController.create({
+        header: 'Confirm Delete',
+        message: 'Are you sure to delete?',
+        buttons: [
+         {
+            text: 'OK',
+            handler: () => {
+              console.log('Confirm Okay');
+              this.deletePost(item, i);
+              
+            }
+          },
+          {
+            text: 'Cancel',
+            handler: () => {
+            }
+          }
+        ]
+      });
+
+      await alert.present();
+  }
   
 }

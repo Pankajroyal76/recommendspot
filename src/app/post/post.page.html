@@ -7,9 +7,9 @@
          <a  href="javascript:void(0)" class="rift-flt" (click)="hide()"> <ion-icon name="ellipsis-vertical-outline"></ion-icon> </a>
 		<ul class="list-post-fl" *ngIf="hideMe">
 		<!-- <li> <a href="javascript:void(0)" (click)="gotoLogin()">Add Recommendations</a> </li> -->
-		<li> <a href="javascript:void(0)" routerLink="/login">Add Recommendation</a> </li>
-		<li> <a  href="javascript:void(0)" routerLink="/login">Login</a> </li>
-		<li> <a routerLink="/signup" href="javascript:void(0)">Sign Up</a> </li>
+		<li> <a href="javascript:void(0)" routerLink="/login" (click)="hide()">Add Recommendation</a> </li>
+		<li> <a  href="javascript:void(0)" routerLink="/login" (click)="hide()">Login</a> </li>
+		<li> <a routerLink="/signup" href="javascript:void(0)" (click)="hide()">Sign Up</a> </li>
 		</ul>
 	</div>  
 </ion-header>
@@ -19,14 +19,14 @@
 <h2><ion-icon name="receipt-outline"></ion-icon> recommend anything you find meaningful to anyone that might find it useful</h2>
 <p>Look at what these people are recommending</p>
 </div>
-
-<form [formGroup]="authForm" (ngSubmit)="search()"  >
+<!--  (ngSubmit)="search()"  -->
+<form [formGroup]="authForm" >
   <ion-searchbar placeholder="Search here..."  formControlName="keyword">
   	 
   </ion-searchbar>
   </form>
 
-	<ion-card post-sec-mn *ngFor="let item of posts; let i = index;">
+	<ion-card post-sec-mn *ngFor="let item of posts | appFilter: authForm.value.keyword; let i = index;">
 		<div class="post-name">	
 			<ion-item lines="none">
 				 <ion-avatar  (click)="viewUser(item)">
@@ -49,7 +49,7 @@
 			<div *ngIf="errors.indexOf(item.web_link) == -1">
 
 			<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
-				<span style="color: blue;font-style: oblique;" (click)="openLink(item.web_link)">{{item.web_link}}</span>
+				<span style="color: blue;font-style: oblique;" (click)="openLink(item.web_link)"><a style="color: blue;font-style: oblique;" (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
 			</div>
 			<div class="post-img" *ngIf="errors.indexOf(item.image) == -1 || item.image">
 				<img (click)="viewPost(item)"  src="{{IMAGES_URL + '/images/' +  item.image}}">
@@ -59,11 +59,11 @@
 			<div class="post-share">
 				<ion-row>
 					<ion-col size="3">
-					<ion-button class="socl-btn" ><ion-icon name="thumbs-up-outline"></ion-icon>  {{item.likes.length}}</ion-button>
+					<ion-button class="socl-btn" (click)="viewPost(item)"><ion-icon name="thumbs-up-outline"></ion-icon>  {{item.likes.length}}</ion-button>
 					</ion-col>
 					<ion-col size="9" class="ion-text-right">
 					<ion-button class="socl-btn" (click)="viewPost(item)"><ion-icon name="chatbubble-outline"></ion-icon> {{item.comments.length}}</ion-button>
-					<ion-button class="socl-btn"><ion-icon name="share-social-outline"></ion-icon></ion-button>		
+					<ion-button class="socl-btn"  (click)="socialsharebranch(item)"><ion-icon name="share-social-outline"></ion-icon></ion-button>		
 					</ion-col>
 				</ion-row>
 			</div>	

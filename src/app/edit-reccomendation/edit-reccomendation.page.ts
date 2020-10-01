@@ -37,11 +37,31 @@ export class EditReccomendationPage implements OnInit {
 	categories: any;
 
  	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, public location: Location, private globalFooService: GlobalFooService) { 
-  		this.expression = /^\S*$/;
+  		this.expression = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
   	}
 
   	ngOnInit() {
   	}
+
+  	typeChange(type){
+  		if(type == 'Photo'){
+  			this.web_link = '';
+  		}else if(type == 'Website'){
+  			this.live_image_url = '';
+  			this.is_live_image_updated = false;
+  			this.imgBlob = '';
+  			this.live_file_name = '';
+  			this.image = '';
+  		}else{
+  			this.web_link = '';
+  			this.live_image_url = '';
+  			this.is_live_image_updated = false;
+  			this.imgBlob = '';
+  			this.live_file_name = '';
+  			this.image = '';
+  		}
+  	}
+
 
   	dismiss(){
       this.location.back();
@@ -86,7 +106,7 @@ export class EditReccomendationPage implements OnInit {
           if(result.status == 1){
               this.post = result.data[0];
               this.type = result.data[0].type;
-              this.category = result.data[0].category;
+              this.category = result.data[0].category_id;
               this.description = result.data[0].description;
               this.web_link = result.data[0].web_link;
               this.image = result.data[0].image;
@@ -110,9 +130,12 @@ export class EditReccomendationPage implements OnInit {
   		if(this.errors.indexOf(this.category) >= 0){
 	      return false;
 	    }
-  		if(this.errors.indexOf(this.description) >= 0){
-	      return false;
-	    }
+  		if(this.type != 'Website'){
+  			if(this.errors.indexOf(this.description) >= 0){
+		      return false;
+		    }
+  		}
+  		
 
 	    if(this.type == 'Website'){
 	    	if(this.errors.indexOf(this.web_link) >= 0 || !this.expression.test(this.web_link)){
@@ -121,7 +144,7 @@ export class EditReccomendationPage implements OnInit {
 	    }
 
 	    if(this.type == 'Photo'){
-	    	if(this.errors.indexOf(this.imgBlob) >= 0){
+	    	if(this.errors.indexOf(this.image) >= 0 && this.errors.indexOf(this.live_image_url) >= 0){
 		      return false;
 		    }
 	    }
@@ -251,14 +274,15 @@ export class EditReccomendationPage implements OnInit {
 	      	this.imgBlob = '';
 	      	this.live_file_name = '';
 	      	this.type = 'Photo';
-	      	this.category = 'netflix';
+	      	this.category = '';
 	      	this.web_link = '';
 	      	this.globalFooService.publishSomeData({
             	foo: {'data': result.data, 'page': 'updateprofile'}
         	});
 	        
 	        this.apiService.presentToast(result.msg,'success');
-	        this.router.navigate(['/tabs/home'])
+
+	        this.router.navigate([localStorage.getItem('route')])
 	      }
 	      else{
 	        this.apiService.presentToast('Error while sending request,Please try after some time','success');

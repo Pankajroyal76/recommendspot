@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "203628444258",
+    "firebase_url": "https://favreet-b2e1c.firebaseio.com",
+    "project_id": "favreet-b2e1c",
+    "storage_bucket": "favreet-b2e1c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:203628444258:android:aa418d18aa6687561f2f3b",
+        "android_client_info": {
+          "package_name": "com.favreet.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "203628444258-l65frnff5vpppch6mt1cko7laar04aud.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfbWYJgUsathX6nRxUnQ3iQ-zVmA4VdqY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "203628444258-l65frnff5vpppch6mt1cko7laar04aud.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

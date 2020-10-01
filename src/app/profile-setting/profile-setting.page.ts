@@ -31,6 +31,7 @@ export class ProfileSettingPage implements OnInit {
 	contact: any;
 	reg_exp: any;
 	reg_exp_digits: any;
+	reg_exp_letters: any;
 	is_submit = false;
 	is_submit_pass = false;
 	password: any = '';
@@ -41,15 +42,21 @@ export class ProfileSettingPage implements OnInit {
 	live_file_name: any;
 	my_image: any;
 	withoutspace: any;
-	is_live_image_updated = false;
+	is_live_image_updated_cover = false;
+	is_live_image_updated_profile = false;
 	image_type: any;
+	image_bg_type: any;
+	imgBlobProfile: any;
+	live_file_name_profile: any;
+	imgBlobCover: any;
+	live_file_name_cover: any;
 
   	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath, private transfer: FileTransfer,private globalFooService: GlobalFooService) { 
 
   		this.reg_exp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      	//this.reg_exp_letters =  /^[a-zA-Z\s]*$/;
-      	this.reg_exp_digits = /^\d{10}$/;
-      	this.withoutspace = /^\S+$/g;
+      	this.reg_exp_letters =  /^[a-zA-Z].*$/;
+      	this.reg_exp_digits = /^\d{6,10}$/;
+      	this.withoutspace = /^\S*$/;
 
   	}
 
@@ -76,7 +83,8 @@ export class ProfileSettingPage implements OnInit {
   	get_profile(){
 
 	 	let dict ={
-	      _id: localStorage.getItem('userId')
+	      _id: localStorage.getItem('userId'),
+	      add_user_type: 'user'
 	    };
 	    console.log(dict)
 
@@ -102,21 +110,24 @@ export class ProfileSettingPage implements OnInit {
   	update_profile(){
 
   		this.is_submit = true;
-  		if(this.errors.indexOf(this.name) >= 0 || this.errors.indexOf(this.contact) >= 0 || this.errors.indexOf(this.email) >= 0 || !this.reg_exp.test(String(this.email).toLowerCase())  || !this.reg_exp_digits.test(String(this.contact))){
+  		if(this.errors.indexOf(this.name) >= 0 || this.errors.indexOf(this.contact) >= 0 || this.errors.indexOf(this.email) >= 0 || !this.reg_exp.test(String(this.email).toLowerCase())  || !this.reg_exp_digits.test(String(this.contact))|| !this.reg_exp_letters.test(String(this.name))){
 	      return false;
 	    };
 
-	    if(this.is_live_image_updated == true){
+
+	     if(this.is_live_image_updated_cover == true){
+	    	this.profileImageSubmit(this.image_bg_type);
+	    }else if(this.is_live_image_updated_profile == true){
 	    	this.profileImageSubmit(this.image_type);
 	    }else{
-	    	this.apiService.presentLoading();  
+	    	// this.apiService.presentLoading();  
 	    	this.finalUpdateProfile();
 	    }
 
   	};
 
   	finalUpdateProfile(){
-
+  		this.apiService.presentLoading();  
   		let dict ={
 	      _id: localStorage.getItem('userId'),
 	      name: this.name,
@@ -133,6 +144,10 @@ export class ProfileSettingPage implements OnInit {
 	      if(result.status == 1){
 
 	      	this.profile.name = this.name;
+
+	      	localStorage.setItem('user_name', this.name);
+  			localStorage.setItem('user_image', this.profile.image);
+  			localStorage.setItem('user_email', this.email);
 
 	      	this.apiService.presentToast(result.msg, 'success');
 	      	this.globalFooService.publishSomeData({
@@ -186,10 +201,10 @@ export class ProfileSettingPage implements OnInit {
 
   	};
 
-  	async selectImage(type) {
-  		this.image_type = type;
+  	async selectCoverImage(type) {
+  		this.image_bg_type = type;
 	    const actionSheet = await this.apiService.actionSheetController.create({
-	      header: "Select " + (type == 'cover' ? 'Cover Image' : "Image"),
+	      header: "Select Cover Image",
 	      buttons: [{
 	            text: 'From Gallery',
 	            handler: () => {
@@ -209,7 +224,31 @@ export class ProfileSettingPage implements OnInit {
 	      ]
 	    });
 	    await actionSheet.present();
-	  }
+	 }
+  	async selectImage(type) {
+  		this.image_type = type;
+	    const actionSheet = await this.apiService.actionSheetController.create({
+	      header: "Select Image",
+	      buttons: [{
+	            text: 'From Gallery',
+	            handler: () => {
+	                this.takePicture(this.camera.PictureSourceType.PHOTOLIBRARY, type);
+	            }
+	        },
+	        {
+	            text: 'Use Camera',
+	            handler: () => {
+	                this.takePicture(this.camera.PictureSourceType.CAMERA, type);
+	            }
+	        },
+	        {
+	            text: 'Cancel',
+	            role: 'cancel'
+	        }
+	      ]
+	    });
+	    await actionSheet.present();
+	 }
 
 
 
@@ -225,11 +264,16 @@ export class ProfileSettingPage implements OnInit {
 
 	    this.camera.getPicture(options).then(imagePath => {
 	      if (sourceType === this.camera.PictureSourceType.PHOTOLIBRARY) {
-	          this.is_live_image_updated = true;
-	          this.live_image_url = imagePath;
+	         
+	          if(type == 'profile'){
+	          	this.live_image_url = imagePath;
+	          	 this.is_live_image_updated_profile = true;
+	          }
+	          
 
 	          if(type == 'cover'){
-	          	this.bgImage = this.win.Ionic.WebView.convertFileSrc(this.live_image_url );
+	          	this.bgImage = this.win.Ionic.WebView.convertFileSrc(imagePath);
+	          	 this.is_live_image_updated_cover = true;
 	          }
 
 	          
@@ -238,7 +282,17 @@ export class ProfileSettingPage implements OnInit {
 	                this.startUpload(imagePath, type);
 	              });
 	      } else {
-	        this.is_live_image_updated = true;
+	        
+
+	        if(type == 'profile'){
+	          	this.live_image_url = imagePath;
+	          	this.is_live_image_updated_profile = true;
+          	}
+
+	          if(type == 'cover'){
+	          	this.bgImage = this.win.Ionic.WebView.convertFileSrc(imagePath);
+	          	 this.is_live_image_updated_cover = true;
+	          }
 	        this.startUpload(imagePath, type);
 	      }
 	    }, (err) => {
@@ -262,11 +316,26 @@ export class ProfileSettingPage implements OnInit {
     var self = this;
     const reader = new FileReader();
     reader.onloadend = () => {
-        const imgBlob = new Blob([reader.result], {
-            type: file.type
-        });
-        self.imgBlob = imgBlob;
-        self.live_file_name = file.name;
+    	if(type == 'profile'){
+    		const imgBlobProfile = new Blob([reader.result], {
+	            type: file.type
+	        });
+	        self.imgBlobProfile = imgBlobProfile;
+	        self.live_file_name_profile = file.name;
+    	}else{
+    		const imgBlobCover = new Blob([reader.result], {
+	            type: file.type
+	        });
+	        self.imgBlobCover = imgBlobCover;
+	        self.live_file_name_cover = file.name;
+    	}
+
+        // const imgBlob = new Blob([reader.result], {
+        //     type: file.type
+        // });
+        // self.imgBlob = imgBlob;
+        // self.live_file_name = file.name;
+       
         //self.profileImageSubmit(type);
     };
     reader.readAsArrayBuffer(file);
@@ -274,11 +343,14 @@ export class ProfileSettingPage implements OnInit {
 
 
   	profileImageSubmit(type){
-	    this.apiService.presentLoading();
+	    // this.apiService.presentLoading();
 	    const frmData = new FormData();
-	    if(this.is_live_image_updated == true){
-	      frmData.append('file', this.imgBlob, this.live_file_name);
-	      frmData.append("live_image", this.live_file_name.replace(/ /g,"_")); 
+	    if(type == 'profile'){
+	      frmData.append('file', this.imgBlobProfile, this.live_file_name_profile);
+	      frmData.append("live_image", this.live_file_name_profile.replace(/ /g,"_")); 
+	    }else{
+	    	frmData.append('file', this.imgBlobCover, this.live_file_name_cover);
+	      	frmData.append("live_image", this.live_file_name_cover.replace(/ /g,"_")); 
 	    }
 	    frmData.append("userId", localStorage.getItem('userId'));
 	    frmData.append("type", type);
@@ -288,14 +360,25 @@ export class ProfileSettingPage implements OnInit {
 	      if(result.status == 1){
 	      	if(type == 'cover'){
 	      		this.bgImage = this.IMAGES_URL + '/images/' +  result.data;
-	      		 this.apiService.presentToast('Cover picture updated successfully','success');
+	      		 //this.apiService.presentToast('Cover picture updated successfully','success');
 	      		 this.profile.cover_image = result.data;
+	      		 this.is_live_image_updated_cover = false;
 	      	}else{
 	      		this.profile.image = result.data;
-	      		 this.apiService.presentToast('Profile picture updated successfully','success');
+	      		this.is_live_image_updated_profile = false;
+	      		 //this.apiService.presentToast('Profile picture updated successfully','success');
 	      	}
 
-	      	this.finalUpdateProfile();
+	      	if(this.is_live_image_updated_cover == true){
+	    		this.profileImageSubmit(this.image_bg_type);
+		    }else if(this.is_live_image_updated_profile == true){
+		    	this.profileImageSubmit(this.image_type);
+		    }else{
+		    	
+		    	this.finalUpdateProfile();
+		    }
+
+	      	
 
 	        
 

@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/fo
 import * as $ from "jquery";
 declare var window: any; 
 declare var Branch;
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 
 @Component({
@@ -31,19 +32,24 @@ export class HomePage implements OnInit {
   	page_limit = 10;
   	keyword = '';
   	private win: any = window;
-  	userId = localStorage.getItem('userId');
+  	userId: any;
   	counter = 0;
   	hideMe = false;
   	selectedItemm = -1;
   	open = false;
   	
 
-  	constructor(public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private menuCtrl: MenuController, private globalFooService: GlobalFooService, public alertController: AlertController,private formBuilder: FormBuilder,private renderer: Renderer2) { 
+  	constructor(public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private menuCtrl: MenuController, private globalFooService: GlobalFooService, public alertController: AlertController,private formBuilder: FormBuilder,private renderer: Renderer2, private iab: InAppBrowser) { 
 
   		this.createForm();
   		this.globalFooService.getObservable().subscribe((data) => {
             console.log('Data received', data);
             this.menuCtrl.enable(true);
+            this.counter = 1;
+            this.page_number = 1;
+            this.is_response = false;
+	    this.posts = [];
+            this.getAllReccomdations(false, '');
         });
        
        
@@ -61,6 +67,15 @@ export class HomePage implements OnInit {
 	    });
   	};
 
+  	closeUpdate(){
+  		this.selectedItemm = -1;
+  	}
+
+  	openUpdate(i){
+
+  		this.selectedItemm = i;
+
+  	}
 
   	getimage(img){
   		if(this.errors.indexOf(img) == -1){
@@ -75,7 +90,8 @@ export class HomePage implements OnInit {
   	}
 
   	ionViewDidEnter(){
-
+  		this.userId = '';
+  		
   		this.counter = 0;
   		this.is_response = false;
 	    this.posts = [];
@@ -102,7 +118,7 @@ export class HomePage implements OnInit {
   	}
 
   	getAllReccomdations(isFirstLoad, event){
-
+  		this.userId = localStorage.getItem('userId');
   		let dict ={
 	      user_id: localStorage.getItem('userId'),
 	      skip: this.page_number, 
@@ -145,7 +161,12 @@ export class HomePage implements OnInit {
     }
 
     openLink(web_link){
-    	window.open(web_link, '_system');
+    	//window.open(web_link, '_system');
+    	if(web_link.includes('http') == false  || web_link.includes('https') == false){
+
+    		web_link = 'http://'  + web_link;
+    	}
+    	this.iab.create(web_link, '_system', {location: 'yes', closebuttoncaption: 'done'});
     }
 
   	addRemoveReccomdation(item, type, index){
@@ -252,7 +273,6 @@ export class HomePage implements OnInit {
 	     }
       }
       
-      console.log(likesArray)
       if(IsLiked){
         return 'thumbs-up';
       }else{
@@ -262,6 +282,7 @@ export class HomePage implements OnInit {
 
 
     viewPost(post){
+    	this.selectedItemm = -1;
       localStorage.setItem('item', JSON.stringify(post));
       localStorage.setItem('postId', post._id);
       this.router.navigate(['/post-details']);
@@ -269,6 +290,8 @@ export class HomePage implements OnInit {
 
 
     viewUser(item){
+    	this.selectedItemm = -1;
+    	localStorage.setItem('item', JSON.stringify(item));
     	localStorage.setItem('clicked_user_id', item.user_id);
     	this.router.navigate(['/user-profile'])
     }
@@ -347,7 +370,9 @@ export class HomePage implements OnInit {
 	//edit post
 	editPost(item, i){
 		console.log(item, i);
+		this.selectedItemm = -1;
 		localStorage.setItem('postId', item._id);
+		localStorage.setItem('route', '/tabs/home');
 		this.router.navigate(['/edit-reccomendation'])
 	}
 
@@ -355,7 +380,7 @@ export class HomePage implements OnInit {
 	//delete post
 	deletePost(item, i){
 		console.log(item, i);
-
+		this.selectedItemm = -1;
 		let dict = {
 	        _id: item._id
 	      };
@@ -413,8 +438,9 @@ export class HomePage implements OnInit {
         var properties = {
           canonicalIdentifier: 'content/123',
           contentMetadata: {
-                userId: localStorage.getItem('userId'),
-                postId: localStorage.getItem('postId'),
+                 userId: post.user_id,
+                postId: post._id,
+                post: JSON.stringify(post)
           }
         };
 

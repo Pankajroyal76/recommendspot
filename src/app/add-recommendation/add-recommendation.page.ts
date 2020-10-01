@@ -22,7 +22,7 @@ export class AddRecommendationPage implements OnInit {
 	private win: any = window;
 	type: any = 'Photo';
 	category: any = '';
-	description: any;
+	description: any = '';
 	web_link: any = '';
 	is_live_image_updated = false;
 	live_image_url: any = '';
@@ -35,7 +35,7 @@ export class AddRecommendationPage implements OnInit {
 	categories: any;
 
   	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, private globalFooService: GlobalFooService) { 
-  		this.expression = /^\S*$/;
+  		this.expression = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
   	}
 
   	ngOnInit() {
@@ -43,6 +43,23 @@ export class AddRecommendationPage implements OnInit {
 
   	ionViewDidEnter(){
   		this.getCategories();
+  	}
+
+  	typeChange(type){
+  		if(type == 'Photo'){
+  			this.web_link = '';
+  		}else if(type == 'Website'){
+  			this.live_image_url = '';
+  			this.is_live_image_updated = false;
+  			this.imgBlob = '';
+  			this.live_file_name = '';
+  		}else{
+  			this.web_link = '';
+  			this.live_image_url = '';
+  			this.is_live_image_updated = false;
+  			this.imgBlob = '';
+  			this.live_file_name = '';
+  		}
   	}
 
 
@@ -151,6 +168,7 @@ export class AddRecommendationPage implements OnInit {
 	              });
 	      } else {
 	        this.is_live_image_updated = true;
+	        this.live_image_url = imagePath;
 	        this.startUpload(imagePath);
 	      }
 	    }, (err) => {
@@ -207,6 +225,7 @@ export class AddRecommendationPage implements OnInit {
 	    	web_link: this.web_link,
 	    	image: this.image,
 	    	user_id: localStorage.getItem('userId'),
+	    	add_user_type: 'user'
 	    }
 	  
 	    this.apiService.postData(dict,'addRecc').subscribe((result) => { 
@@ -219,11 +238,13 @@ export class AddRecommendationPage implements OnInit {
 	      	this.imgBlob = '';
 	      	this.live_file_name = '';
 	      	this.type = 'Photo';
-	      	this.category = 'netflix';
+	      	this.category = '';
 	      	this.web_link = '';
 	      	this.globalFooService.publishSomeData({
             	foo: {'data': '', 'page': 'updateprofile'}
         	});
+        	this.is_live_image_updated = false;
+	        this.image = '';
 	        
 	        this.apiService.presentToast(result.msg,'success');
 	        this.router.navigate(['/tabs/home'])

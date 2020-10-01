@@ -3,7 +3,7 @@
 		
     	<ion-back-button slot="start" (click)="dismiss()">
    </ion-back-button> 
-		<ion-title class="center"> Post Details </ion-title>
+		<ion-title class="ion-text-center"> Post Details </ion-title>
 		<!-- <ion-buttons slot="end" (click)="logout()">
 			<ion-icon name="log-out-outline"></ion-icon>
 		</ion-buttons> -->
@@ -20,13 +20,14 @@
 				<ion-row>
 					<ion-col size="12">
 						<div class="slide">
-							<div class="img-bx-sly storis" style="height: 275px;">
+							<div class="img-bx-sly storis" style="height: auto;">
 
+								<span class="servcs-badge">{{post?.category}}</span>
 							<div class="post-content">
-								<p>{{post?.description}}</p>
+								<p style="padding-left: 10px;">{{post?.description}}</p>
 							</div>
 
-							<span class="servcs-badge">{{post?.category}}</span>
+							
 
 							<div *ngIf="errors.indexOf(post?.web_link) == -1">
 
@@ -54,11 +55,17 @@
 				
 				<div class="top-useer-s">
 					<!-- <img src="assets/imgs/user1.jpg" class="adm-usr">  -->
-					 <img class="adm-usr" *ngIf="errors.indexOf(post?.user_image) == -1 && errors.indexOf(post?.user_image) == false" src="{{IMAGES_URL +  '/images/' + post?.user_image}}">
+					 <!-- <img class="adm-usr" *ngIf="errors.indexOf(post?.user_image) == -1 && errors.indexOf(post?.user_image) == false" src="{{IMAGES_URL +  '/images/' + post?.user_image}}">
 					 <img class="adm-usr" *ngIf="errors.indexOf(post?.user_image) == -1 && errors.indexOf(post?.user_image) == true" src="{{post?.user_image}}">
 					 <img class="adm-usr" *ngIf="errors.indexOf(post?.user_image) >= 0" src="assets/img/default.png">
+ -->
+
+					 <img class="adm-usr" *ngIf="errors.indexOf(post?.user_image) == -1 && getimage(post?.user_image) == true" src="{{post?.user_image}}">
+			    	 <img class="adm-usr" *ngIf="errors.indexOf(post?.user_image) == -1 && getimage(post?.user_image) == false" src="{{IMAGES_URL + '/images/' + post?.user_image}}">
+			 		 <img class="adm-usr" *ngIf="errors.indexOf(post?.user_image) >= 0" src="assets/img/default.png">
+
 					<h5> {{post?.user_name}} </h5>
-					<span class="time-al"> {{post?.created_at | timeAgo}} </span>
+					<span class="time-al" *ngIf="errors.indexOf(post?.created_at) == -1"> {{post?.created_at | timeAgo}} </span>
 					<div class="icon-rut">
 
 
@@ -68,12 +75,12 @@
 						</span>
 
 						<span *ngIf="post?.fav == '1' && errors.indexOf(userId) == -1" (click)="addRemoveReccomdation(post, '0', i)">
-							<ion-icon class="heart-icon" name="heart" ></ion-icon>
+							<ion-icon class="heart-icon" name="heart" class="liked"></ion-icon>
 						</span>
 
 
 						<span class="likes-number"(click)="like(post?.likes)" *ngIf="post?.likes?.length > 0"> <!-- <img src="{{isLikedPost(post?.likes)}}">  -->
-						<ion-icon name="{{isLikedPost(post?.likes)}}"></ion-icon>
+						<ion-icon name="{{isLikedPost(post?.likes)}}" [ngClass]="{'liked': isLikedPost(post?.likes) == 'thumbs-up'}"></ion-icon>
 
 						{{post?.likes?.length}} </span>
 
@@ -92,9 +99,13 @@
 				</div>
 				<div class="commnts" *ngFor="let item of post?.comments">
 					<!-- <img src="assets/imgs/default.png" class="adm-usr">  -->
-					<img class="adm-usr" *ngIf="errors.indexOf(item?.image) == -1 && item?.medium == 'simple'" src="{{IMAGES_URL + '/images/' + item?.image}}">
+			<!-- 		<img class="adm-usr" *ngIf="errors.indexOf(item?.image) == -1 && item?.medium == 'simple'" src="{{IMAGES_URL + '/images/' + item?.image}}">
 					<img class="adm-usr" *ngIf="errors.indexOf(item?.image) == -1 && item?.medium != 'simple'" src="{{item?.image}}">
-					 <img class="adm-usr" *ngIf="errors.indexOf(item?.image) >= 0" src="assets/img/default.png">
+					 <img class="adm-usr" *ngIf="errors.indexOf(item?.image) >= 0" src="assets/img/default.png"> -->
+
+					  <img class="adm-usr" *ngIf="errors.indexOf(item?.image) == -1 && getimage(item?.image) == true" src="{{item?.image}}">
+			    	 <img class="adm-usr" *ngIf="errors.indexOf(item?.image) == -1 && getimage(item?.image) == false" src="{{IMAGES_URL + '/images/' + item?.image}}">
+			 		 <img class="adm-usr" *ngIf="errors.indexOf(item?.image) >= 0" src="assets/img/default.png">
 					<h5> {{item?.user}} <span class="time-al"> {{item?.created_on | timeAgo}} </span> </h5>
 					<p> {{item?.comment}} </p>
 				</div>
