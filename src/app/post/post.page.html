@@ -42,14 +42,14 @@
 			</ion-item>
 		</div>
 		<div class="cart-mn-pd">
-			<div class="post-content" (click)="viewPost(item)">
+			<div class="post-content padding-left-3" (click)="viewPost(item)">
 				<p>{{item.description}}<!-- <a class="readmore" href="javascript:void(0)">Read More</a> --></p>
 			</div>
 
-			<div *ngIf="errors.indexOf(item.web_link) == -1">
+			<div *ngIf="errors.indexOf(item.web_link) == -1" class="padding-left-3">
 
-			<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
-				<span style="color: blue;font-style: oblique;" (click)="openLink(item.web_link)"><a style="color: blue;font-style: oblique;" (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
+				<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
+				<span class="weblink"  (click)="openLink(item.web_link)"><a (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
 			</div>
 			<div class="post-img" *ngIf="errors.indexOf(item.image) == -1 || item.image">
 				<img (click)="viewPost(item)"  src="{{IMAGES_URL + '/images/' +  item.image}}">
@@ -59,10 +59,10 @@
 			<div class="post-share">
 				<ion-row>
 					<ion-col size="3">
-					<ion-button class="socl-btn" (click)="viewPost(item)"><ion-icon name="thumbs-up-outline"></ion-icon>  {{item.likes.length}}</ion-button>
+					<ion-button class="socl-btn" (click)="viewPost(item)"><ion-icon name="thumbs-up-outline"></ion-icon> <span class="padding-8"> {{item.likes.length}} </span></ion-button>
 					</ion-col>
 					<ion-col size="9" class="ion-text-right">
-					<ion-button class="socl-btn" (click)="viewPost(item)"><ion-icon name="chatbubble-outline"></ion-icon> {{item.comments.length}}</ion-button>
+					<ion-button class="socl-btn" (click)="viewPost(item)"><ion-icon name="chatbubble-outline"></ion-icon> <span class="padding-8"> {{item.comments.length}} </span></ion-button>
 					<ion-button class="socl-btn"  (click)="socialsharebranch(item)"><ion-icon name="share-social-outline"></ion-icon></ion-button>		
 					</ion-col>
 				</ion-row>

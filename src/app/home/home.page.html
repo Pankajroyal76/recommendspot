@@ -56,41 +56,56 @@
 					<span (click)="viewPost(item)" class="servcs-badge" *ngIf="item.category != ''">{{item.category}}</span>
 				</ion-item>
 			</div>
-			<div class="post-content" (click)="viewPost(item)">
-				<p>{{item.description}}</p>
+			<div class="post-content" style="position: relative;">
+				<p (click)="viewPost(item)">{{item.description}}</p>
+
+				<ng-container *ngIf="item?.type == 'Words'">
+					<ion-icon class="heart-icon weblink-icon" name="heart-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)" style="    bottom: 0%"></ion-icon>
+					<ion-icon class="heart-icon weblink-icon" name="heart" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)" style="    bottom: 0%"></ion-icon>
+				</ng-container>
 			</div>
 
 			<div *ngIf="errors.indexOf(item.web_link) == -1">
 
-			<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
-				<span style="color: blue;font-style: oblique;" > <a style="color: blue;font-style: oblique;" (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
+				<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
+				<span class="weblink"> <a (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
+
+				<ng-container *ngIf="errors.indexOf(item.web_link) == -1">
+					<ion-icon class="heart-icon weblink-icon" name="heart-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
+					<ion-icon class="heart-icon weblink-icon" name="heart" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon>
+				</ng-container>
 			</div>
+
+			
 			<div class="post-img" *ngIf="errors.indexOf(item.image) == -1 || item.image">
 				<img (click)="viewPost(item)"  src="{{IMAGES_URL + '/images/' + item.image}}">
 				
-				<!-- <ion-icon class="heart-icon" name="heart-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
-				<ion-icon class="heart-icon" name="heart" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon> -->
+				<ng-container >
+					<ion-icon class="heart-icon" name="heart-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
+					<ion-icon class="heart-icon" name="heart" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon>
+				</ng-container>
 			</div>	
 			<div class="post-share">
 				<ion-row>
 					<ion-col size="6">
 					
-						<ion-button class="socl-btn" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)">
+						<!-- <ion-button class="socl-btn" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)">
 
 							<ion-icon class="heart-icon" name="heart-outline" ></ion-icon>
 						</ion-button>
 						<ion-button class="socl-btn" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)">
 							<ion-icon class="heart-icon" name="heart" class="liked"></ion-icon>
-						</ion-button>
+						</ion-button> -->
 
 						<ion-button class="socl-btn" (click)="like(item.likes, i)">
 
-							<ion-icon name="{{isLikedPost(item.likes)}}"  [ngClass]="{'liked': isLikedPost(item.likes) == 'thumbs-up'}"></ion-icon> {{item.likes.length}}
+							<ion-icon name="{{isLikedPost(item.likes)}}"  [ngClass]="{'liked': isLikedPost(item.likes) == 'thumbs-up'}"></ion-icon> 
+							<span class="padding-8">{{item.likes.length}}</span>
 						</ion-button>
 
 					</ion-col>
 					<ion-col size="6" class="ion-text-right" >
-					<ion-button (click)="viewPost(item)" class="socl-btn"><ion-icon name="chatbubble-outline"></ion-icon> {{item.comments.length}} </ion-button>
+					<ion-button (click)="viewPost(item)" class="socl-btn"><ion-icon name="chatbubble-outline"></ion-icon> <span class="padding-8">{{item.comments.length}}</span> </ion-button>
 					<ion-button class="socl-btn" (click)="socialsharebranch(item)"><ion-icon name="share-social-outline"></ion-icon></ion-button>		
 					</ion-col>
 				</ion-row>

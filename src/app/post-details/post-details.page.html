@@ -20,7 +20,7 @@
 				<ion-row>
 					<ion-col size="12">
 						<div class="slide">
-							<div class="img-bx-sly storis" style="height: auto;">
+							<div class="img-bx-sly storis" style="height: auto;max-height: 225px;">
 
 								<span class="servcs-badge">{{post?.category}}</span>
 							<div class="post-content">
@@ -29,10 +29,10 @@
 
 							
 
-							<div *ngIf="errors.indexOf(post?.web_link) == -1">
+							<div *ngIf="errors.indexOf(post?.web_link) == -1" class="weblink">
 
-							<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
-								<span style="color: blue;font-style: oblique;" (click)="openLink(post?.web_link)">{{post?.web_link}}</span>
+								<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
+								<span (click)="openLink(post?.web_link)">{{post?.web_link}}</span>
 							</div>
 
 							
@@ -93,7 +93,7 @@
 						<span class="mesgs-number"> <ion-icon name="chatbubble-outline"></ion-icon> {{post?.comments?.length}}  </span>
 					</div>
 				</div>
-				<h4 class="ttl-main mt-20"> Comments ({{post?.comments?.length}} )</h4>
+				<h4 class="ttl-main mt-20"> Comments ({{post?.comments?.length}})</h4>
 				<div class="commnts" *ngIf="post?.comments?.length == 0">
 					<p>No comment posted yet!</p>
 				</div>

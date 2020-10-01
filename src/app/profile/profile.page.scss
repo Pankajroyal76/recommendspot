@@ -182,10 +182,11 @@ ion-content
 					font-size:14px;
 					color:#000;
 				    font-weight: 500;	
+				    text-transform: capitalize;
 				}
 				p
 				{
-					font-size:12px;
+					font-size:10px;
 					color:#555555;
 				}
 			}
@@ -227,6 +228,7 @@ ion-content
 					font-size:13px;
 					color:#000;
 				    font-weight: 400;	
+				    text-transform: capitalize;
 				}
 				p
 				{
@@ -250,4 +252,29 @@ ion-content
 	
 }
 }
+}
+
+.weblink {
+	color: #ed6234;
+    font-style: oblique;
+    min-width: 50%;
+    position: absolute;
+    margin-left: 2%;
+    text-decoration: underline;
+}
+
+.padding-8 {
+    padding: 2px;
+}
+
+.padding-left-3 {
+	padding-left: 3px;
+}
+
+.weblink-icon {
+    position: absolute;
+    /* bottom: 15px; */
+    right: 15px;
+    font-size: 24px;
+    color: #ee6234;
 }

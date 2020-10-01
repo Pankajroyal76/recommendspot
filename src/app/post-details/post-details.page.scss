@@ -123,6 +123,7 @@ ion-content[bg-grey] {
 			font-size: 16px;
 			margin-top: 2px;
 			margin-bottom: 0px;
+		    text-transform: capitalize;
 		}
 		span.time-al {
 			font-size: 10px;
@@ -181,8 +182,10 @@ ion-content[bg-grey] {
 			}
 			h5  {
 				font-size: 14px;
+				padding-top: 2%;
 				margin: 0px;
-				color: #ee6234;
+				color: #000;
+				text-transform: capitalize;
 				span.time-al {
 					float: right;
 					font-size: 10px;
@@ -206,6 +209,7 @@ ion-content[bg-grey] {
 	    padding-right: 60px;
 	    bottom: 14px;
 	    width: 91%;
+	    background: #fff;
 		ion-input {
 			background: #f9f9f9;
 			--padding: 14px;
@@ -280,3 +284,17 @@ span.servcs-badge
 	float: right;
 	margin-top: 10px;
 }	
+
+.weblink {
+    position: relative;
+    padding: 9px;
+    min-height: 46px;
+
+    span {
+	    font-style: oblique;
+	    position: absolute;
+	    margin-left: 3%;
+	    text-decoration: underline;
+	    color: #ed6234;
+    }
+}
