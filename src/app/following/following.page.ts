@@ -94,7 +94,9 @@ export class FollowingPage implements OnInit {
 
 	  	let dict = {
 	      userId: localStorage.getItem('userId'),
-	      friendId: item.friendData[0].friendId,
+	      //friendId: item.friendData[0].friendId,
+	      friendId: item._id,
+
 	    };
 	    this.apiService.presentLoading();
 	    this.apiService.postData(dict,'removeFriend').subscribe((result) => {
