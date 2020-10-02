@@ -21,6 +21,7 @@ import { Crop } from '@ionic-native/crop/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { AuthGuard } from './services/auth.guard';
 import { FCM } from '@ionic-native/fcm/ngx';
+import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 
 //services
 import { ApilinkService } from './services/apilink.service';
@@ -55,7 +56,8 @@ import { Http, HttpModule, RequestOptions } from '@angular/http';
     Crop,
     InAppBrowser,
     AuthGuard,
-    FCM
+    FCM,
+    PhotoViewer
   ],
   bootstrap: [AppComponent]
 })

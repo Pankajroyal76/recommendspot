@@ -37,7 +37,7 @@
 
 							
 								
-								<div class="post-img"  *ngIf="errors.indexOf(post?.image) == -1">
+								<div class="post-img"  *ngIf="errors.indexOf(post?.image) == -1" (click)="openImagePopup(IMAGES_URL + '/images/'  + post?.image)">
 									<img src="{{IMAGES_URL + '/images/'  + post?.image}}">
 									<!-- <span class="servcs-badge" *ngIf="post?.category == 'netflix'">Netlix Series</span>
 									<span class="servcs-badge" *ngIf="post?.category == 'stock'">Stock Market</span> -->

@@ -7,6 +7,9 @@ import { GlobalFooService } from '../services/globalFooService.service';
 import { config } from '../services/config';
 import { Location } from "@angular/common";
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { ImagepopupPage } from '../imagepopup/imagepopup.page';
+import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
+
 @Component({
   selector: 'app-post-details',
   templateUrl: './post-details.page.html',
@@ -21,7 +24,7 @@ export class PostDetailsPage implements OnInit {
   	IMAGES_URL: any = config.IMAGES_URL;
     errors: any = config.errors;
   	userId: any = localStorage.getItem('userId');
-  	constructor(public location: Location, public toastController: ToastController, public apiService: ApiserviceService, public loadingController: LoadingController, public router: Router, private globalFooService: GlobalFooService, private iab: InAppBrowser) { 
+  	constructor(public location: Location, public toastController: ToastController, public apiService: ApiserviceService, public loadingController: LoadingController, public router: Router, private globalFooService: GlobalFooService, private iab: InAppBrowser, public modalController: ModalController, private photoViewer: PhotoViewer) { 
       
     }
 
@@ -30,6 +33,10 @@ export class PostDetailsPage implements OnInit {
   	}
     ionViewDidEnter(){
         this.getData();
+    }
+
+    async openImagePopup(image) {
+      this.photoViewer.show(image);
     }
 
     getimage(img){
@@ -116,7 +123,6 @@ export class PostDetailsPage implements OnInit {
 		     }
 	      }
 	      
-	      console.log(likesArray)
 	      if(IsLiked){
 	        return 'thumbs-up';
 	      }else{

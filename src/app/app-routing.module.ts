@@ -73,7 +73,7 @@ const routes: Routes = [
   {
     path: 'followingfollowers',
     loadChildren: () => import('./followingfollowers/followingfollowers.module').then( m => m.FollowingfollowersPageModule)
-  },
+  }
 ];
 @NgModule({
   imports: [
