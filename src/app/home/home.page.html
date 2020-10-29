@@ -18,6 +18,17 @@
   
 
   </div>
+  <ion-item lines="none">
+		
+	
+  	<ion-label><span>Sort By</span></ion-label>
+  	<ion-select [interfaceOptions]="customAlertOptions" interface="alert" [(ngModel)]="type" (ionChange)="typeChange(type)">
+		<ion-select-option value="Saved"> Saved </ion-select-option>
+		<ion-select-option value="Likes"> Likes </ion-select-option>
+		<ion-select-option value="Comments"> Comments   </ion-select-option>
+		<ion-select-option value="Random"> Random   </ion-select-option>
+	</ion-select>
+</ion-item>
 
 <div class="home-sec">
      <ion-segment [(ngModel)]="profiletab" (ionChange)="onSegmentChange()" >
@@ -97,10 +108,16 @@
 							<ion-icon class="heart-icon" name="heart" class="liked"></ion-icon>
 						</ion-button> -->
 
-						<ion-button class="socl-btn" (click)="like(item.likes, i)">
 
-							<ion-icon name="{{isLikedPost(item.likes)}}"  [ngClass]="{'liked': isLikedPost(item.likes) == 'thumbs-up'}"></ion-icon> 
-							<span class="padding-8">{{item.likes.length}}</span>
+
+						<ion-button class="socl-btn" (click)="like(item.likes, item.dislikes, i)">
+
+							<ion-icon name="{{isLikedPost(item.likes)}}"  [ngClass]="{'liked': isLikedPost(item.likes) == 'thumbs-up'}"></ion-icon> {{item.likes.length}}
+						</ion-button>
+
+						<ion-button class="socl-btn" (click)="dislike(item.likes, item.dislikes, i)">
+
+							<ion-icon name="{{isDisLikedPost(item.dislikes)}}"  [ngClass]="{'liked': isDisLikedPost(item.dislikes) == 'thumbs-down'}"></ion-icon>{{item.dislikes.length}}
 						</ion-button>
 
 					</ion-col>
@@ -225,10 +242,10 @@
 No Record Found
 </div>
 
- <ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="is_response == true">
+<!--  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="is_response == true">
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
-
+ -->
 
 </ion-content>

@@ -79,16 +79,29 @@
 						</span>
 
 
-						<span class="likes-number"(click)="like(post?.likes)" *ngIf="post?.likes?.length > 0"> <!-- <img src="{{isLikedPost(post?.likes)}}">  -->
+						<span class="likes-number"(click)="like(post?.likes, post?.dislikes)" *ngIf="post?.likes?.length > 0"> <!-- <img src="{{isLikedPost(post?.likes)}}">  -->
 						<ion-icon name="{{isLikedPost(post?.likes)}}" [ngClass]="{'liked': isLikedPost(post?.likes) == 'thumbs-up'}"></ion-icon>
 
 						{{post?.likes?.length}} </span>
 
+						<span class="likes-number"(click)="dislike(post?.likes, post?.dislikes)" *ngIf="post?.dislikes?.length > 0"> <!-- <img src="{{isLikedPost(post?.likes)}}">  -->
+						<ion-icon name="{{isDisLikedPost(post?.dislikes)}}" [ngClass]="{'liked': isDisLikedPost(post?.dislikes) == 'thumbs-down'}"></ion-icon>
 
-						<span class="likes-number"(click)="like(post?.likes)" *ngIf="post?.likes?.length == 0"> <!-- <img src="{{isLikedPost(post?.likes)}}">  -->
+						{{post?.dislikes?.length}} </span>
+
+
+
+
+						<span class="likes-number"(click)="like(post?.likes, post?.dislikes)" *ngIf="post?.likes?.length == 0"> <!-- <img src="{{isLikedPost(post?.likes)}}">  -->
 						<ion-icon name="thumbs-up-outline"></ion-icon>
 
 						{{post?.likes?.length}} </span>
+
+
+						<span class="likes-number"(click)="like(post?.likes, post?.dislikes)" *ngIf="post?.dislikes?.length == 0"> <!-- <img src="{{isLikedPost(post?.likes)}}">  -->
+						<ion-icon name="thumbs-down-outline"></ion-icon>
+
+						{{post?.dislikes?.length}} </span>
 
 						<span class="mesgs-number"> <ion-icon name="chatbubble-outline"></ion-icon> {{post?.comments?.length}}  </span>
 					</div>

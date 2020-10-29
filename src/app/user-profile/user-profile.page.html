@@ -107,7 +107,30 @@
 					<ion-icon class="heart-icon" name="heart" class="liked"></ion-icon>
 					</ion-button> -->
 
-					<ion-button class="socl-btn" (click)="like(item.likes, i)"><ion-icon name="{{isLikedPost(item.likes)}}" [ngClass]="{'liked': isLikedPost(item.likes) == 'thumbs-up'}"></ion-icon>{{item.likes.length}}</ion-button>
+					<ion-button class="socl-btn" *ngIf="errors.indexOf(loggedUserId) >= 0" (click)="viewPost(item)">
+
+						<ion-icon name="thumbs-up-outline"></ion-icon> {{item.likes.length}}
+					</ion-button>
+
+					<ion-button class="socl-btn" *ngIf="errors.indexOf(loggedUserId) >= 0" (click)="viewPost(item)">
+
+						<ion-icon name="thumbs-down-outline"></ion-icon>{{item.dislikes.length}}
+					</ion-button>
+
+					<ion-button class="socl-btn" (click)="like(item.likes, item.dislikes, i)" *ngIf="errors.indexOf(loggedUserId) == -1">
+
+						<ion-icon name="{{isLikedPost(item.likes)}}"  [ngClass]="{'liked': isLikedPost(item.likes) == 'thumbs-up'}"></ion-icon> {{item.likes.length}}
+					</ion-button>
+
+					<ion-button class="socl-btn" (click)="dislike(item.likes, item.dislikes, i)" *ngIf="errors.indexOf(loggedUserId) == -1">
+
+						<ion-icon name="{{isDisLikedPost(item.dislikes)}}"  [ngClass]="{'liked': isDisLikedPost(item.dislikes) == 'thumbs-down'}"></ion-icon>{{item.dislikes.length}}
+					</ion-button>
+
+
+
+
+					<!-- <ion-button class="socl-btn" (click)="like(item.likes, i)"><ion-icon name="{{isLikedPost(item.likes)}}" [ngClass]="{'liked': isLikedPost(item.likes) == 'thumbs-up'}"></ion-icon>{{item.likes.length}}</ion-button> -->
 					</ion-col>
 					<ion-col size="6" class="ion-text-right">
 					<ion-button class="socl-btn" (click)="viewPost(item)"><ion-icon name="chatbubble-outline"></ion-icon> {{item.comments.length}} </ion-button>

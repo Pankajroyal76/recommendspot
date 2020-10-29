@@ -3,7 +3,7 @@
   <ion-menu-button slot="start">
 <img height="15px" src="assets/img/menu.png"/>
   </ion-menu-button>
-    <ion-title class="ion-text-center">Add Recommendation</ion-title>
+    <ion-title class="ion-text-center">Save Reccomendation</ion-title>
 	
   </ion-toolbar>
 </ion-header>
@@ -60,5 +60,5 @@
 	<span error *ngIf=" type == 'Website' && errors.indexOf(web_link) >= 0 && is_submit == true">Please enter web link</span>
 	<span error *ngIf=" type == 'Website' && errors.indexOf(web_link) == -1 && !expression.test(web_link) && is_submit == true">Please enter valid web link (i.e. http://www.example.com, https://www.example.com, www.example.com, example.com)</span>
 </div>
-<ion-button color="secondary" expand="full" shape="round" (click)="add_recc()">Submit</ion-button>
+<ion-button color="secondary" expand="full" shape="round" (click)="add_recc()">Save Reccomendation</ion-button>
 </ion-content>

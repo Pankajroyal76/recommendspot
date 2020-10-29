@@ -173,81 +173,152 @@ export class UserProfilePage implements OnInit {
 	    });
   	}
 
-    like(likesArray, index){
-      if(this.errors.indexOf(this.loggedUserId) == -1){
-      	let IsLiked = false;
-            let likeId = null;
-            for(var i=0; i < likesArray.length; i++)
+    like(likesArray,dislikesArray, index){
+      let IsLiked = false;
+      let likeId = null;
+      for(var i=0; i < likesArray.length; i++)
+      {
+        if(likesArray[i].userId == localStorage.getItem('userId')){
+          IsLiked = true;
+          likeId = likesArray[i]._id;
+        }
+      }
+
+      let dict = {
+        userId: this.userId,
+        _id: likeId,
+        postId: this.data.post[index]._id
+      };
+
+      let ApiEndPoint = IsLiked == true ? 'deleteLike' : 'addLike';
+
+      this.apiService.presentLoading();
+      this.apiService.postData(dict,ApiEndPoint).subscribe((result) => {
+        this.apiService.stopLoading();
+        if(result.status == 1){
+          if(!IsLiked){
+            this.data.post[index].likes.push(result.data);
+          for(var i=0; i < dislikesArray.length; i++)
             {
-              if(likesArray[i].userId == localStorage.getItem('userId')){
-                IsLiked = true;
-                likeId = likesArray[i]._id;
+              if(dislikesArray[i].userId == this.userId){
+                this.data.post[index].dislikes.splice(i, 1);
               }
             }
-      
-            let dict = {
-              userId: this.loggedUserId,
-              _id: likeId,
-              postId: this.data.post[index]._id
-            };
-      
-            let ApiEndPoint = IsLiked == true ? 'deleteLike' : 'addLike';
-      
-            this.apiService.presentLoading();
-            this.apiService.postData(dict,ApiEndPoint).subscribe((result) => {
-              this.apiService.stopLoading();
-              if(result.status == 1){
-                if(!IsLiked){
-                  this.data.post[index].likes.push(result.data);
-                }else{
-                  for(var i=0; i < likesArray.length; i++)
-                  {
-                    if(likesArray[i].userId == this.loggedUserId){
-                      this.data.post[index].likes.splice(i, 1);
-                    }
-                  }
-                }
+          }else{
+            for(var i=0; i < likesArray.length; i++)
+            {
+              if(likesArray[i].userId == this.userId){
+                this.data.post[index].likes.splice(i, 1);
+              }
+            }
+          }
+        }
+        else{
+          this.apiService.presentToast('Technical error,Please try after some time.','danger');
+        }
+      },
+      err => {
+        this.apiService.stopLoading();
+          this.apiService.presentToast('Technical error,Please try after some time.','danger');
+      });
+    };
 
-                this.globalFooService.publishSomeData({
-                    foo: {'data': '', 'page': 'profile'}
-                });
+    dislike(likesArray, dislikesArray, index){
+      let IsLiked = false;
+      let likeId = null;
+      for(var i=0; i < dislikesArray.length; i++)
+      {
+        if(dislikesArray[i].userId == localStorage.getItem('userId')){
+          IsLiked = true;
+          likeId = dislikesArray[i]._id;
+        }
+      }
+
+      let dict = {
+        userId: this.userId,
+        _id: likeId,
+        postId: this.data.post[index]._id
+      };
+
+      let ApiEndPoint = IsLiked == true ? 'deleteDisLike' : 'addDisLike';
+
+      this.apiService.presentLoading();
+      this.apiService.postData(dict,ApiEndPoint).subscribe((result) => {
+        this.apiService.stopLoading();
+        if(result.status == 1){
+          if(!IsLiked){
+            this.data.post[index].dislikes.push(result.data);
+            for(var i=0; i < likesArray.length; i++)
+            {
+              if(likesArray[i].userId == this.userId){
+                this.data.post[index].likes.splice(i, 1);
               }
-              else{
-                this.apiService.presentToast('Technical error,Please try after some time.','danger');
+            }
+          }else{
+            for(var i=0; i < dislikesArray.length; i++)
+            {
+              if(dislikesArray[i].userId == this.userId){
+                this.data.post[index].dislikes.splice(i, 1);
               }
-            },
-            err => {
-              this.apiService.stopLoading();
-                this.apiService.presentToast('Technical error,Please try after some time.','danger');
-            });}
+            }
+          }
+        }
+        else{
+          this.apiService.presentToast('Technical error,Please try after some time.','danger');
+        }
+      },
+      err => {
+        this.apiService.stopLoading();
+          this.apiService.presentToast('Technical error,Please try after some time.','danger');
+      });
     };
 
 
     isLikedPost(likesArray){
-      	//assets/imgs/like.png
-      	if(this.errors.indexOf(this.loggedUserId) == -1){
+        //assets/imgs/like.png
+        if(this.errors.indexOf(this.loggedUserId) == -1){
 
-	      let IsLiked = false;
-	      if(likesArray.length == 0){
+        let IsLiked = false;
+        if(likesArray.length == 0){
 
-	      }else{
-	      	for(var i=0; i < likesArray.length; i++){
-		       
-		        if(likesArray[i].userId == this.loggedUserId){
-		          IsLiked = true;
-		        }
-		     }
-	      }
-	      
-	      console.log(likesArray)
-	      if(IsLiked){
-	        return 'thumbs-up';
-	      }else{
-	        return 'thumbs-up-outline';
-	      }
-	  	}else{
-	  		return 'thumbs-up-outline';
-	  	}
+        }else{
+          for(var i=0; i < likesArray.length; i++){
+           
+            if(likesArray[i].userId == this.loggedUserId){
+              IsLiked = true;
+            }
+         }
+        }
+        
+        console.log(likesArray)
+        if(IsLiked){
+          return 'thumbs-up';
+        }else{
+          return 'thumbs-up-outline';
+        }
+      }else{
+        return 'thumbs-up-outline';
+      }
+    }
+    isDisLikedPost(dislikesArray){
+      //assets/imgs/like.png
+      let IsLiked = false;
+      if(dislikesArray.length == 0){
+
+      }else{
+        for(var i=0; i < dislikesArray.length; i++){
+         
+          if(dislikesArray[i].userId == this.userId){
+            IsLiked = true;
+          }
+       }
+      }
+      
+      if(IsLiked){
+        return 'thumbs-down';
+      }else{
+        return 'thumbs-down-outline';
+      }
     }
 
      viewPost(post){

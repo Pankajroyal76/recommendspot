@@ -37,6 +37,7 @@ export class HomePage implements OnInit {
   	hideMe = false;
   	selectedItemm = -1;
   	open = false;
+  	type = 'Random';
   	
 
   	constructor(public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private menuCtrl: MenuController, private globalFooService: GlobalFooService, public alertController: AlertController,private formBuilder: FormBuilder,private renderer: Renderer2, private iab: InAppBrowser) { 
@@ -76,6 +77,60 @@ export class HomePage implements OnInit {
   		this.selectedItemm = i;
 
   	}
+
+  	typeChange(type){
+      if(type == 'Saved'){
+    	for (let i = 0; i < this.posts.length; i++) {
+		    // loop through the array, moving forwards:
+		    // note in loop below we set `j = i` so we move on after finding greatest value:
+		    for (let j = i; j < this.posts.length; j++) {
+
+	     	if (parseInt(this.posts[i].fav) < parseInt(this.posts[j].fav)) {
+		      	let temp = this.posts[i]; // store original value for swapping
+		        this.posts[i] = this.posts[j]; // set original value position to greater value
+		        this.posts[j] = temp; // set greater value position to original value
+	      	};
+		      
+		    };
+	  	};
+      }else if(type == 'Comments'){
+       	for (let i = 0; i < this.posts.length; i++) {
+		    // loop through the array, moving forwards:
+		    // note in loop below we set `j = i` so we move on after finding greatest value:
+		    for (let j = i; j < this.posts.length; j++) {
+
+		      if (this.posts[i].comment_count < this.posts[j].comment_count) {
+		        let temp = this.posts[i]; // store original value for swapping
+		        this.posts[i] = this.posts[j]; // set original value position to greater value
+		        this.posts[j] = temp; // set greater value position to original value
+		      }
+		      
+		    };
+	  	};
+      }else if(type == 'Likes'){
+       	for (let i = 0; i < this.posts.length; i++) {
+		    // loop through the array, moving forwards:
+		    // note in loop below we set `j = i` so we move on after finding greatest value:
+		    for (let j = i; j < this.posts.length; j++) {
+
+	  
+
+		      if (this.posts[i].like_count < this.posts[j].like_count) {
+		      	let temp = this.posts[i]; // store original value for swapping
+		        this.posts[i] = this.posts[j]; // set original value position to greater value
+		        this.posts[j] = temp; // set greater value position to original value
+		      };
+		    
+
+
+		      
+		    };
+	  	};
+      }else{
+      	 this.getAllReccomdations(false, '');
+      }
+      
+    }
 
   	getimage(img){
   		if(this.errors.indexOf(img) == -1){
@@ -138,20 +193,76 @@ export class HomePage implements OnInit {
 	      	this.is_response = true;
 	        // this.posts = result;
 
-	        if(result.length == 0){
-	          this.is_response = false;
-	          event.target.complete();
-	        }else{
+	        for (let i = 0; i < result.data.length; i++) {
+          // loop through the array, moving forwards:
+          // note in loop below we set `j = i` so we move on after finding greatest value:
+          for (let j = i; j < result.data.length; j++) {
+
+          if (parseInt(result.data[i].fav) < parseInt(result.data[j].fav)) {
+              let temp = result.data[i]; // store original value for swapping
+              result.data[i] = result.data[j]; // set original value position to greater value
+              result.data[j] = temp; // set greater value position to original value
+            };
+            if (result.data[i].comment_count < result.data[j].comment_count) {
+              if (result.data[i].comment_count < result.data[j].like_count) {
+
+                let temp = result.data[i]; // store original value for swapping
+                result.data[i] = result.data[j]; // set original value position to greater value
+                result.data[j] = temp; // set greater value position to original value
+            }else{
+              if (result.data[i].like_count < result.data[j].comment_count) {
+                  let temp = result.data[i]; // store original value for swapping
+                  result.data[i] = result.data[j]; // set original value position to greater value
+                  result.data[j] = temp; // set greater value position to original value
+              };
+            }
+            }else if (result.data[i].like_count < result.data[j].like_count) {
+               if (result.data[i].like_count < result.data[j].comment_count) {
+                let temp = result.data[i]; // store original value for swapping
+                result.data[i] = result.data[j]; // set original value position to greater value
+                result.data[j] = temp; // set greater value position to original value
+            }else{
+              if (result.data[i].comment_count < result.data[j].like_count) {
+
+                  let temp = result.data[i]; // store original value for swapping
+                  result.data[i] = result.data[j]; // set original value position to greater value
+                  result.data[j] = temp; // set greater value position to original value
+              }
+            };
+            };
+            // if (result.data[i].comment_count < result.data[j].like_count) {
+            //   let temp = result.data[i]; // store original value for swapping
+            //   result.data[i] = result.data[j]; // set original value position to greater value
+            //   result.data[j] = temp; // set greater value position to original value
+            // }
+            // if (result.data[i].like_count < result.data[j].comment_count) {
+            //  let temp = result.data[i]; // store original value for swapping
+            //   result.data[i] = result.data[j]; // set original value position to greater value
+            //   result.data[j] = temp; // set greater value position to original value
+            // };
+
+
+
+            
+          };
+        };
+
+        this.posts = result.data;
+
+	     //    if(result.length == 0){
+	     //      this.is_response = false;
+	     //      event.target.complete();
+	     //    }else{
         
-           for (let i = 0; i < result.data.length; i++) {
-            this.posts.push(result.data[i]);
-          }
+      //      for (let i = 0; i < result.data.length; i++) {
+      //       this.posts.push(result.data[i]);
+      //     }
 
-        if (isFirstLoad)
-          event.target.complete();
+      //   if (isFirstLoad)
+      //     event.target.complete();
 
-        this.page_number++;
-      }
+      //   this.page_number++;
+      // }
 	    });
   	}
 
@@ -214,7 +325,7 @@ export class HomePage implements OnInit {
 		this.win.plugins.socialsharing.shareWithOptions(options, onSuccess, onError);
   	}
 
-  	like(likesArray, index){
+  	like(likesArray,dislikesArray, index){
       let IsLiked = false;
       let likeId = null;
       for(var i=0; i < likesArray.length; i++)
@@ -239,11 +350,67 @@ export class HomePage implements OnInit {
         if(result.status == 1){
           if(!IsLiked){
             this.posts[index].likes.push(result.data);
+         	for(var i=0; i < dislikesArray.length; i++)
+            {
+              if(dislikesArray[i].userId == this.userId){
+                this.posts[index].dislikes.splice(i, 1);
+              }
+            }
           }else{
             for(var i=0; i < likesArray.length; i++)
             {
               if(likesArray[i].userId == this.userId){
                 this.posts[index].likes.splice(i, 1);
+              }
+            }
+          }
+        }
+        else{
+          this.apiService.presentToast('Technical error,Please try after some time.','danger');
+        }
+      },
+      err => {
+        this.apiService.stopLoading();
+          this.apiService.presentToast('Technical error,Please try after some time.','danger');
+      });
+    };
+
+    dislike(likesArray, dislikesArray, index){
+      let IsLiked = false;
+      let likeId = null;
+      for(var i=0; i < dislikesArray.length; i++)
+      {
+        if(dislikesArray[i].userId == localStorage.getItem('userId')){
+          IsLiked = true;
+          likeId = dislikesArray[i]._id;
+        }
+      }
+
+      let dict = {
+        userId: this.userId,
+        _id: likeId,
+        postId: this.posts[index]._id
+      };
+
+      let ApiEndPoint = IsLiked == true ? 'deleteDisLike' : 'addDisLike';
+
+      this.apiService.presentLoading();
+      this.apiService.postData(dict,ApiEndPoint).subscribe((result) => {
+        this.apiService.stopLoading();
+        if(result.status == 1){
+          if(!IsLiked){
+            this.posts[index].dislikes.push(result.data);
+            for(var i=0; i < likesArray.length; i++)
+            {
+              if(likesArray[i].userId == this.userId){
+                this.posts[index].likes.splice(i, 1);
+              }
+            }
+          }else{
+            for(var i=0; i < dislikesArray.length; i++)
+            {
+              if(dislikesArray[i].userId == this.userId){
+                this.posts[index].dislikes.splice(i, 1);
               }
             }
           }
@@ -277,6 +444,27 @@ export class HomePage implements OnInit {
         return 'thumbs-up';
       }else{
         return 'thumbs-up-outline';
+      }
+    }
+
+    isDisLikedPost(dislikesArray){
+      //assets/imgs/like.png
+      let IsLiked = false;
+      if(dislikesArray.length == 0){
+
+      }else{
+      	for(var i=0; i < dislikesArray.length; i++){
+	       
+	        if(dislikesArray[i].userId == this.userId){
+	          IsLiked = true;
+	        }
+	     }
+      }
+      
+      if(IsLiked){
+        return 'thumbs-down';
+      }else{
+        return 'thumbs-down-outline';
       }
     }
 

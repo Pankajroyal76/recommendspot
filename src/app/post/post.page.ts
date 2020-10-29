@@ -29,6 +29,7 @@ export class PostPage implements OnInit {
 	userId = localStorage.getItem('userId');	
 	counter = 0;
 	keyword = '';
+  type = 'Random';
 	
 	hide() {
 		this.hideMe = !this.hideMe;
@@ -88,6 +89,59 @@ export class PostPage implements OnInit {
 	    this.page_number = 1;
 	    this.getAllReccomdations(false, '');
   	}
+      typeChange(type){
+      if(type == 'Saved'){
+      for (let i = 0; i < this.posts.length; i++) {
+        // loop through the array, moving forwards:
+        // note in loop below we set `j = i` so we move on after finding greatest value:
+        for (let j = i; j < this.posts.length; j++) {
+
+        if (parseInt(this.posts[i].fav) < parseInt(this.posts[j].fav)) {
+            let temp = this.posts[i]; // store original value for swapping
+            this.posts[i] = this.posts[j]; // set original value position to greater value
+            this.posts[j] = temp; // set greater value position to original value
+          };
+          
+        };
+      };
+      }else if(type == 'Comments'){
+        for (let i = 0; i < this.posts.length; i++) {
+        // loop through the array, moving forwards:
+        // note in loop below we set `j = i` so we move on after finding greatest value:
+        for (let j = i; j < this.posts.length; j++) {
+
+          if (this.posts[i].comment_count < this.posts[j].comment_count) {
+            let temp = this.posts[i]; // store original value for swapping
+            this.posts[i] = this.posts[j]; // set original value position to greater value
+            this.posts[j] = temp; // set greater value position to original value
+          }
+          
+        };
+      };
+      }else if(type == 'Likes'){
+        for (let i = 0; i < this.posts.length; i++) {
+        // loop through the array, moving forwards:
+        // note in loop below we set `j = i` so we move on after finding greatest value:
+        for (let j = i; j < this.posts.length; j++) {
+
+    
+
+          if (this.posts[i].like_count < this.posts[j].like_count) {
+            let temp = this.posts[i]; // store original value for swapping
+            this.posts[i] = this.posts[j]; // set original value position to greater value
+            this.posts[j] = temp; // set greater value position to original value
+          };
+        
+
+
+          
+        };
+      };
+      }else{
+         this.getAllReccomdations(false, '');
+      }
+      
+    }
 
 
   	getAllReccomdations(isFirstLoad, event){
@@ -111,20 +165,76 @@ export class PostPage implements OnInit {
 	      	this.is_response = true;
 	        // this.posts = result;
 
-	        if(result.length == 0){
-	          this.is_response = false;
-	          event.target.complete();
-	        }else{
+          for (let i = 0; i < result.data.length; i++) {
+          // loop through the array, moving forwards:
+          // note in loop below we set `j = i` so we move on after finding greatest value:
+          for (let j = i; j < result.data.length; j++) {
+
+          if (parseInt(result.data[i].fav) < parseInt(result.data[j].fav)) {
+              let temp = result.data[i]; // store original value for swapping
+              result.data[i] = result.data[j]; // set original value position to greater value
+              result.data[j] = temp; // set greater value position to original value
+            };
+            if (result.data[i].comment_count < result.data[j].comment_count) {
+              if (result.data[i].comment_count < result.data[j].like_count) {
+
+                let temp = result.data[i]; // store original value for swapping
+                result.data[i] = result.data[j]; // set original value position to greater value
+                result.data[j] = temp; // set greater value position to original value
+            }else{
+              if (result.data[i].like_count < result.data[j].comment_count) {
+                  let temp = result.data[i]; // store original value for swapping
+                  result.data[i] = result.data[j]; // set original value position to greater value
+                  result.data[j] = temp; // set greater value position to original value
+              };
+            }
+            }else if (result.data[i].like_count < result.data[j].like_count) {
+               if (result.data[i].like_count < result.data[j].comment_count) {
+                let temp = result.data[i]; // store original value for swapping
+                result.data[i] = result.data[j]; // set original value position to greater value
+                result.data[j] = temp; // set greater value position to original value
+            }else{
+              if (result.data[i].comment_count < result.data[j].like_count) {
+
+                  let temp = result.data[i]; // store original value for swapping
+                  result.data[i] = result.data[j]; // set original value position to greater value
+                  result.data[j] = temp; // set greater value position to original value
+              }
+            };
+            };
+            // if (result.data[i].comment_count < result.data[j].like_count) {
+            //   let temp = result.data[i]; // store original value for swapping
+            //   result.data[i] = result.data[j]; // set original value position to greater value
+            //   result.data[j] = temp; // set greater value position to original value
+            // }
+            // if (result.data[i].like_count < result.data[j].comment_count) {
+            //  let temp = result.data[i]; // store original value for swapping
+            //   result.data[i] = result.data[j]; // set original value position to greater value
+            //   result.data[j] = temp; // set greater value position to original value
+            // };
+
+
+
+            
+          };
+        };
+
+        this.posts = result.data;
+
+	     //    if(result.length == 0){
+	     //      this.is_response = false;
+	     //      event.target.complete();
+	     //    }else{
         
-           for (let i = 0; i < result.data.length; i++) {
-            this.posts.push(result.data[i]);
-          }
+      //      for (let i = 0; i < result.data.length; i++) {
+      //       this.posts.push(result.data[i]);
+      //     }
 
-        if (isFirstLoad)
-          event.target.complete();
+      //   if (isFirstLoad)
+      //     event.target.complete();
 
-        this.page_number++;
-      }
+      //   this.page_number++;
+      // }
 	    });
   	}
 
