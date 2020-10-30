@@ -1,3 +1,25 @@
+<div headerWeb>
+  <a href="javascript:void(0)" logo>Favreek</a>
+  <div ritHeader>
+    <ul>
+      <li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
+      <li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
+      <li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Save Reccomendation</a></li>
+       
+    </ul>
+    <a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon></a>
+    <span proImg routerLink="/tabs/profile">
+      <img src="assets/img/user4.jpg" alt="">
+       <p>Priyanka S. <small>priyankasharma@gmail.com</small></p>
+			<div profileDropdown>
+				<ul>
+					<li><a href="javascript:void(0)" routerLink="/profile-setting">Profile Settings</a></li>
+					<li><a href="javascript:void(0)">Logout</a></li>
+				</ul>
+			</div>
+    </span>
+  </div>
+</div>
 <ion-header>
   <ion-toolbar color="secondary">
   <!--ion-menu-button slot="start">
@@ -10,6 +32,8 @@
 </ion-header>
 
 <ion-content>
+
+  <div container>
   <div profileinfo>
     <div profileimg [style.backgroundImage]="'url(' + bgImage + ')'">
     <label  (click)="selectCoverImage('cover')" class="cover-label">
@@ -131,4 +155,9 @@
     
     </div>
   </div>
+</div>
 </ion-content>
+<div footerWeb>
+  <p>© 2020 Favreet. All rights reserved.</p>
+</div>
+

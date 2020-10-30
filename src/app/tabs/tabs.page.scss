@@ -50,3 +50,12 @@ ion-label
 }
 }
 }
+
+
+@media (min-width:1024px){
+    [mobileTabs]{
+        ion-tab-bar{
+            display: none !important;
+        }
+    }
+}
