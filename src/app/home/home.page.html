@@ -126,7 +126,7 @@
 								<div class="linkcontent" *ngIf="item.web_link_content != null" (click)="openLinkPreview(item.web_link_content.url)">
 				
 									<ion-row>
-										<ion-col size="3" *ngIf="item.web_link_content?.image != ''">
+										<ion-col size="3" size-md="1" *ngIf="item.web_link_content?.image != ''">
 											<img src="{{item.web_link_content?.image}}" />
 										</ion-col>
 

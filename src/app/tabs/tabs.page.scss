@@ -3,11 +3,11 @@ ion-tabs
 ion-tab-bar
 {
 contain:initial!important;
-ion-tab-button
-{
-ion-icon
-{
-    font-size: 20px;color:#b1b1b1;
+ion-tab-button{
+    min-width: 20%;
+ion-icon{
+    font-size: 20px;
+    color:#b1b1b1;
 }
 img 
 {
@@ -16,14 +16,16 @@ img
 }
 ion-label
 {
-    font-size: 10px;color:#b1b1b1;
+    font-size: 10px;
+    color:#b1b1b1;
+        white-space: nowrap;
 }
-&[home] {
+&[home]{
 
-   ion-icon
-{
-    font-size: 24px;color:#fff
-}
+   ion-icon{
+    font-size: 24px;
+    color:#fff
+    }
     height: 45px;
     max-width: 45px;
     min-width: 45px;
@@ -47,6 +49,16 @@ ion-label
     color: #fff;
 }	
 }
+&:nth-child(2){
+    ion-label{
+        font-size: 10px;
+        color:#b1b1b1;
+        white-space: nowrap;
+        text-overflow:ellipsis;
+        max-width:80px;
+    }
+}
+
 }
 }
 }

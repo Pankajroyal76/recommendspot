@@ -43,23 +43,22 @@
 			<p>Look at what these people are recommending</p>
 		</div>
 		<!--  (ngSubmit)="search()"  -->
-		<form [formGroup]="authForm" (ngSubmit)="search()">
-			<ion-searchbar placeholder="Search here..."  formControlName="keyword">
+		<div webPostsearch>
+			<form [formGroup]="authForm" (ngSubmit)="search()">
+				<ion-searchbar placeholder="Search here..."  formControlName="keyword">
 
-			</ion-searchbar>
-		</form>
-
-		<ion-item lines="none">
-
-
-			<ion-label><span>Sort By</span></ion-label>
-			<ion-select [interfaceOptions]="customAlertOptions" interface="alert" [(ngModel)]="type" (ionChange)="typeChange(type)">
-				<!-- <ion-select-option value="Saved"> Saved </ion-select-option> -->
-				<ion-select-option value="Likes"> Likes </ion-select-option>
-				<ion-select-option value="Comments"> Comments   </ion-select-option>
-				<ion-select-option value="Random"> Random   </ion-select-option>
-			</ion-select>
-		</ion-item>
+				</ion-searchbar>
+			</form>
+			<ion-item lines="none">
+				<ion-label><span>Sort By</span></ion-label>
+				<ion-select [interfaceOptions]="customAlertOptions" interface="alert" [(ngModel)]="type" (ionChange)="typeChange(type)">
+					<!-- <ion-select-option value="Saved"> Saved </ion-select-option> -->
+					<ion-select-option value="Likes"> Likes </ion-select-option>
+					<ion-select-option value="Comments"> Comments   </ion-select-option>
+					<ion-select-option value="Random"> Random   </ion-select-option>
+				</ion-select>
+			</ion-item>
+		</div>
 
 		<ion-card post-sec-mn *ngFor="let item of posts | appFilter: authForm.value.keyword; let i = index;">
 			<div class="post-name">	
@@ -88,7 +87,7 @@
 					<div class="linkcontent" *ngIf="item.web_link_content != null" (click)="openLinkPreview(item.web_link_content.url)">
 				
 					<ion-row>
-						<ion-col size="3" *ngIf="item.web_link_content?.image != ''">
+						<ion-col size="3" size-md="1" *ngIf="item.web_link_content?.image != ''">
 							<img src="{{item.web_link_content?.image}}" />
 						</ion-col>
 
