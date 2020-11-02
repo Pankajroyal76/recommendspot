@@ -1,6 +1,6 @@
 <div headerWeb>
-	<a href="javascript:void(0)" logo>Favreek</a>
-	<div ritHeader>
+	<a href="javascript:void(0)" logo>Favreet</a>
+	<div ritHeader [style.height]="errors.indexOf(user_id) >= 0 ? '66px' : '' ">
 		<ul>
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
 			<li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
@@ -8,13 +8,16 @@
 			 
 		</ul>
 		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon></a>
-		<span proImg routerLink="/tabs/profile">
-			<img src="assets/img/user4.jpg" alt="">
-			 <p>Priyanka S. <small>priyankasharma@gmail.com</small></p>
+		<span proImg *ngIf="errors.indexOf(user_id) == -1">
+			<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
+	        <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
+	       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) >= 0" src="assets/img/default.png">
+
+			<p routerLink="/tabs/profile"><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
 			<div profileDropdown>
 				<ul>
-					<li><a href="javascript:void(0)" routerLink="/profile-setting">Profile Settings</a></li>
-					<li><a href="javascript:void(0)">Logout</a></li>
+					<li><a href="javascript:void(0)" routerLink="/profile-setting/{{user_id}}">Profile Settings</a></li>
+					<li (click)="logout()"><a href="javascript:void(0)">Logout</a></li>
 				</ul>
 			</div>
 		</span>
@@ -58,6 +61,22 @@
 
 								<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
 								<span (click)="openLink(post?.web_link)">{{post?.web_link}}</span>
+								<div class="linkcontent" *ngIf=" post?.web_link_content != null" (click)="openLinkPreview(post?.web_link_content.url)">
+				
+								<ion-row>
+									<ion-col size="3" *ngIf="post?.web_link_content?.image != ''">
+										<img src="{{post?.web_link_content?.image}}" />
+									</ion-col>
+
+									<ion-col size="{{post?.web_link_content?.title != '' ? 9 : 12}}">
+										<p *ngIf="post?.web_link_content?.title != ''">{{post?.web_link_content?.title}}</p>
+										<p *ngIf="post?.web_link_content?.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
+										<p *ngIf="post?.web_link_content?.title != ''">{{post?.web_link_content?.description}}</p>
+										<p *ngIf="post?.web_link_content?.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
+									</ion-col>
+								</ion-row>
+								
+							</div>
 							</div>
 
 							

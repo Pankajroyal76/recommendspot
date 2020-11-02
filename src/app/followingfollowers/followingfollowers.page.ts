@@ -17,6 +17,10 @@ export class FollowingfollowersPage implements OnInit {
 	errors = config.errors;
 	is_response = false;
 	str = 'Following';
+	user_name: any;
+    user_image: any;
+    user_email: any;
+    user_id: any;
 
 
   	constructor(public location: Location,public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService) { 
@@ -28,14 +32,29 @@ export class FollowingfollowersPage implements OnInit {
 	    	this.str = 'Following';
 	    }
 
+	    this.user_name = localStorage.getItem('user_name');
+        this.user_image = localStorage.getItem('user_image');
+        this.user_email = localStorage.getItem('user_email');
+        this.user_id = localStorage.getItem('userId');
+       
+
   		this.globalFooService.getObservable().subscribe((data) => {
-          console.log('Data received', data);
+          	console.log('Data received', data);
+          	this.user_name = localStorage.getItem('user_name');
+            this.user_image = localStorage.getItem('user_image');
+            this.user_email = localStorage.getItem('user_email');
+            this.user_id = localStorage.getItem('userId');
           	if(localStorage.getItem('friend') == 'follower'){
 	    		this.str = 'Follower';
 		    }else{
 		    	this.str = 'Following';
 		    }
       	});
+  	}
+
+  	logout(){
+	    localStorage.clear();
+	    this.router.navigate(['/']);
   	}
 
   	ngOnInit() {

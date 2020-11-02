@@ -1,5 +1,5 @@
 <div headerWeb>
-	<a href="javascript:void(0)" logo>Favreek</a>
+	<a href="javascript:void(0)" logo>Favreet</a>
 	<div ritHeader>
 		<ul>
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
@@ -14,7 +14,7 @@
 			<div profileDropdown>
 				<ul>
 					<li><a href="javascript:void(0)" routerLink="/profile-setting">Profile Settings</a></li>
-					<li><a href="javascript:void(0)">Logout</a></li>
+					<li (click)="logout()"><a href="javascript:void(0)">Logout</a></li>
 				</ul>
 			</div>
 		</span>
@@ -104,6 +104,23 @@
 
 			<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
 				<span class="weblink" (click)="openLink(item.web_link)"><a (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
+
+				<div class="linkcontent" *ngIf="item.web_link_content != null" (click)="openLinkPreview(item.web_link_content.url)">
+				
+					<ion-row>
+						<ion-col size="3" *ngIf="item.web_link_content?.image != ''">
+							<img src="{{item.web_link_content?.image}}" />
+						</ion-col>
+
+						<ion-col size="{{item.web_link_content?.title != '' ? 9 : 12}}">
+							<p *ngIf="item.web_link_content?.title != ''">{{item.web_link_content?.title}}</p>
+							<p *ngIf="item.web_link_content?.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
+							<p *ngIf="item.web_link_content?.title != ''">{{item.web_link_content?.description}}</p>
+							<p *ngIf="item.web_link_content?.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
+						</ion-col>
+					</ion-row>
+					
+				</div>
 
 				<ng-container *ngIf="errors.indexOf(item.web_link) == -1">
 					<ion-icon class="heart-icon weblink-icon" name="heart-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>

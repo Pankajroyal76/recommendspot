@@ -27,6 +27,10 @@ import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import { ApilinkService } from './services/apilink.service';
 import { ApiserviceService } from './services/apiservice.service';
 
+import { AngularFireModule } from 'angularfire2';
+import { environment } from './services/environment';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+
 //pipe
 
 
@@ -38,7 +42,9 @@ import { Http, HttpModule, RequestOptions } from '@angular/http';
   imports: [BrowserModule, 
   IonicModule.forRoot(), 
   AppRoutingModule,
-  HttpModule
+  HttpModule,
+  AngularFireModule.initializeApp(environment.firebase),
+  AngularFireAuthModule,
   ],
   providers: [
     StatusBar,

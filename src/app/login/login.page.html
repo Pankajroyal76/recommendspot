@@ -9,13 +9,14 @@
   <img src="assets/img/logo.png"/>
   <h2>Sign in to continue</h2>
 </div>
+<form [formGroup]="authForm" (ngSubmit)="login()">
 <div form-group>
 <label>Email</label>
 <ion-item lines="none">
 <ion-label>
 <ion-icon name="mail-outline"></ion-icon>
 </ion-label>
-<ion-input clearOnEdit="false" type="email"  placeholder="Enter Email" [(ngModel)]="email"></ion-input>
+<ion-input clearOnEdit="false" type="email"  placeholder="Enter Email" [(ngModel)]="email" [ngModelOptions]="{standalone: true}"  formControlName="password"></ion-input>
 </ion-item>
 <span error *ngIf="errors.indexOf(email) >= 0 && is_submit == true">Please enter your email</span>
 <span error *ngIf="errors.indexOf(email) == -1 && !reg_exp.test(email) && is_submit == true">Please enter valid email</span>
@@ -26,7 +27,7 @@
 <ion-label>
 <ion-icon name="lock-closed-outline"></ion-icon>
 </ion-label>
-<ion-input clearOnEdit="false" type="password"  placeholder="Enter Password" [(ngModel)]="password"></ion-input>
+<ion-input clearOnEdit="false" type="password"  placeholder="Enter Password" [(ngModel)]="password" [ngModelOptions]="{standalone: true}" formControlName="password">  </ion-input>
 
 </ion-item>
 <span error *ngIf="errors.indexOf(password) >= 0 && is_submit == true">Please enter your password</span>
@@ -36,10 +37,11 @@
 <a routerLink="/forgotpassword" href="javascript:void(0)">Forgot Password ?</a>
 </div>
 <div login-btn>
-<ion-button expand="full" color="secondary"  shape="round" (click)="login()">
+<ion-button type="submit" expand="full" color="secondary"  shape="round" >
 Login
 </ion-button>
 </div>
+</form>
 <div btn-signup class="ion-text-center">
 <p>Don't have an account ? <a routerLink="/signup" href="javascript:void(0)">Sign Up Here</a></p>
 

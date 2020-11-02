@@ -24,8 +24,23 @@ export class PostDetailsPage implements OnInit {
   	IMAGES_URL: any = config.IMAGES_URL;
     errors: any = config.errors;
   	userId: any = localStorage.getItem('userId');
+    user_name: any;
+    user_image: any;
+    user_email: any;
+    user_id: any;
+
   	constructor(public location: Location, public toastController: ToastController, public apiService: ApiserviceService, public loadingController: LoadingController, public router: Router, private globalFooService: GlobalFooService, private iab: InAppBrowser, public modalController: ModalController, private photoViewer: PhotoViewer) { 
       
+      this.user_name = localStorage.getItem('user_name');
+      this.user_image = localStorage.getItem('user_image');
+      this.user_email = localStorage.getItem('user_email');
+      this.user_id = localStorage.getItem('userId');
+      this.globalFooService.getObservable().subscribe((data) => {
+          this.user_name = localStorage.getItem('user_name');
+          this.user_image = localStorage.getItem('user_image');
+          this.user_email = localStorage.getItem('user_email');
+          this.user_id = localStorage.getItem('userId');
+      });
     }
 
   	ngOnInit() {
@@ -33,6 +48,11 @@ export class PostDetailsPage implements OnInit {
   	}
     ionViewDidEnter(){
         this.getData();
+    }
+
+    logout(){
+      localStorage.clear();
+      this.router.navigate(['/']);
     }
 
     async openImagePopup(image) {
@@ -133,12 +153,7 @@ export class PostDetailsPage implements OnInit {
 	  }
     }
 
-    logout(){
-      localStorage.clear();
-      console.log('clicked')
-      this.router.navigate(['/login']);
-    }
-
+   
     sendNotification(type){
       if(this.post.userId != this.userId){
         var dict = {
@@ -322,6 +337,13 @@ export class PostDetailsPage implements OnInit {
 
 
     openLink(web_link){
+      if(web_link.includes('http') == false  || web_link.includes('https') == false){
+
+        web_link = 'http://'  + web_link;
+      }
+      this.iab.create(web_link, '_system', {location: 'yes', closebuttoncaption: 'done'});
+    }
+    openLinkPreview(web_link){
       if(web_link.includes('http') == false  || web_link.includes('https') == false){
 
         web_link = 'http://'  + web_link;

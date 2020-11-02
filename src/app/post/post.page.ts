@@ -252,6 +252,14 @@ export class PostPage implements OnInit {
       this.iab.create(web_link, '_system', {location: 'yes', closebuttoncaption: 'done'});
     }
 
+    openLinkPreview(web_link){
+      if(web_link.includes('http') == false  || web_link.includes('https') == false){
+
+        web_link = 'http://'  + web_link;
+      }
+      this.iab.create(web_link, '_system', {location: 'yes', closebuttoncaption: 'done'});
+    }
+
 
     viewPost(post){
       localStorage.setItem('item', JSON.stringify(post));

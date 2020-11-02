@@ -50,6 +50,10 @@ export class ProfileSettingPage implements OnInit {
 	live_file_name_profile: any;
 	imgBlobCover: any;
 	live_file_name_cover: any;
+	user_name: any;
+    user_image: any;
+    user_email: any;
+    user_id: any;
 
   	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath, private transfer: FileTransfer,private globalFooService: GlobalFooService) { 
 
@@ -57,10 +61,24 @@ export class ProfileSettingPage implements OnInit {
       	this.reg_exp_letters =  /^[a-zA-Z].*$/;
       	this.reg_exp_digits = /^\d{6,10}$/;
       	this.withoutspace = /^\S*$/;
-
+      	this.user_name = localStorage.getItem('user_name');
+        this.user_image = localStorage.getItem('user_image');
+        this.user_email = localStorage.getItem('user_email');
+        this.user_id = localStorage.getItem('userId');
+        this.globalFooService.getObservable().subscribe((data) => {
+            this.user_name = localStorage.getItem('user_name');
+            this.user_image = localStorage.getItem('user_image');
+            this.user_email = localStorage.getItem('user_email');
+            this.user_id = localStorage.getItem('userId');
+        });
   	}
 
   	ngOnInit() {
+  	}
+
+  	logout(){
+	    localStorage.clear();
+	    this.router.navigate(['/']);
   	}
   	
   	ionViewDidEnter(){

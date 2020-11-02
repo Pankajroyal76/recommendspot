@@ -6,6 +6,11 @@ import { GlobalFooService } from '../services/globalFooService.service';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { FCM } from '@ionic-native/fcm/ngx';
+import { AngularFireAuth } from 'angularfire2/auth';
+import * as firebase from 'firebase/app';
+import { Platform, MenuController } from '@ionic/angular';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+
 
 @Component({
   selector: 'app-login',
@@ -21,15 +26,25 @@ export class LoginPage implements OnInit {
 	reg_exp: any;
 	fcm_token: any;
 	withoutspace: any;
+	authForm: FormGroup;
 
-  	constructor(private fcm: FCM,public apiService: ApiserviceService, public router: Router,private globalFooService: GlobalFooService, private fb: Facebook, private googlePlus: GooglePlus) { 
-
+  	constructor(private fcm: FCM,public apiService: ApiserviceService, public router: Router,private globalFooService: GlobalFooService, private fb: Facebook, private googlePlus: GooglePlus, public fireAuth: AngularFireAuth, private platform: Platform,private formBuilder: FormBuilder) { 
+  		this.createForm();
   		this.reg_exp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   		this.withoutspace = /^\S*$/;
   	}
 
   	ngOnInit() {
+  	console.log(this.platform)
   	}
+
+  	//define the validators for form fields
+  	createForm(){
+	    this.authForm = this.formBuilder.group({
+	      email: ['', Validators.compose([Validators.required])],
+	      password: ['', Validators.compose([Validators.required])]
+	    });
+  	};
 
   	ionViewDidEnter(){
 
@@ -79,12 +94,74 @@ export class LoginPage implements OnInit {
 
 	};
 
+	fbLogin() {
+        //this.loginType = 'Login with Facebook'
+       // return this.fireAuth.auth.signInWithPopup(new firebase.auth.FacebookAuthProvider());
+
+        const provider = new firebase.auth.FacebookAuthProvider();
+    	this.fireAuth.auth.signInWithPopup(provider)
+        .then((result) => {
+        	console.log('Signin result', result);
+        	// if(this.errors.indexOf(result) == -1){
+	          	let dict ={
+		            name: result.additionalUserInfo.profile['name'],
+		            email: result.additionalUserInfo.profile['email'],
+		            password: '',
+		            medium: 'facebook',
+		            social_id: result.additionalUserInfo.profile['id'],
+		            image: result.additionalUserInfo.profile['picture']['data']['url'],
+		            fcm_token: this.fcm_token,
+		            contact: ''
+		        };
+          		console.log('dict', dict);
+          		this.finalSignup(dict); 
+
+        	// }else{
+         //  		this.apiService.presentToast('Error,Please try after some time', 'danger')
+        	// }
+
+        	})
+        .catch((error) => console.error('Sigin error', error));
+    };
+
+    gglLogin(){
+        //this.loginType = 'Login with Facebook'
+       // return this.fireAuth.auth.signInWithPopup(new firebase.auth.FacebookAuthProvider());
+
+        const provider = new firebase.auth.GoogleAuthProvider();
+    	this.fireAuth.auth.signInWithPopup(provider)
+        .then((result) => {
+        	console.log('Signin result', result);
+        	// if(this.errors.indexOf(result) == -1){
+	          	let dict ={
+			            name: result.additionalUserInfo.profile['name'],
+			            email: result.additionalUserInfo.profile['email'],
+			            password: '',
+			            medium: 'google',
+			            social_id: result.additionalUserInfo.profile['id'],
+			            image: !result.additionalUserInfo.profile['picture'] ? '' : result.additionalUserInfo.profile['picture'],
+			            fcm_token: this.fcm_token,
+			            contact: ''
+		          	};
+          		console.log('dict', dict);
+          		this.finalSignup(dict); 
+
+        	// }else{
+         //  		this.apiService.presentToast('Error,Please try after some time', 'danger')
+        	// }
+
+        	})
+        .catch((error) => console.error('Sigin error', error));
+    };
+
 	//Facebook login
  	facebookLogin(){
+ 	
+	 	if (this.platform.is('cordova')) {	
     
-    	this.fb.login(['public_profile', 'email']).then((res: FacebookLoginResponse) => 
+    		this.fb.login(['public_profile', 'email']).then((res: FacebookLoginResponse) => 
 	     	this.fb.api('me?fields=id,name,email,first_name,picture.width(720).height(720).as(picture_large)', []).then(profile => {
-	        console.log('profile', profile);     
+	        	console.log('profile', profile);     
 	        	if(this.errors.indexOf(profile) == -1){
 		          	let dict ={
 			            name: profile['name'],
@@ -99,14 +176,17 @@ export class LoginPage implements OnInit {
 	          		console.log('dict', dict);
 	          		this.finalSignup(dict); 
 
-        	}else{
-          		this.apiService.presentToast('Error,Please try after some time', 'danger')
-        	}
-      	})
-      	).catch(e => {
-          this.apiService.presentToast( 'Error,Please try after some time', 'danger');
-          console.log(e)
-      	});
+	        	}else{
+	          		this.apiService.presentToast('Error,Please try after some time', 'danger')
+	        	}
+      		})
+      		).catch(e => {
+          	this.apiService.presentToast( 'Error,Please try after some time', 'danger');
+          		console.log(e)
+      		});
+      	}else{
+      		this.fbLogin();
+	 	}
 	};
 
 
@@ -114,31 +194,37 @@ export class LoginPage implements OnInit {
 	 //Google social login 
 	googleLogin(){
 	    console.log(this.googlePlus)
-	    this.googlePlus.login({'scopes': 'profile'})
-	    .then(profile => {
-	      	console.log(profile);
-	      	if(this.errors.indexOf(profile) == -1){
-	          	let dict ={
-		            name: profile['displayName'],
-		            email: profile['email'],
-		            password: '',
-		            medium: 'google',
-		            social_id: profile['userId'],
-		            image: !profile['imageUrl'] ? '' : profile['imageUrl'],
-		            fcm_token: this.fcm_token,
-		            contact: ''
-	          	};
-	          	console.log('dict', dict);
+	    if (this.platform.is('cordova')) {	
+		    this.googlePlus.login({'scopes': 'profile'})
+		    .then(profile => {
+		      	console.log(profile);
+		      	if(this.errors.indexOf(profile) == -1){
+		          	let dict ={
+			            name: profile['displayName'],
+			            email: profile['email'],
+			            password: '',
+			            medium: 'google',
+			            social_id: profile['userId'],
+			            image: !profile['imageUrl'] ? '' : profile['imageUrl'],
+			            fcm_token: this.fcm_token,
+			            contact: ''
+		          	};
+		          	console.log('dict', dict);
 
-	          	
-	         	this.finalSignup(dict);             
-	      	}
+		          	
+		         	this.finalSignup(dict);             
+		      	}
 
-	    })
-	    .catch(err => {
-	    	console.error(err)
-	    	this.apiService.presentToast( 'Error,Please try after some time', 'danger');
-	    });
+		    })
+		    .catch(err => {
+		    	console.error(err)
+		    	this.apiService.presentToast( 'Error,Please try after some time', 'danger');
+		    });
+		}else{
+			this.gglLogin();
+		}
+
+	    
 	};
 
 	finalSignup(dict){

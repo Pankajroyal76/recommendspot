@@ -24,18 +24,34 @@ export class ProfilePage implements OnInit {
 	is_response = false;
   counter = 0;
   selectedItemm = -1;
+  user_name: any;
+  user_image: any;
+  user_email: any;
+  user_id: any;
 
   	constructor(private globalFooService: GlobalFooService,public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private iab: InAppBrowser, public alertController: AlertController) { 
-
+      this.user_name = localStorage.getItem('user_name');
+      this.user_image = localStorage.getItem('user_image');
+      this.user_email = localStorage.getItem('user_email');
+      this.user_id = localStorage.getItem('userId');
       this.globalFooService.getObservable().subscribe((data) => {
           console.log('Data received', data);
           this.counter = 1;
           this.get_profile();
+          this.user_name = localStorage.getItem('user_name');
+          this.user_image = localStorage.getItem('user_image');
+          this.user_email = localStorage.getItem('user_email');
+          this.user_id = localStorage.getItem('userId');
       });
     }
 
   	ngOnInit() {
   	}
+
+    logout(){
+      localStorage.clear();
+      this.router.navigate(['/']);
+    }
 
     openUpdate(i){
 

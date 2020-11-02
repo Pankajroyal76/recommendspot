@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiserviceService } from '../services/apiservice.service';
 import { config } from '../services/config';
 import { Router } from '@angular/router';
+import { GlobalFooService } from '../services/globalFooService.service';
 
 @Component({
   selector: 'app-notification',
@@ -14,10 +15,30 @@ export class NotificationPage implements OnInit {
 	IMAGES_URL: any = config.IMAGES_URL;
 	errors = config.errors;
 	is_response = false;
+	user_name: any;
+    user_image: any;
+    user_email: any;
+    user_id: any;
 
-  	constructor(public apiService: ApiserviceService, public router: Router) { }
+  	constructor(public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService) { 
+  		this.user_name = localStorage.getItem('user_name');
+        this.user_image = localStorage.getItem('user_image');
+        this.user_email = localStorage.getItem('user_email');
+        this.user_id = localStorage.getItem('userId');
+        this.globalFooService.getObservable().subscribe((data) => {
+            this.user_name = localStorage.getItem('user_name');
+            this.user_image = localStorage.getItem('user_image');
+            this.user_email = localStorage.getItem('user_email');
+            this.user_id = localStorage.getItem('userId');
+        });
+  	}
 
   	ngOnInit() {
+  	}
+
+  	logout(){
+	    localStorage.clear();
+	    this.router.navigate(['/']);
   	}
 
 

@@ -23,34 +23,46 @@ export class HomePage implements OnInit {
 	authForm: FormGroup;
 	selectedItem:any = 'item1';
  	profiletab: string = "Basic";
-  	isAndroid: boolean = false;
-  	posts: any = [];
-  	is_response = false;
-  	IMAGES_URL: any = config.IMAGES_URL;
+	isAndroid: boolean = false;
+	posts: any = [];
+	is_response = false;
+	IMAGES_URL: any = config.IMAGES_URL;
 	errors = config.errors;
 	page_number = 1;
-  	page_limit = 10;
-  	keyword = '';
-  	private win: any = window;
-  	userId: any;
-  	counter = 0;
-  	hideMe = false;
-  	selectedItemm = -1;
-  	open = false;
-  	type = 'Random';
-  	
+	page_limit = 10;
+	keyword = '';
+	private win: any = window;
+	userId: any;
+	counter = 0;
+	hideMe = false;
+	selectedItemm = -1;
+	open = false;
+	type = 'Random';
+  user_name: any;
+  user_image: any;
+  user_email: any;
+  user_id: any;
+	
 
   	constructor(public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private menuCtrl: MenuController, private globalFooService: GlobalFooService, public alertController: AlertController,private formBuilder: FormBuilder,private renderer: Renderer2, private iab: InAppBrowser) { 
 
   		this.createForm();
+      this.user_name = localStorage.getItem('user_name');
+      this.user_image = localStorage.getItem('user_image');
+      this.user_email = localStorage.getItem('user_email');
+      this.user_id = localStorage.getItem('userId');
   		this.globalFooService.getObservable().subscribe((data) => {
             console.log('Data received', data);
             this.menuCtrl.enable(true);
             this.counter = 1;
             this.page_number = 1;
             this.is_response = false;
-	    this.posts = [];
+            this.posts = [];
             this.getAllReccomdations(false, '');
+            this.user_name = localStorage.getItem('user_name');
+            this.user_image = localStorage.getItem('user_image');
+            this.user_email = localStorage.getItem('user_email');
+            this.user_id = localStorage.getItem('userId');
         });
        
        
@@ -67,6 +79,11 @@ export class HomePage implements OnInit {
 	      keyword: ['', Validators.compose([Validators.required])]
 	    });
   	};
+
+    logout(){
+      localStorage.clear();
+      this.router.navigate(['/']);
+    }
 
   	closeUpdate(){
   		this.selectedItemm = -1;
@@ -278,6 +295,13 @@ export class HomePage implements OnInit {
     		web_link = 'http://'  + web_link;
     	}
     	this.iab.create(web_link, '_system', {location: 'yes', closebuttoncaption: 'done'});
+    }
+    openLinkPreview(web_link){
+      if(web_link.includes('http') == false  || web_link.includes('https') == false){
+
+        web_link = 'http://'  + web_link;
+      }
+      this.iab.create(web_link, '_system', {location: 'yes', closebuttoncaption: 'done'});
     }
 
   	addRemoveReccomdation(item, type, index){
