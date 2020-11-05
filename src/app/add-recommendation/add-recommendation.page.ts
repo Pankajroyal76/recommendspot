@@ -8,8 +8,7 @@ import { Camera, CameraOptions, PictureSourceType } from '@ionic-native/camera/n
 import { File, FileEntry } from '@ionic-native/file/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
-
-
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 declare var window: any; 
 
 @Component({
@@ -40,8 +39,11 @@ export class AddRecommendationPage implements OnInit {
     IMAGES_URL: any = config.IMAGES_URL;
     link_content: any;
 	opencontent: any;
+	authForm: FormGroup;
 
-  	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, private globalFooService: GlobalFooService) { 
+  	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, private globalFooService: GlobalFooService,private formBuilder: FormBuilder) { 
+
+  		this.createForm();
   		this.expression = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
 
   		this.user_name = localStorage.getItem('user_name');
@@ -58,6 +60,16 @@ export class AddRecommendationPage implements OnInit {
 
   	ngOnInit() {
   	}
+
+  	//define the validators for form fields
+  	createForm(){
+	    this.authForm = this.formBuilder.group({
+	      type: ['', Validators.compose([Validators.required])],
+	      description: ['', Validators.compose([Validators.required])],
+	      category: ['', Validators.compose([Validators.required])],
+	      web_link: ['', Validators.compose([Validators.required])],
+	    });
+  	};
 
   	logout(){
 	    localStorage.clear();
@@ -283,7 +295,8 @@ export class AddRecommendationPage implements OnInit {
 	    	web_link: this.web_link,
 	    	image: this.image,
 	    	user_id: localStorage.getItem('userId'),
-	    	add_user_type: 'user'
+	    	add_user_type: 'user',
+	    	web_link_content: this.link_content
 	    }
 	  
 	    this.apiService.postData(dict,'addRecc').subscribe((result) => { 
@@ -298,6 +311,7 @@ export class AddRecommendationPage implements OnInit {
 	      	this.type = 'Photo';
 	      	this.category = '';
 	      	this.web_link = '';
+	      	this.link_content = '';
 	      	this.globalFooService.publishSomeData({
             	foo: {'data': '', 'page': 'updateprofile'}
         	});

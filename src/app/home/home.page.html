@@ -181,7 +181,15 @@
 					</ion-col>
 					<ion-col size="6" class="ion-text-right" >
 						<ion-button (click)="viewPost(item)" class="socl-btn"><ion-icon name="chatbubble-outline"></ion-icon> <span class="padding-8">{{item.comments.length}}</span> </ion-button>
-						<ion-button class="socl-btn" (click)="socialsharebranch(item)"><ion-icon name="share-social-outline"></ion-icon></ion-button>		
+						<div *ngIf="platform1 == false">
+								<a (click)="viewPostSocial(item)" href="http://www.facebook.com/share.php?u=http://18.219.109.190/weblive/" target="_blank"><ion-icon name="logo-facebook"></ion-icon></a>
+								<a (click)="viewPostSocial(item)" href="https://twitter.com/share?url=http://18.219.109.190/weblive/&amp;text=aa&amp;hashtags=YOUR_HASHTAGS" target="_blank"><ion-icon name="logo-twitter"></ion-icon></a>
+								<a (click)="viewPostSocial(item)" href="https://web.whatsapp.com/send?text=http://18.219.109.190/weblive/" target="_blank"><ion-icon name="logo-whatsapp"></ion-icon></a>
+								<a (click)="viewPostSocial(item)" href="https://plus.google.com/share?url=http://18.219.109.190/weblive/" target="_blank"><ion-icon name="logo-google"></ion-icon></a>
+								<a (click)="viewPostSocial(item)" href="http://www.linkedin.com/shareArticle?mini=true&amp;url=http://18.219.109.190/weblive/" target="_blank"><ion-icon name="logo-linkedin"></ion-icon></a>
+							</div>
+
+							<ion-button class="socl-btn"  (click)="socialsharebranch(item)" *ngIf="platform1 == true"><ion-icon name="share-social-outline"></ion-icon></ion-button>			
 					</ion-col>
 				</ion-row>
 			</div>	

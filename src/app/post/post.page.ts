@@ -3,10 +3,24 @@ import { ApiserviceService } from '../services/apiservice.service';
 import { config } from '../services/config';
 import { Router } from '@angular/router';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
-import { MenuController } from '@ionic/angular';
+import { MenuController, Platform } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 declare var Branch;
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+declare var window: any; 
+  const share = {
+    displayNames: true,
+    config: [{
+          facebook: {
+            socialShareUrl: 'https://peterpeterparker.io'
+          }
+        },{
+          twitter: {
+            socialShareUrl: 'https://peterpeterparker.io'
+          }
+    }]
+};
+const navigator = window.navigator as any;
 
 @Component({
   selector: 'app-post',
@@ -15,6 +29,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 })
 export class PostPage implements OnInit {
 	
+  
   authForm: FormGroup;
   hideMe=false;
 	selectedItem:any = 'item1';
@@ -30,12 +45,13 @@ export class PostPage implements OnInit {
 	counter = 0;
 	keyword = '';
   type = 'Random';
+  platform1: any;
 	
 	hide() {
 		this.hideMe = !this.hideMe;
 	}
 
-  	constructor(public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private menuCtrl: MenuController,private formBuilder: FormBuilder, private iab: InAppBrowser) { 
+  	constructor(public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private menuCtrl: MenuController,private formBuilder: FormBuilder, private iab: InAppBrowser, private platform: Platform) { 
 
       this.createForm();
     }
@@ -46,6 +62,8 @@ export class PostPage implements OnInit {
       this.is_response = false;
       this.posts = [];
       this.page_number = 1;
+      this.platform1 = this.platform.is('cordova');
+      console.log(this.platform);
       this.getAllReccomdations(false, '');
   	}
 
@@ -267,6 +285,11 @@ export class PostPage implements OnInit {
       this.router.navigate(['/post-details']);
     }
 
+    viewPostSocial(post){
+      localStorage.setItem('item', JSON.stringify(post));
+      localStorage.setItem('postId', post._id);
+    }
+
 
     viewUser(item){
       localStorage.setItem('item', JSON.stringify(item));
@@ -277,6 +300,18 @@ export class PostPage implements OnInit {
 
     //scoial share 
   socialsharebranch(post){
+    if (navigator.share) {
+      navigator
+        .share({
+          title: 'Google',
+          text: 'Save',
+          url: 'https://google.com'
+        })
+        .then(() => console.log('Successful share'))
+        .catch(error => console.log('Error sharing', error));
+    } else {
+      alert('share not supported');
+    }
       const Branch = window['Branch'];
         const self = this;
 

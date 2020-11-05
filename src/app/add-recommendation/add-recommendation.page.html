@@ -39,77 +39,78 @@
 <ion-content class="ion-padding">
 
 	<div container>
-<div form-group>
-	    <label>Type</label>
-	<ion-item lines="none">
-		<ion-label>
-			<ion-icon name="keypad-outline"></ion-icon> 
-			<span style="display: none;">Type</span>
-		</ion-label>
-		<ion-select [interfaceOptions]="customAlertOptions" interface="alert" [(ngModel)]="type" (ionChange)="typeChange(type)">
-			<ion-select-option value="Photo"> Photo/Image </ion-select-option>
-			<ion-select-option value="Website"> Website Link </ion-select-option>
-			<ion-select-option value="Words"> Text Only   </ion-select-option>
-		</ion-select>
-	</ion-item>
-</div>
-<div form-group>
-	 <label>Category</label>
-	<ion-item lines="none">
-		<ion-label>
-			<ion-icon name="layers-outline"></ion-icon>
-			<span style="display: none;">Category</span>
-		</ion-label>
-		<ion-select [interfaceOptions]="customAlertOptions" interface="alert"  placeholder="Select" [(ngModel)]="category">
-			<ion-select-option value="{{doc._id}}" *ngFor="let doc of categories; let i = index;"> {{doc.name}} </ion-select-option>
-		</ion-select>
-	</ion-item>
-	<span error *ngIf="errors.indexOf(category) >= 0 && is_submit == true">Please choose category</span>
-</div>
-<div form-group>
-	    <label>Description</label>
-	<ion-item lines="none">
-			<ion-textarea rows="3" placeholder="Enter Any Description Here..." [(ngModel)]="description"></ion-textarea>
-	</ion-item>
-	<span error *ngIf="type != 'Website' && errors.indexOf(description) >= 0 && is_submit == true">Please enter description</span>
-</div>
-<div form-group  uploadimg *ngIf="type == 'Photo'">
-	    <label>Image</label>
-	<div add-recc>
-		<label for="resume" (click)="selectImage()"><ion-icon name="cloud-upload-outline"></ion-icon><span>Upload Image Here</span></label>
-		<!-- <input type="file" name="resume" id="resume" style="display:none"/> -->
-		<img *ngIf="errors.indexOf(live_image_url) == -1" [src]="win.Ionic.WebView.convertFileSrc(live_image_url)" />
-	</div>
-	<span error *ngIf="errors.indexOf(live_image_url) >= 0 && is_submit == true">Please select image</span>
-</div>
-<div form-group  uploadimg *ngIf="type == 'Website'">
-	    <label>Web Link</label>
-	
-	<ion-item lines="none">
-			<ion-textarea placeholder="Enter Website Link" [(ngModel)]="web_link" (ngModelChange)="checklink(web_link)"></ion-textarea>
-	</ion-item>
-	<span error *ngIf=" type == 'Website' && errors.indexOf(web_link) >= 0 && is_submit == true">Please enter web link</span>
-	<span error *ngIf=" type == 'Website' && errors.indexOf(web_link) == -1 && !expression.test(web_link) && is_submit == true">Please enter valid web link (i.e. http://www.example.com, https://www.example.com, www.example.com, example.com)</span>
-	<div class="linkcontent" *ngIf="web_link != '' && opencontent == true">
-		<ion-icon name="close-circle-outline" class="linkcontentclose" (click)="closeLinkContent()"></ion-icon> 
-		<ion-row>
-			<ion-col size="3" *ngIf="link_content?.image != ''">
-				<img src="{{link_content?.image}}" />
-			</ion-col>
-
-			<ion-col size="{{link_content?.title != '' ? 9 : 12}}">
-				<p *ngIf="link_content?.title != ''">{{link_content?.title}}</p>
-				<p *ngIf="link_content?.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
-				<p *ngIf="link_content?.title != ''">{{link_content?.description}}</p>
-				<p *ngIf="link_content?.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
-			</ion-col>
-		</ion-row>
+		<form [formGroup]="authForm" (keyup.enter)="add_recc()">
+			<div form-group>
+		    	<label>Type</label>
+				<ion-item lines="none">
+					<ion-label>
+						<ion-icon name="keypad-outline"></ion-icon> 
+						<span style="display: none;">Type</span>
+					</ion-label>
+					<ion-select [interfaceOptions]="customAlertOptions" interface="alert" [(ngModel)]="type" (ionChange)="typeChange(type)" [ngModelOptions]="{standalone: true}"  formControlName="type">
+						<ion-select-option value="Photo"> Photo/Image </ion-select-option>
+						<ion-select-option value="Website"> Website Link </ion-select-option>
+						<ion-select-option value="Words"> Text Only   </ion-select-option>
+					</ion-select>
+				</ion-item>
+			</div>
+			<div form-group>
+		 		<label>Category</label>
+				<ion-item lines="none">
+					<ion-label>
+						<ion-icon name="layers-outline"></ion-icon>
+						<span style="display: none;">Category</span>
+					</ion-label>
+					<ion-select [interfaceOptions]="customAlertOptions" interface="alert"  placeholder="Select" [(ngModel)]="category" [ngModelOptions]="{standalone: true}"  formControlName="category">
+						<ion-select-option value="{{doc._id}}" *ngFor="let doc of categories; let i = index;"> {{doc.name}} </ion-select-option>
+					</ion-select>
+				</ion-item>
+				<span error *ngIf="errors.indexOf(category) >= 0 && is_submit == true">Please choose category</span>
+			</div>
+			<div form-group>
+		    	<label>Description</label>
+				<ion-item lines="none">
+					<ion-textarea rows="3" placeholder="Enter Any Description Here..." [(ngModel)]="description" [ngModelOptions]="{standalone: true}"  formControlName="description"></ion-textarea>
+				</ion-item>
+				<span error *ngIf="type != 'Website' && errors.indexOf(description) >= 0 && is_submit == true">Please enter description</span>
+			</div>
+			<div form-group  uploadimg *ngIf="type == 'Photo'">
+		    	<label>Image</label>
+				<div add-recc>
+					<label for="resume" (click)="selectImage()"><ion-icon name="cloud-upload-outline"></ion-icon><span>Upload Image Here</span></label>
+					<!-- <input type="file" name="resume" id="resume" style="display:none"/> -->
+					<img *ngIf="errors.indexOf(live_image_url) == -1" [src]="win.Ionic.WebView.convertFileSrc(live_image_url)" />
+				</div>
+				<span error *ngIf="errors.indexOf(live_image_url) >= 0 && is_submit == true">Please select image</span>
+			</div>
+			<div form-group  uploadimg *ngIf="type == 'Website'">
+		    	<label>Web Link</label>
 		
-	</div>
-</div>
-<ion-button color="secondary" expand="full" shape="round" (click)="add_recc()">Save Reccomendation</ion-button>
+				<ion-item lines="none">
+						<ion-textarea placeholder="Enter Website Link" [(ngModel)]="web_link" (ngModelChange)="checklink(web_link)" [ngModelOptions]="{standalone: true}"  formControlName="web_link"> </ion-textarea>
+				</ion-item>
+				<span error *ngIf=" type == 'Website' && errors.indexOf(web_link) >= 0 && is_submit == true">Please enter web link</span>
+				<span error *ngIf=" type == 'Website' && errors.indexOf(web_link) == -1 && !expression.test(web_link) && is_submit == true">Please enter valid web link (i.e. http://www.example.com, https://www.example.com, www.example.com, example.com)</span>
+				<div class="linkcontent" *ngIf="web_link != '' && opencontent == true">
+					<ion-icon name="close-circle-outline" class="linkcontentclose" (click)="closeLinkContent()"></ion-icon> 
+					<ion-row>
+						<ion-col size="3" *ngIf="link_content?.image != ''">
+							<img src="{{link_content?.image}}" />
+						</ion-col>
 
-</div>
+						<ion-col size="{{link_content?.title != '' ? 9 : 12}}">
+							<p *ngIf="link_content?.title != ''">{{link_content?.title}}</p>
+							<p *ngIf="link_content?.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
+							<p *ngIf="link_content?.title != ''">{{link_content?.description}}</p>
+							<p *ngIf="link_content?.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
+						</ion-col>
+					</ion-row>
+			
+				</div>
+			</div>
+			<ion-button color="secondary" expand="full" shape="round" type="submit">Save Reccomendation</ion-button>
+		</form>
+	</div>
 
 </ion-content>
 

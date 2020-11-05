@@ -9,6 +9,7 @@ import { File, FileEntry } from '@ionic-native/file/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { Crop } from '@ionic-native/crop/ngx';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 declare var window: any; 
 
 @Component({
@@ -54,9 +55,12 @@ export class ProfileSettingPage implements OnInit {
     user_image: any;
     user_email: any;
     user_id: any;
+    authForm: FormGroup;
+    authForm1: FormGroup;
 
-  	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath, private transfer: FileTransfer,private globalFooService: GlobalFooService) { 
+  	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath, private transfer: FileTransfer,private globalFooService: GlobalFooService,private formBuilder: FormBuilder) { 
 
+  		this.createForm();
   		this.reg_exp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       	this.reg_exp_letters =  /^[a-zA-Z].*$/;
       	this.reg_exp_digits = /^\d{6,10}$/;
@@ -72,6 +76,21 @@ export class ProfileSettingPage implements OnInit {
             this.user_id = localStorage.getItem('userId');
         });
   	}
+
+  	//define the validators for form fields
+  	createForm(){
+	    this.authForm = this.formBuilder.group({
+	      name: ['', Validators.compose([Validators.required])],
+	      email: ['', Validators.compose([Validators.required])],
+	      contact: ['', Validators.compose([Validators.required])],
+	    });
+
+	    this.authForm1 = this.formBuilder.group({
+	      confirm_new_password: ['', Validators.compose([Validators.required])],
+	      password: ['', Validators.compose([Validators.required])],
+	      confirm_password: ['', Validators.compose([Validators.required])],
+	    });
+  	};
 
   	ngOnInit() {
   	}

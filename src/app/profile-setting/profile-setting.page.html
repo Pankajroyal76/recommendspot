@@ -69,14 +69,14 @@
     <div [ngSwitch]="profiletab">
 
     	<ion-list *ngSwitchCase="'Basic'">
-
+        <form [formGroup]="authForm" (keyup.enter)="update_profile()">
         <div form-group>
           <label>Full Name</label>
           <ion-item lines="none">
             <ion-label>
               <ion-icon name="person-outline"></ion-icon>
             </ion-label>
-            <ion-input clearOnEdit="false" type="text"  placeholder="Enter Name" [(ngModel)]="name"></ion-input>
+            <ion-input clearOnEdit="false" type="text"  placeholder="Enter Name" [(ngModel)]="name"  [ngModelOptions]="{standalone: true}"  formControlName="name"></ion-input>
           </ion-item>
           <span error *ngIf="errors.indexOf(name) >= 0 && is_submit == true">Please enter your full name</span>
           <span error *ngIf="errors.indexOf(name) == -1 && is_submit == true && !reg_exp_letters.test(name)">Please enter valid name should starts with alphabet</span>
@@ -88,7 +88,7 @@
             <ion-label>
             <ion-icon name="mail-outline"></ion-icon>
             </ion-label>
-            <ion-input clearOnEdit="false" type="email"  placeholder="Enter Email"  [(ngModel)]="email"></ion-input>
+            <ion-input clearOnEdit="false" type="email"  placeholder="Enter Email"  [(ngModel)]="email" [ngModelOptions]="{standalone: true}"  formControlName="email"></ion-input>
           </ion-item>
           <span error *ngIf="errors.indexOf(email) >= 0 && is_submit == true">Please enter your email</span>
           <span error *ngIf="errors.indexOf(email) == -1 && is_submit == true && !reg_exp.test(email.toLowerCase())">Please enter valid email</span>
@@ -100,25 +100,28 @@
             <ion-label>
             <ion-icon name="call-outline"></ion-icon>
             </ion-label>
-            <ion-input clearOnEdit="false" type="text"  placeholder="Enter Contact Number"  [(ngModel)]="contact"></ion-input>
+            <ion-input clearOnEdit="false" type="text"  placeholder="Enter Contact Number"  [(ngModel)]="contact" [ngModelOptions]="{standalone: true}"  formControlName="contact"></ion-input>
           </ion-item>
 
           <span error *ngIf="errors.indexOf(contact) >= 0 && is_submit == true">Please enter your phone number</span>
           <span error *ngIf="!reg_exp_digits.test(contact) && errors.indexOf(contact) == -1 && is_submit == true">Phone number should consist min. 6 digits and max. 10 digits</span>
         </div>
 
-        <ion-button  color="secondary"  expand="full" shape="round" (click)="update_profile()">Submit</ion-button>
+        <ion-button  type="submit" color="secondary"  expand="full" shape="round" (click)="update_profile()">Submit</ion-button>
+      </form>
+
 
       </ion-list>
       
       <ion-list *ngSwitchCase="'pwd'">
+         <form [formGroup]="authForm1" (keyup.enter)="update_password()">
     	  <div form-group>
           <label>Current Password</label>
           <ion-item lines="none">
             <ion-label>
             <ion-icon name="lock-closed-outline"></ion-icon>
             </ion-label>
-            <ion-input clearOnEdit="false" type="password"  placeholder="Enter Current Password" [(ngModel)]="password"></ion-input>
+            <ion-input clearOnEdit="false" type="password"  placeholder="Enter Current Password" [(ngModel)]="password" [ngModelOptions]="{standalone: true}"  formControlName="password"></ion-input>
           </ion-item>
          
           <span error *ngIf="profile?.medium == 'simple' && errors.indexOf(password) >= 0 && is_submit_pass == true">Please enter your current password</span>  
@@ -132,7 +135,7 @@
             <ion-label>
             <ion-icon name="lock-closed-outline"></ion-icon>
             </ion-label>
-            <ion-input clearOnEdit="false" type="password"  placeholder="Enter New Password" [(ngModel)]="confirm_password"></ion-input>
+            <ion-input clearOnEdit="false" type="password"  placeholder="Enter New Password" [(ngModel)]="confirm_password" [ngModelOptions]="{standalone: true}"  formControlName="confirm_password"></ion-input>
           </ion-item>
           <span error *ngIf="errors.indexOf(confirm_password) >= 0 && is_submit_pass == true">Please enter your new password</span>  
           <span error *ngIf="errors.indexOf(confirm_password) == -1 && is_submit_pass == true && confirm_password.length < 6 && withoutspace.test(confirm_password)">Please enter atleast 6 digits password</span>
@@ -145,7 +148,7 @@
             <ion-label>
             <ion-icon name="lock-closed-outline"></ion-icon>
             </ion-label>
-            <ion-input clearOnEdit="false" type="password"  placeholder="Enter Confirm New Password" [(ngModel)]="confirm_new_password"></ion-input>
+            <ion-input clearOnEdit="false" type="password"  placeholder="Enter Confirm New Password" [(ngModel)]="confirm_new_password" [ngModelOptions]="{standalone: true}"  formControlName="confirm_new_password"></ion-input>
           </ion-item>
           <span error *ngIf="errors.indexOf(confirm_new_password) >= 0 && is_submit_pass == true">Please enter your confirm new password</span>  
           <!-- <span error *ngIf="errors.indexOf(confirm_new_password) == -1 && is_submit_pass == true && confirm_new_password.length < 6 && withoutspace.test(confirm_new_password)">Please enter atleast 6 digits password</span> -->
@@ -153,7 +156,8 @@
            <span error *ngIf="errors.indexOf(confirm_new_password) == -1 && is_submit_pass == true && !withoutspace.test(confirm_new_password)">Please enter valid confirm new password containing no space</span>
         </div>
 
-        <ion-button color="secondary"  expand="full" shape="round" (click)="update_password()">Submit</ion-button>
+        <ion-button type="submit" color="secondary"  expand="full" shape="round" (click)="update_password()">Submit</ion-button>
+        </form>
     	</ion-list>
     
     </div>

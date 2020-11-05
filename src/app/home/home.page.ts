@@ -5,7 +5,8 @@ import { GlobalFooService } from '../services/globalFooService.service';
 import { config } from '../services/config';
 import { Router } from '@angular/router';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
-import { MenuController, AlertController } from '@ionic/angular'; 
+import { MenuController, AlertController, Platform } from '@ionic/angular'; 
+
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import * as $ from "jquery";
 declare var window: any; 
@@ -42,9 +43,9 @@ export class HomePage implements OnInit {
   user_image: any;
   user_email: any;
   user_id: any;
-	
+	platform1: any;
 
-  	constructor(public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private menuCtrl: MenuController, private globalFooService: GlobalFooService, public alertController: AlertController,private formBuilder: FormBuilder,private renderer: Renderer2, private iab: InAppBrowser) { 
+  	constructor(public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private menuCtrl: MenuController, private globalFooService: GlobalFooService, public alertController: AlertController,private formBuilder: FormBuilder,private renderer: Renderer2, private iab: InAppBrowser, private platform: Platform) { 
 
   		this.createForm();
       this.user_name = localStorage.getItem('user_name');
@@ -69,7 +70,7 @@ export class HomePage implements OnInit {
   	}
 
   	ngOnInit() {
-
+      this.platform1 = this.platform.is('cordova');
   	
 	      	}
 

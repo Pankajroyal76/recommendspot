@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+//import { NgxSocialShareModule } from 'ngx-social-share';
 import { IonicModule } from '@ionic/angular';
 
 import { PostPageRoutingModule } from './post-routing.module';
@@ -16,7 +16,8 @@ import { CommonPipeModule } from '../services/commonPipe.module';
     IonicModule,
     CommonPipeModule,
     PostPageRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+   // NgxSocialShareModule
   ],
   declarations: [PostPage]
 })

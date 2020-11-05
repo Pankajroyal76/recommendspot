@@ -7,6 +7,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { Location } from "@angular/common";
 declare var Branch;
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import {Platform} from '@ionic/angular';
 
 @Component({
   selector: 'app-user-profile',
@@ -29,8 +30,9 @@ export class UserProfilePage implements OnInit {
   user_image: any;
   user_email: any;
   user_id: any;
+  platform1: any;
   	
-  	constructor(public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService, private iab: InAppBrowser, private socialSharing: SocialSharing,public location: Location) { 
+  	constructor(public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService, private iab: InAppBrowser, private socialSharing: SocialSharing,public location: Location, private platform: Platform) { 
 
       this.user_name = localStorage.getItem('user_name');
       this.user_image = localStorage.getItem('user_image');
@@ -47,12 +49,14 @@ export class UserProfilePage implements OnInit {
     }
 
   	ngOnInit() {
+      this.platform1 = this.platform.is('cordova');
   	}
 
     logout(){
       localStorage.clear();
       this.router.navigate(['/']);
     }
+
 
     dismiss(){
       this.location.back();

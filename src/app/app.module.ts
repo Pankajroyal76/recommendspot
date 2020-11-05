@@ -31,6 +31,7 @@ import { AngularFireModule } from 'angularfire2';
 import { environment } from './services/environment';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 
+
 //pipe
 
 
@@ -45,6 +46,7 @@ import { Http, HttpModule, RequestOptions } from '@angular/http';
   HttpModule,
   AngularFireModule.initializeApp(environment.firebase),
   AngularFireAuthModule,
+  
   ],
   providers: [
     StatusBar,

@@ -9,7 +9,7 @@
   <img src="assets/img/logo.png"/>
   <h2>Sign in to continue</h2>
 </div>
-<form [formGroup]="authForm" (ngSubmit)="login()">
+<form [formGroup]="authForm" (keyup.enter)="login()">
 <div form-group>
 <label>Email</label>
 <ion-item lines="none">
@@ -37,7 +37,7 @@
 <a routerLink="/forgotpassword" href="javascript:void(0)">Forgot Password ?</a>
 </div>
 <div login-btn>
-<ion-button type="submit" expand="full" color="secondary"  shape="round" >
+<ion-button type="submit" expand="full" color="secondary"  shape="round" (click)="login()">
 Login
 </ion-button>
 </div>

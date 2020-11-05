@@ -10,7 +10,7 @@ import { File, FileEntry } from '@ionic-native/file/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 declare var window: any; 
-
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-edit-reccomendation',
@@ -39,8 +39,13 @@ export class EditReccomendationPage implements OnInit {
     user_image: any;
     user_email: any;
     user_id: any;
+	authForm: FormGroup;
+	link_content: any;
+	opencontent: any;
 
- 	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, public location: Location, private globalFooService: GlobalFooService) { 
+ 	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, public location: Location, private globalFooService: GlobalFooService,private formBuilder: FormBuilder) { 
+  		
+ 		this.createForm();
   		this.expression = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
   		this.user_name = localStorage.getItem('user_name');
         this.user_image = localStorage.getItem('user_image');
@@ -56,6 +61,36 @@ export class EditReccomendationPage implements OnInit {
 
   	ngOnInit() {
   	}
+
+  	//define the validators for form fields
+  	createForm(){
+	    this.authForm = this.formBuilder.group({
+	      type: ['', Validators.compose([Validators.required])],
+	      description: ['', Validators.compose([Validators.required])],
+	      category: ['', Validators.compose([Validators.required])],
+	      web_link: ['', Validators.compose([Validators.required])],
+	    });
+  	};
+
+  	checklink(link){
+  		console.log(link);
+  		var self = this;
+		var target = link;
+		$.ajax({
+		url: "https://api.linkpreview.net",
+		dataType: 'jsonp',
+		data: {q: target, key: 'c23b499c88994dfa1fad242d8e141ee3'},
+		success: function (response) {
+		console.log(response);
+		self.opencontent = true;
+		self.link_content = response;
+
+		}
+		});
+		
+  		
+  	}
+
 
   	logout(){
 	    localStorage.clear();
@@ -140,6 +175,7 @@ export class EditReccomendationPage implements OnInit {
               this.description = result.data[0].description;
               this.web_link = result.data[0].web_link;
               this.image = result.data[0].image;
+              this.link_content = result.data[0].web_link_content
           }
           else{
               this.apiService.presentToast('Technical error,Please try after some time.','danger');
@@ -291,7 +327,9 @@ export class EditReccomendationPage implements OnInit {
 	    	web_link: this.web_link,
 	    	image: this.image,
 	    	user_id: localStorage.getItem('userId'),
-	    	_id: this.post._id
+	    	_id: this.post._id,
+            web_link_content: this.link_content
+
 	    }
 	  
 	    this.apiService.postData(dict,'updateRecc').subscribe((result) => { 
@@ -306,6 +344,7 @@ export class EditReccomendationPage implements OnInit {
 	      	this.type = 'Photo';
 	      	this.category = '';
 	      	this.web_link = '';
+	      	this.link_content = '';
 	      	this.globalFooService.publishSomeData({
             	foo: {'data': result.data, 'page': 'updateprofile'}
         	});
