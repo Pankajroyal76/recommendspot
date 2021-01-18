@@ -61,6 +61,21 @@ export class ProfilePage implements OnInit {
 
     }
 
+     openLinkPreview(web_link){
+      if(web_link.includes('http') == false  || web_link.includes('https') == false){
+
+        web_link = 'http://'  + web_link;
+      }
+      this.iab.create(web_link, '_system', {location: 'yes', closebuttoncaption: 'done'});
+    }
+
+
+    viewPostSocial(post, link){
+      localStorage.setItem('item', JSON.stringify(post));
+      localStorage.setItem('postId', post._id);
+      this.iab.create(link, '_system', {location: 'yes', closebuttoncaption: 'done'});
+    }
+
   	ionViewDidEnter(){
       this.counter = 0;
   		this.userId = localStorage.getItem('userId');
@@ -254,7 +269,7 @@ export class ProfilePage implements OnInit {
             }
 
             var properties1 = {
-              $og_title: "Favreet",
+              $og_title: "Recommendspot",
               $deeplink_path: 'content/123',
               $match_duration: 2000,
               custom_string: 'data',
@@ -268,7 +283,7 @@ export class ProfilePage implements OnInit {
                 var sendlink = res.url;
                 console.log(sendlink);
                 var imgUrl = self.errors.indexOf(post.image) >= 0 ? null :  (self.IMAGES_URL + '/images/' + post.image);
-                self.socialSharing.share('Check out the link: ', 'Favreet App', imgUrl, sendlink);
+                self.socialSharing.share('Check out the link: ', 'Recommendspot', imgUrl, sendlink);
               
     
           }).catch(function(err) {

@@ -44,6 +44,8 @@ export class HomePage implements OnInit {
   user_email: any;
   user_id: any;
 	platform1: any;
+  categories: any;
+  cat: any = "All";
 
   	constructor(public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private menuCtrl: MenuController, private globalFooService: GlobalFooService, public alertController: AlertController,private formBuilder: FormBuilder,private renderer: Renderer2, private iab: InAppBrowser, private platform: Platform) { 
 
@@ -52,18 +54,16 @@ export class HomePage implements OnInit {
       this.user_image = localStorage.getItem('user_image');
       this.user_email = localStorage.getItem('user_email');
       this.user_id = localStorage.getItem('userId');
+      var self = this;
   		this.globalFooService.getObservable().subscribe((data) => {
             console.log('Data received', data);
-            this.menuCtrl.enable(true);
-            this.counter = 1;
-            this.page_number = 1;
-            this.is_response = false;
-            this.posts = [];
-            this.getAllReccomdations(false, '');
-            this.user_name = localStorage.getItem('user_name');
-            this.user_image = localStorage.getItem('user_image');
-            this.user_email = localStorage.getItem('user_email');
-            this.user_id = localStorage.getItem('userId');
+            self.menuCtrl.enable(true);
+            self.counter = 1;
+            self.page_number = 1;
+            self.is_response = false;
+            self.posts = [];
+            self.getAllReccomdations(false, '');
+            self.updateInfo(data);
         });
        
        
@@ -72,7 +72,47 @@ export class HomePage implements OnInit {
   	ngOnInit() {
       this.platform1 = this.platform.is('cordova');
   	
-	      	}
+	  }
+
+    catChange(cat, str){
+
+      if(str == 'web'){
+        this.counter = 4;
+      }
+      if(str == 'app'){
+        this.counter = 0;
+      }
+
+      
+      this.is_response = false;
+      this.posts = [];
+      this.page_number = 1;
+      this.getAllReccomdations(false, '');
+    }
+
+    getCategories(){
+
+      //this.apiService.presentLoading();
+      var dict = {
+        user_id: localStorage.getItem('userId')
+      }
+    
+      this.apiService.postData(dict,'categories').subscribe((result) => { 
+        //this.apiService.stopLoading();
+        console.log('this.categories', result.data)  
+        if(result.status == 1){
+          this.categories = result.data;
+          //this.cat = this.categories[0]._id;
+          this.getAllReccomdations(false, '');
+        }
+        else{
+          this.apiService.presentToast('Error while sending request,Please try after some time','success');
+        }
+      },
+      err => {
+          this.apiService.presentToast('Technical error,Please try after some time','success');
+      });
+    }
 
   	//define the validators for form fields
   	createForm(){
@@ -80,6 +120,12 @@ export class HomePage implements OnInit {
 	      keyword: ['', Validators.compose([Validators.required])]
 	    });
   	};
+
+    viewPostSocial(post, link){
+      localStorage.setItem('item', JSON.stringify(post));
+      localStorage.setItem('postId', post._id);
+      this.iab.create(link, '_system', {location: 'yes', closebuttoncaption: 'done'});
+    }
 
     logout(){
       localStorage.clear();
@@ -91,8 +137,12 @@ export class HomePage implements OnInit {
   	}
 
   	openUpdate(i){
-
-  		this.selectedItemm = i;
+      if(this.selectedItemm == i){
+        this.selectedItemm = -1;
+      }else{
+      this.selectedItemm = i;
+      }
+  		
 
   	}
 
@@ -169,7 +219,8 @@ export class HomePage implements OnInit {
   		this.is_response = false;
 	    this.posts = [];
 	    this.page_number = 1;
-	    this.getAllReccomdations(false, '');
+      this.getCategories();
+	    
 	    this.menuCtrl.enable(true);
 	  
   	};
@@ -190,22 +241,41 @@ export class HomePage implements OnInit {
 	    this.getAllReccomdations(false, '');
   	}
 
+    updateInfo(data){
+      this.user_name = localStorage.getItem('user_name');
+      this.user_image = localStorage.getItem('user_image');
+      this.user_email = localStorage.getItem('user_email');
+      this.user_id = localStorage.getItem('userId');
+    }
+
   	getAllReccomdations(isFirstLoad, event){
   		this.userId = localStorage.getItem('userId');
+
+      
   		let dict ={
 	      user_id: localStorage.getItem('userId'),
 	      skip: this.page_number, 
 	      limit: this.page_limit,
 	      type: this.profiletab,
+        cat: this.cat,
 	      keyword: this.authForm.value.keyword
 	    };
 	    console.log(dict)
 	    if(this.counter == 0){
-	    	 this.apiService.presentLoading();
+	    	 //this.apiService.presentLoading();
 	    }
+      if(this.counter == 4){
+        // this.apiService.presentLoading();
+      }
 	   
 	    this.apiService.postData(dict,'getAllRecc').subscribe((result) => {
-	      	this.apiService.stopLoading();
+	      	if(this.counter == 0){
+             //this.apiService.stopLoading();
+          }
+          if(this.counter == 4){
+             //this.apiService.stopLoading();
+          }
+          
 	      	console.log(result);
 	      	
 	      	this.is_response = true;
@@ -671,7 +741,7 @@ export class HomePage implements OnInit {
           	}
 
           	var properties1 = {
-	            $og_title: "Favreet",
+	            $og_title: "Recommendspot",
 	            $deeplink_path: 'content/123',
 	            $match_duration: 2000,
 	            custom_string: 'data',
@@ -685,7 +755,7 @@ export class HomePage implements OnInit {
               	var sendlink = res.url;
               	console.log(sendlink);
               	var imgUrl = self.errors.indexOf(post.image) >= 0 ? null :  (self.IMAGES_URL + '/images/' + post.image);
-              	self.socialSharing.share('Check out the link: ', 'Favreet App', imgUrl, sendlink);
+              	self.socialSharing.share('Check out the link: ', 'Recommendspot', imgUrl, sendlink);
           		
     
       		}).catch(function(err) {

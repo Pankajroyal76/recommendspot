@@ -71,18 +71,18 @@ export class SignupPage implements OnInit {
   	register(){
 	    this.is_submit = true;
 	    console.log('signup')
-	    if(this.errors.indexOf(this.name) >= 0 || !this.reg_exp_letters.test(String(this.name)) || this.errors.indexOf(this.contact) >= 0 || this.errors.indexOf(this.email) >= 0 || !this.reg_exp.test(String(this.email).toLowerCase()) || this.errors.indexOf(this.password) >= 0 || this.password.length < 6 || this.errors.indexOf(this.confirm_password) >= 0 || this.confirm_password.length < 6 || !this.reg_exp_digits.test(String(this.contact))){
+	    if(this.errors.indexOf(this.authForm.value.name) >= 0 || !this.reg_exp_letters.test(String(this.authForm.value.name)) || this.errors.indexOf(this.authForm.value.contact) >= 0 || this.errors.indexOf(this.authForm.value.email) >= 0 || !this.reg_exp.test(String(this.authForm.value.email).toLowerCase()) || this.errors.indexOf(this.authForm.value.password) >= 0 || this.authForm.value.password.length < 6 || this.errors.indexOf(this.authForm.value.confirm_password) >= 0 || this.authForm.value.confirm_password.length < 6 || !this.reg_exp_digits.test(String(this.authForm.value.contact))){
 	      return false;
 	    };
 
-	    if(this.password != this.confirm_password){
+	    if(this.authForm.value.password != this.authForm.value.confirm_password){
 	    	return false;
 	    }
 	    let dict ={
-	      name: this.name,
-	      contact: this.contact,
-	      email: this.email,
-	      password: this.password,
+	      name: this.authForm.value.name,
+	      contact: this.authForm.value.contact,
+	      email: this.authForm.value.email,
+	      password: this.authForm.value.password,
 	      fcm_token: this.fcm_token,
 	    };
 	    console.log(dict)

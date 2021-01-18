@@ -1,16 +1,19 @@
 <div headerWeb>
-	<a href="javascript:void(0)" logo>Favreet</a>
-	<div ritHeader>
+	<a href="javascript:void(0)" routerLink="/tabs/home" logo>Recommendspot</a>
+	<div ritHeader [style.height]="errors.indexOf(user_id) >= 0 ? '66px' : '' ">
 		<ul>
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
 			<li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
-			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Save Reccomendation</a></li>
+			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Save Recommendation</a></li>
 			 
 		</ul>
 		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon></a>
-		<span proImg routerLink="/tabs/profile">
-			<img src="assets/img/user4.jpg" alt="">
-			 <p>Priyanka S. <small>priyankasharma@gmail.com</small></p>
+		<span proImg *ngIf="errors.indexOf(user_id) == -1">
+			<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
+	       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
+	      <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) >= 0" src="assets/img/default.png">
+
+			 <p routerLink="/tabs/profile"><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
 			<div profileDropdown>
 				<ul>
 					<li><a href="javascript:void(0)" routerLink="/profile-setting">Profile Settings</a></li>
@@ -56,8 +59,8 @@
 			 <img *ngIf="errors.indexOf(profile?.image) == -1 && getimage(profile?.image) == false" src="{{IMAGES_URL + '/images/' + profile?.image}}">
 			<img *ngIf="errors.indexOf(profile?.image) >= 0" src="assets/img/default.png">
 			<h2>{{profile?.name}}</h2>
-			<ion-button class="socl-btn" (click)="follow()" *ngIf="add_user_type == 'user' && joined == 'false' && loggedUserId != userId && errors.indexOf(loggedUserId) == -1" >Follow</ion-button>
-			<ion-button class="socl-btn" (click)="remove()" *ngIf="add_user_type == 'user' && joined == 'true' && loggedUserId != userId && errors.indexOf(loggedUserId) == -1">Following</ion-button>
+			<ion-button class="socl-btn" (click)="follow()" *ngIf="add_user_type == 'user' && joined == 'false' && loggedUserId !== userId && errors.indexOf(loggedUserId) == -1" >Follow</ion-button>
+			<ion-button class="socl-btn" (click)="remove()" *ngIf="add_user_type == 'user' && joined == 'true' && loggedUserId !== userId && errors.indexOf(loggedUserId) == -1">Following</ion-button>
 			
 			</div>
 		</ion-col>
@@ -85,13 +88,14 @@
 					 </ion-avatar>
 					<ion-label>
 					<h2 (click)="viewUser(item)">{{item.user_name}}</h2>
-					<p (click)="viewUser(item)">{{item.created_at  | timeAgo}}</p>
+					<p (click)="viewUser(item)">{{item.created_at  | dateAgo}}</p>
 					</ion-label>
 					<!-- <ion-icon class="icon-dots" name="ellipsis-vertical"></ion-icon> -->
 					<span (click)="viewPost(item)" class="servcs-badge">{{item.category}}</span>
 				</ion-item>
 			</div>
 			<div class="post-content" style="position: relative;">
+				<h6 style="font-size: 14px;color: #000;">{{item.title}}</h6>
 				<p  (click)="viewPost(item)">{{item.description}}</p>
 
 				<ng-container *ngIf="item?.type == 'Words'">
@@ -105,26 +109,26 @@
 			<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
 				<span class="weblink" (click)="openLink(item.web_link)"><a (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
 
-				<div class="linkcontent" *ngIf="item.web_link_content != null" (click)="openLinkPreview(item.web_link_content.url)">
+				<div class="linkcontent" *ngIf="item.web_link_content != null" (click)="openLinkPreview(item.web_link_content.data.link)">
 				
 					<ion-row>
-						<ion-col size="3" *ngIf="item.web_link_content?.image != ''">
-							<img src="{{item.web_link_content?.image}}" />
+						<ion-col size="3" size-md="1" *ngIf="item.web_link_content?.data.image != ''">
+							<img src="{{item.web_link_content?.data.image}}" />
 						</ion-col>
 
-						<ion-col size="{{item.web_link_content?.title != '' ? 9 : 12}}">
-							<p *ngIf="item.web_link_content?.title != ''">{{item.web_link_content?.title}}</p>
-							<p *ngIf="item.web_link_content?.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
-							<p *ngIf="item.web_link_content?.title != ''">{{item.web_link_content?.description}}</p>
-							<p *ngIf="item.web_link_content?.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
+						<ion-col size="{{item.web_link_content?.data.title != '' ? 9 : 12}}">
+							<p style="margin:0;" *ngIf="item.web_link_content?.data.title != ''">{{item.web_link_content?.data.title}}</p>
+							<p style="margin:0;" *ngIf="item.web_link_content?.data.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
+							<p style="margin:0;" *ngIf="item.web_link_content?.data.title != ''">{{item.web_link_content?.data.description}}</p>
+							<p style="margin:0;" *ngIf="item.web_link_content?.data.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
 						</ion-col>
 					</ion-row>
 					
 				</div>
 
 				<ng-container *ngIf="errors.indexOf(item.web_link) == -1">
-					<ion-icon class="heart-icon weblink-icon" name="heart-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
-					<ion-icon class="heart-icon weblink-icon" name="heart" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon>
+					<ion-icon style="z-index: 999;bottom: 135px;right: 25px;" class="heart-icon weblink-icon" name="heart-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
+					<ion-icon style="z-index: 999;bottom: 135px;right: 25px;" class="heart-icon weblink-icon" name="heart" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon>
 				</ng-container>
 			</div>
 			<div class="post-img" *ngIf="errors.indexOf(item.image) == -1 || item.image" (click)="viewPost(item)">
@@ -176,11 +180,12 @@
 					<ion-col size="6" class="ion-text-right">
 					<ion-button class="socl-btn" (click)="viewPost(item)"><ion-icon name="chatbubble-outline"></ion-icon> {{item.comments.length}} </ion-button>
 					<div *ngIf="platform1 == false">
-								<a (click)="viewPostSocial(item)" href="http://www.facebook.com/share.php?u=http://18.219.109.190/weblive/" target="_blank"><ion-icon name="logo-facebook"></ion-icon></a>
-								<a (click)="viewPostSocial(item)" href="https://twitter.com/share?url=http://18.219.109.190/weblive/&amp;text=aa&amp;hashtags=YOUR_HASHTAGS" target="_blank"><ion-icon name="logo-twitter"></ion-icon></a>
-								<a (click)="viewPostSocial(item)" href="https://web.whatsapp.com/send?text=http://18.219.109.190/weblive/" target="_blank"><ion-icon name="logo-whatsapp"></ion-icon></a>
-								<a (click)="viewPostSocial(item)" href="https://plus.google.com/share?url=http://18.219.109.190/weblive/" target="_blank"><ion-icon name="logo-google"></ion-icon></a>
-								<a (click)="viewPostSocial(item)" href="http://www.linkedin.com/shareArticle?mini=true&amp;url=http://18.219.109.190/weblive/" target="_blank"><ion-icon name="logo-linkedin"></ion-icon></a>
+								<span style="padding: 5px;" (click)="viewPostSocial(item, 'http://www.facebook.com/share.php?u=http://18.219.109.190/weblive/')" ><ion-icon name="logo-facebook"></ion-icon></span>
+
+								<span style="padding: 5px;"  (click)="viewPostSocial(item, 'https://twitter.com/share?url=http://18.219.109.190/weblive/&amp;text=aa&amp;hashtags=YOUR_HASHTAGS')"  ><ion-icon name="logo-twitter"></ion-icon></span>
+								<span style="padding: 5px;"  (click)="viewPostSocial(item, 'https://web.whatsapp.com/send?text=http://18.219.109.190/weblive/')"><ion-icon name="logo-whatsapp"></ion-icon></span>
+								<span style="padding: 5px;"  (click)="viewPostSocial(item, 'https://plus.google.com/share?url=http://18.219.109.190/weblive/')" ><ion-icon name="logo-google"></ion-icon></span>
+								<span style="padding: 5px;"  (click)="viewPostSocial(item, 'http://www.linkedin.com/shareArticle?mini=true&amp;url=http://18.219.109.190/weblive/')"><ion-icon name="logo-linkedin"></ion-icon></span>
 							</div>
 
 							<ion-button class="socl-btn"  (click)="socialsharebranch(item)" *ngIf="platform1 == true"><ion-icon name="share-social-outline"></ion-icon></ion-button>		
@@ -209,7 +214,7 @@
 </ion-content>
 
 <div footerWeb>
-	<p>© 2020 Favreet. All rights reserved.</p>
+	<p>© 2020 Recommendspot. All rights reserved.</p>
 </div>
 
   

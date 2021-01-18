@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { PostDetailsPageRoutingModule } from './post-details-routing.module';
 
 import { PostDetailsPage } from './post-details.page';
-import { CommonPipeModule } from '../services/commonPipe.module';
+import { CommonPipeModule } from '../commonPipe.module';
 
 @NgModule({
   imports: [
@@ -17,6 +17,7 @@ import { CommonPipeModule } from '../services/commonPipe.module';
     CommonPipeModule,
     PostDetailsPageRoutingModule
   ],
-  declarations: [PostDetailsPage]
+  declarations: [PostDetailsPage],
+  exports: [CommonPipeModule]
 })
 export class PostDetailsPageModule {}

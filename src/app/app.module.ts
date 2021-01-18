@@ -28,7 +28,8 @@ import { ApilinkService } from './services/apilink.service';
 import { ApiserviceService } from './services/apiservice.service';
 
 import { AngularFireModule } from 'angularfire2';
-import { environment } from './services/environment';
+import { environment } from '../environments/environment';
+import { environments } from './services/environment';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 
 
@@ -36,6 +37,7 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 
 
 import { Http, HttpModule, RequestOptions } from '@angular/http';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
   declarations: [AppComponent],
@@ -44,8 +46,9 @@ import { Http, HttpModule, RequestOptions } from '@angular/http';
   IonicModule.forRoot(), 
   AppRoutingModule,
   HttpModule,
-  AngularFireModule.initializeApp(environment.firebase),
+  AngularFireModule.initializeApp(environments.firebase),
   AngularFireAuthModule,
+  ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production, scope: './', registrationStrategy: 'registerImmediately' })
   
   ],
   providers: [

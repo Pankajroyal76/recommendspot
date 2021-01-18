@@ -45,6 +45,8 @@ export class AppComponent {
   user_medium = localStorage.getItem('user_medium');
   IMAGES_URL: any = config.IMAGES_URL;
   errors = config.errors;
+  selectedIndex: any;
+  showBtn: boolean = false;
 
   constructor(
     private platform: Platform,
@@ -85,6 +87,11 @@ export class AppComponent {
   }
 
   initializeApp() {
+
+
+  let deferredPrompt;
+ 
+    
     this.platform.ready().then(() => {
       //this.statusBar.styleDefault();
       this.statusBar.backgroundColorByHexString('#f16334');
@@ -99,7 +106,8 @@ export class AppComponent {
       
       this.branchInit();
       this.fcmNotification();
-           
+
+      
     });
 
     this.platform.resume.subscribe(() => {

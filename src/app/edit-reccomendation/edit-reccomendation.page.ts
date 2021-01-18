@@ -11,15 +11,18 @@ import { FilePath } from '@ionic-native/file-path/ngx';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 declare var window: any; 
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-edit-reccomendation',
   templateUrl: './edit-reccomendation.page.html',
   styleUrls: ['./edit-reccomendation.page.scss'],
 })
+
+
 export class EditReccomendationPage implements OnInit {
 	
-	private win: any = window;
+	public win: any = window;
 	type: any = 'Photo';
 	category: any = '';
 	description: any;
@@ -42,8 +45,13 @@ export class EditReccomendationPage implements OnInit {
 	authForm: FormGroup;
 	link_content: any;
 	opencontent: any;
+	allowedMimes:any = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/webp', 'image/svg'];
+	image_error: any = false;
+	image_file: any;
+	image_url: any;
+	is_image_uploaded: any;
 
- 	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, public location: Location, private globalFooService: GlobalFooService,private formBuilder: FormBuilder) { 
+ 	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, public location: Location, private globalFooService: GlobalFooService,private formBuilder: FormBuilder, public sanitizer:DomSanitizer) { 
   		
  		this.createForm();
   		this.expression = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
@@ -65,6 +73,7 @@ export class EditReccomendationPage implements OnInit {
   	//define the validators for form fields
   	createForm(){
 	    this.authForm = this.formBuilder.group({
+	      title: ['', Validators.compose([Validators.required])],
 	      type: ['', Validators.compose([Validators.required])],
 	      description: ['', Validators.compose([Validators.required])],
 	      category: ['', Validators.compose([Validators.required])],
@@ -76,17 +85,32 @@ export class EditReccomendationPage implements OnInit {
   		console.log(link);
   		var self = this;
 		var target = link;
-		$.ajax({
-		url: "https://api.linkpreview.net",
-		dataType: 'jsonp',
-		data: {q: target, key: 'c23b499c88994dfa1fad242d8e141ee3'},
-		success: function (response) {
-		console.log(response);
-		self.opencontent = true;
-		self.link_content = response;
+		// $.ajax({
+		// url: "https://api.linkpreview.net",
+		// dataType: 'jsonp',
+		// data: {q: target, key: 'c23b499c88994dfa1fad242d8e141ee3'},
+		// success: function (response) {
+		// console.log(response);
+		// self.opencontent = true;
+		// self.link_content = response;
 
-		}
-		});
+		// }
+		// });
+
+		var dict = {
+	    	url: link
+	    }
+	  	this.apiService.presentLoading();
+	    this.apiService.postData(dict,'scrapUrl').subscribe((result) => { 
+	      this.apiService.stopLoading();  
+	      console.log(result)
+	      this.opencontent = true;
+		this.link_content = result;
+		this.apiService.stopLoading();
+	    },
+	    err => {
+	        this.apiService.presentToast('Technical error,Please try after some time','success');
+	    });
 		
   		
   	}
@@ -136,6 +160,11 @@ export class EditReccomendationPage implements OnInit {
   		this.getCategories();
   	}
 
+  	closeLinkContent(){
+  		this.opencontent = false;
+  	}
+
+
   	getCategories(){
 
   		this.apiService.presentLoading();
@@ -144,7 +173,7 @@ export class EditReccomendationPage implements OnInit {
 	    }
 	  
 	    this.apiService.postData(dict,'categories').subscribe((result) => { 
-	      this.apiService.stopLoading();  
+	     this.apiService.stopLoading();  
 	      if(result.status == 1){
 	        this.categories = result.data;	        
 	        this.getData();
@@ -164,16 +193,43 @@ export class EditReccomendationPage implements OnInit {
         'user_id': localStorage.getItem('userId'),
       };
 
-      this.apiService.presentLoading();
+      // this.apiService.presentLoading();
         this.apiService.postData(dict,'postDetail').subscribe((result) => {
-          this.apiService.stopLoading();
+          // this.apiService.stopLoading();
           console.log(result)
           if(result.status == 1){
+          	this.authForm.patchValue({
+	          	title: result.data[0].title,
+	          	type: result.data[0].type,
+	          	category: result.data[0].category_id,
+	          	description: result.data[0].description,
+	          	web_link: result.data[0].web_link,
+	          	
+	        });
+
+	        var self = this;
+	        if(this.errors.indexOf(result.data[0].web_link) == -1){
+				var target = result.data[0].web_link;
+				var dict = {
+			    	url: target
+			    }
+			  	// this.apiService.presentLoading();
+			    this.apiService.postData(dict,'scrapUrl').subscribe((result) => { 
+		     	 	this.apiService.stopLoading();  
+			      	console.log(result)
+			      	this.opencontent = true;
+					this.link_content = result;
+			    },
+			    err => {
+			        this.apiService.presentToast('Technical error,Please try after some time','success');
+			    });
+				
+			};
               this.post = result.data[0];
-              this.type = result.data[0].type;
-              this.category = result.data[0].category_id;
-              this.description = result.data[0].description;
-              this.web_link = result.data[0].web_link;
+              this.authForm.value.type = result.data[0].type;
+              this.authForm.value.category = result.data[0].category_id;
+              this.authForm.value.description = result.data[0].description;
+              this.authForm.value.web_link = result.data[0].web_link;
               this.image = result.data[0].image;
               this.link_content = result.data[0].web_link_content
           }
@@ -191,32 +247,32 @@ export class EditReccomendationPage implements OnInit {
     add_recc(){
 
   		this.is_submit = true;
-  		console.log(this.type, this.category, this.description,this.web_link);
+  		console.log(this.authForm.value.type, this.authForm.value.category, this.authForm.value.description,this.authForm.value.web_link);
 
-  		if(this.errors.indexOf(this.category) >= 0){
+  		if(this.errors.indexOf(this.authForm.value.category) >= 0 || this.errors.indexOf(this.authForm.value.title) >= 0){
 	      return false;
 	    }
-  		if(this.type != 'Website'){
-  			if(this.errors.indexOf(this.description) >= 0){
+  		if(this.authForm.value.type != 'Website'){
+  			if(this.errors.indexOf(this.authForm.value.description) >= 0){
 		      return false;
 		    }
   		}
   		
 
-	    if(this.type == 'Website'){
-	    	if(this.errors.indexOf(this.web_link) >= 0 || !this.expression.test(this.web_link)){
+	    if(this.authForm.value.type == 'Website'){
+	    	if(this.errors.indexOf(this.authForm.value.web_link) >= 0 || !this.expression.test(this.authForm.value.web_link)){
 		      return false;
 		    }
 	    }
 
-	    if(this.type == 'Photo'){
+	    if(this.authForm.value.type == 'Photo'){
 	    	if(this.errors.indexOf(this.image) >= 0 && this.errors.indexOf(this.live_image_url) >= 0){
 		      return false;
 		    }
 	    }
 	    
 	    
-	    if(this.type == 'Photo' && this.errors.indexOf(this.live_image_url) == -1){
+	    if(this.authForm.value.type == 'Photo' && this.errors.indexOf(this.image_file) == -1){
 	    	this.uploadImage();
 	    }else{
 	    	this.profileImageSubmit();
@@ -306,7 +362,8 @@ export class EditReccomendationPage implements OnInit {
 
   	uploadImage(){
   		const frmData = new FormData();
-  		frmData.append('file', this.imgBlob, this.live_file_name);
+  		//frmData.append('file', this.imgBlob, this.live_file_name);
+  		frmData.append('file', this.image_file, this.image_file.name);
   		this.apiService.postData(frmData,'uploadReccImage').subscribe((result) => { 
 	      		console.log(result);
 	      		this.image = result;
@@ -321,10 +378,11 @@ export class EditReccomendationPage implements OnInit {
   	profileImageSubmit(){
 	    this.apiService.presentLoading();
 	    var dict = {
-	    	type: this.type,
-	    	description: this.description,
-	    	category: this.category,
-	    	web_link: this.web_link,
+	    	title: this.authForm.value.title,
+	    	type: this.authForm.value.type,
+	    	description: this.authForm.value.description,
+	    	category: this.authForm.value.category,
+	    	web_link: this.authForm.value.web_link,
 	    	image: this.image,
 	    	user_id: localStorage.getItem('userId'),
 	    	_id: this.post._id,
@@ -336,14 +394,14 @@ export class EditReccomendationPage implements OnInit {
 	      this.apiService.stopLoading();  
 	      if(result.status == 1){
 
-	      	this.description = '';
+	      	this.authForm.value.description = '';
 	      	this.is_submit = false;
 	      	this.live_image_url = '';
 	      	this.imgBlob = '';
 	      	this.live_file_name = '';
-	      	this.type = 'Photo';
-	      	this.category = '';
-	      	this.web_link = '';
+	      	this.authForm.value.type = 'Photo';
+	      	this.authForm.value.category = '';
+	      	this.authForm.value.web_link = '';
 	      	this.link_content = '';
 	      	this.globalFooService.publishSomeData({
             	foo: {'data': result.data, 'page': 'updateprofile'}
@@ -361,5 +419,25 @@ export class EditReccomendationPage implements OnInit {
 	        this.apiService.presentToast('Technical error,Please try after some time','success');
 	    });
   	}
+
+  	uploadImages(event){
+   
+	    this.image_error = false;
+	    var self = this;
+	    if (event.target.files && event.target.files[0]) {
+	      var reader = new FileReader();
+	      var image_file = event.target.files[0];
+	      if(self.allowedMimes.indexOf(image_file.type) == -1){
+	        this.image_error = true;
+	      }
+	      else{
+	        console.log('type is');
+	          self.image_file = image_file;
+	          self.image_url = window.URL.createObjectURL(image_file);
+	          self.is_live_image_updated = true;
+	        
+	      }
+	    }
+	  }
 
 }

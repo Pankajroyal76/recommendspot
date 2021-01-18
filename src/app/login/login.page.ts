@@ -56,13 +56,13 @@ export class LoginPage implements OnInit {
   	login(){
 
 	    this.is_submit = true;
-	    if(this.errors.indexOf(this.email) >= 0 || this.errors.indexOf(this.password) >= 0 || !this.reg_exp.test(String(this.email)) || !this.withoutspace.test(this.password) ){
+	    if(this.errors.indexOf(this.authForm.value.email) >= 0 || this.errors.indexOf(this.authForm.value.password) >= 0 || !this.reg_exp.test(String(this.authForm.value.email)) || !this.withoutspace.test(this.authForm.value.password) ){
 	      return false;
 	    }
 
 	    let dict ={
-	      email: this.email,
-	      password: this.password,
+	      email: this.authForm.value.email,
+	      password: this.authForm.value.password,
 	      fcm_token: this.fcm_token
 	    };
 	    console.log(dict)
@@ -135,7 +135,7 @@ export class LoginPage implements OnInit {
         	// if(this.errors.indexOf(result) == -1){
 	          	let dict ={
 			            name: result.additionalUserInfo.profile['name'],
-			            email: result.additionalUserInfo.profile['email'],
+			            email: result.user.email,
 			            password: '',
 			            medium: 'google',
 			            social_id: result.additionalUserInfo.profile['id'],
@@ -243,7 +243,7 @@ export class LoginPage implements OnInit {
         	localStorage.setItem('user_name', result.data.name);
   			localStorage.setItem('user_image', result.data.image);
   			localStorage.setItem('user_email', result.data.email);
-  			localStorage.setItem('user_medium', dict.medium);
+  			localStorage.setItem('user_medium', result.data.medium);
   			this.globalFooService.publishSomeData({
             	foo: {'data': result.data, 'page': 'profile'}
         	});

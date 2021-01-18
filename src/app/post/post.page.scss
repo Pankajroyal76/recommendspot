@@ -85,11 +85,29 @@ div .searchbar-input-container{
 	
 }
 
-ion-searchbar{
-    	input{
-    		border-radius: 25px !important;
+ion-select {
+	div{
+		.select-icon{
+	
+			float: right !important;
+	    	margin-left: 137px !important;
     	}
     }
+	
+}
+
+.search
+{
+    background:var(--ion-color-secondary);
+    padding: 15px 15px 30px;
+    position: relative;
+    z-index: 2;
+    ion-searchbar{
+    	input{
+    		color: #000 !important;
+    	}
+    }
+}
 .home-sec 
 {
 

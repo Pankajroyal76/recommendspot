@@ -1,4 +1,5 @@
-var MAIN_URL = 'http://18.219.109.190';
+//var MAIN_URL = 'http://3.138.151.178';
+var MAIN_URL = 'https://recommendspot.com';
 var MAIN_URL_PORT = '3001';
 //var MAIN_URL_PORT = '3003';
 var SOCKET_URL_PORT = '3002';

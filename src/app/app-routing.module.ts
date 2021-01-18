@@ -7,7 +7,7 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: "posts",
-    pathMatch: 'full'
+    pathMatch: 'full' 
   },
   {
     path: 'login',
@@ -77,7 +77,7 @@ const routes: Routes = [
 ];
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(routes,{useHash:true})
   ],
   exports: [RouterModule]
 })

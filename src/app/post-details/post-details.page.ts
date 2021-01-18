@@ -153,6 +153,27 @@ export class PostDetailsPage implements OnInit {
 	  }
     }
 
+    isDisLikedPost(dislikesArray){
+      //assets/imgs/like.png
+      let IsLiked = false;
+      if(dislikesArray.length == 0){
+
+      }else{
+        for(var i=0; i < dislikesArray.length; i++){
+         
+          if(dislikesArray[i].userId == this.userId){
+            IsLiked = true;
+          }
+       }
+      }
+      
+      if(IsLiked){
+        return 'thumbs-down';
+      }else{
+        return 'thumbs-down-outline';
+      }
+    }
+
    
     sendNotification(type){
       if(this.post.userId != this.userId){
@@ -351,7 +372,7 @@ export class PostDetailsPage implements OnInit {
       this.iab.create(web_link, '_system', {location: 'yes', closebuttoncaption: 'done'});
     }
 
-  	addRemoveReccomdation(item, type, index){
+  	addRemoveReccomdation(item, type){
 
   		let dict ={
 	      user_id: localStorage.getItem('userId'),

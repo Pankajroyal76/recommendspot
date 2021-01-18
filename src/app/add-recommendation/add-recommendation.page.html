@@ -1,10 +1,10 @@
 <div headerWeb>
-	<a href="javascript:void(0)" logo>Favreet</a>
+	<a href="javascript:void(0)" routerLink="/tabs/home" logo>Recommendspot</a>
 	<div ritHeader>
 		<ul>
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
 			<li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
-			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Save Reccomendation</a></li>
+			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
 			 
 		</ul>
 		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon></a>
@@ -30,7 +30,7 @@
   <ion-menu-button slot="start">
 <img height="15px" src="assets/img/menu.png"/>
   </ion-menu-button>
-    <ion-title class="ion-text-center">Save Reccomendation</ion-title>
+    <ion-title class="ion-text-center">Add Recommendation</ion-title>
 	
   </ion-toolbar>
 </ion-header>
@@ -41,13 +41,20 @@
 	<div container>
 		<form [formGroup]="authForm" (keyup.enter)="add_recc()">
 			<div form-group>
+		    	<label>Title</label>
+				<ion-item lines="none">
+					<ion-input rows="3" placeholder="Enter Title" formControlName="title"></ion-input>
+				</ion-item>
+				<span error *ngIf="errors.indexOf(authForm.value.title) >= 0 && is_submit == true">Please enter title</span>
+			</div>
+			<div form-group>
 		    	<label>Type</label>
 				<ion-item lines="none">
 					<ion-label>
 						<ion-icon name="keypad-outline"></ion-icon> 
 						<span style="display: none;">Type</span>
 					</ion-label>
-					<ion-select [interfaceOptions]="customAlertOptions" interface="alert" [(ngModel)]="type" (ionChange)="typeChange(type)" [ngModelOptions]="{standalone: true}"  formControlName="type">
+					<ion-select interface="alert" (ionChange)="typeChange(authForm.value.type)" formControlName="type">
 						<ion-select-option value="Photo"> Photo/Image </ion-select-option>
 						<ion-select-option value="Website"> Website Link </ion-select-option>
 						<ion-select-option value="Words"> Text Only   </ion-select-option>
@@ -61,60 +68,65 @@
 						<ion-icon name="layers-outline"></ion-icon>
 						<span style="display: none;">Category</span>
 					</ion-label>
-					<ion-select [interfaceOptions]="customAlertOptions" interface="alert"  placeholder="Select" [(ngModel)]="category" [ngModelOptions]="{standalone: true}"  formControlName="category">
+					<ion-select interface="alert"  placeholder="Select"  formControlName="category">
 						<ion-select-option value="{{doc._id}}" *ngFor="let doc of categories; let i = index;"> {{doc.name}} </ion-select-option>
 					</ion-select>
 				</ion-item>
-				<span error *ngIf="errors.indexOf(category) >= 0 && is_submit == true">Please choose category</span>
+				<span error *ngIf="errors.indexOf(authForm.value.category) >= 0 && is_submit == true">Please choose category</span>
 			</div>
 			<div form-group>
 		    	<label>Description</label>
 				<ion-item lines="none">
-					<ion-textarea rows="3" placeholder="Enter Any Description Here..." [(ngModel)]="description" [ngModelOptions]="{standalone: true}"  formControlName="description"></ion-textarea>
+					<ion-textarea rows="3" placeholder="Enter Any Description Here..." formControlName="description"></ion-textarea>
 				</ion-item>
-				<span error *ngIf="type != 'Website' && errors.indexOf(description) >= 0 && is_submit == true">Please enter description</span>
+				<span error *ngIf="authForm.value.type != 'Website' && errors.indexOf(authForm.value.description) >= 0 && is_submit == true">Please enter description</span>
 			</div>
-			<div form-group  uploadimg *ngIf="type == 'Photo'">
+			<div form-group  uploadimg *ngIf="authForm.value.type == 'Photo'">
 		    	<label>Image</label>
 				<div add-recc>
-					<label for="resume" (click)="selectImage()"><ion-icon name="cloud-upload-outline"></ion-icon><span>Upload Image Here</span></label>
-					<!-- <input type="file" name="resume" id="resume" style="display:none"/> -->
-					<img *ngIf="errors.indexOf(live_image_url) == -1" [src]="win.Ionic.WebView.convertFileSrc(live_image_url)" />
-				</div>
-				<span error *ngIf="errors.indexOf(live_image_url) >= 0 && is_submit == true">Please select image</span>
-			</div>
-			<div form-group  uploadimg *ngIf="type == 'Website'">
-		    	<label>Web Link</label>
-		
-				<ion-item lines="none">
-						<ion-textarea placeholder="Enter Website Link" [(ngModel)]="web_link" (ngModelChange)="checklink(web_link)" [ngModelOptions]="{standalone: true}"  formControlName="web_link"> </ion-textarea>
-				</ion-item>
-				<span error *ngIf=" type == 'Website' && errors.indexOf(web_link) >= 0 && is_submit == true">Please enter web link</span>
-				<span error *ngIf=" type == 'Website' && errors.indexOf(web_link) == -1 && !expression.test(web_link) && is_submit == true">Please enter valid web link (i.e. http://www.example.com, https://www.example.com, www.example.com, example.com)</span>
-				<div class="linkcontent" *ngIf="web_link != '' && opencontent == true">
-					<ion-icon name="close-circle-outline" class="linkcontentclose" (click)="closeLinkContent()"></ion-icon> 
-					<ion-row>
-						<ion-col size="3" *ngIf="link_content?.image != ''">
-							<img src="{{link_content?.image}}" />
-						</ion-col>
+					<!-- (click)="selectImage()" -->
+					<label for="resume" ><ion-icon name="cloud-upload-outline"></ion-icon><span>Upload Image Here</span></label>
+					<input type="file" name="resume" id="resume" style="display:none" (change)="uploadImages($event)"/>
 
-						<ion-col size="{{link_content?.title != '' ? 9 : 12}}">
-							<p *ngIf="link_content?.title != ''">{{link_content?.title}}</p>
-							<p *ngIf="link_content?.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
-							<p *ngIf="link_content?.title != ''">{{link_content?.description}}</p>
-							<p *ngIf="link_content?.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
-						</ion-col>
-					</ion-row>
+					<img *ngIf="errors.indexOf(image_url) == -1" [src]="sanitizer.bypassSecurityTrustUrl(image_url)" />
+					 
+					 <!--  [src]="win.Ionic.WebView.convertFileSrc(live_image_url)" -->
+				</div>
+				<span error *ngIf="errors.indexOf(image_file) >= 0 && is_submit == true">Please select image</span>
+			</div>
+			<div form-group  uploadimg *ngIf="authForm.value.type == 'Website'">
+		    	<label>Web Link</label>
+
+	<ion-item lines="none">
+			<ion-textarea placeholder="Enter Website Link"  (ionChange)="checklink(authForm.value.web_link)" formControlName="web_link"></ion-textarea>
+	</ion-item>
+	<span error *ngIf=" authForm.value.type == 'Website' && errors.indexOf(authForm.value.web_link) >= 0 && is_submit == true">Please enter web link</span>
+	<span error *ngIf=" authForm.value.type == 'Website' && errors.indexOf(authForm.value.web_link) == -1 && !expression.test(authForm.value.web_link) && is_submit == true">Please enter valid web link (i.e. http://www.example.com, https://www.example.com, www.example.com, example.com)</span>
+	<div class="linkcontent" *ngIf="authForm.value.web_link != '' && opencontent == true">
+		<ion-icon name="close-circle-outline" class="linkcontentclose" (click)="closeLinkContent()"></ion-icon> 
+		<ion-row>
+			<ion-col size="3" size-md="1" *ngIf="link_content?.image != ''">
+				<img src="{{link_content?.data?.image}}" />
+			</ion-col>
+
+			<ion-col size="{{link_content?.title != '' ? 9 : 12}}">
+				<p *ngIf="link_content?.data?.title != ''">{{link_content?.data?.title}}</p>
+				<p *ngIf="link_content?.data == null"> Lorem Ipsum is simply dummy text of the industry. </p>
+				<p *ngIf="link_content?.data?.title != ''">{{link_content?.data?.description}}</p>
+				<p *ngIf="link_content?.data == null">Lorem Ipsum is simply dummy text of the industry.</p>
+			</ion-col>
+		</ion-row>
+				
 			
 				</div>
 			</div>
-			<ion-button color="secondary" expand="full" shape="round" type="submit">Save Reccomendation</ion-button>
+			<ion-button color="secondary" expand="full" shape="round" type="submit" (click)="add_recc()">Add Recommendation</ion-button>
 		</form>
 	</div>
 
 </ion-content>
 
 <div footerWeb>
-	<p>© 2020 Favreet. All rights reserved.</p>
+	<p>© 2020 Recommendspot. All rights reserved.</p>
 </div>
 

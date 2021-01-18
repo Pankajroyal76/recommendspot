@@ -126,8 +126,43 @@ ion-searchbar {
 }
 
 
+
+
 @media (min-width:1025px){
+    [webPostsearch]{
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        form, ion-item{
+            flex: 1;
+            background: #fff;
+            height: 47px;
+            ion-searchbar{
+                padding: 0;
+                --box-shadow: none;
+                margin-top: 3px;
+            }
+        }
+        ion-item{
+            margin-left: 15px;
+        }
+    }
+    [profilesetting]{
+        max-width: 450px;
+        margin:0px auto;
+        ion-segment{
+            max-width: 450px;
+            margin:20px auto 40px;
+        }
+    }
+    [loginform]{
+        max-width: 500px;
+        margin:0 auto;
+    }
     [sortbyPhn]{
+        display: none;
+    }
+    [displayabovePhn]{
         display: none;
     }
     ion-content .search{

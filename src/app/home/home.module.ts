@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { HomePageRoutingModule } from './home-routing.module';
 
 import { HomePage } from './home.page';
-import { CommonPipeModule } from '../services/commonPipe.module';
+import { CommonPipeModule } from '../commonPipe.module';
 
 @NgModule({
   imports: [
@@ -18,6 +18,7 @@ import { CommonPipeModule } from '../services/commonPipe.module';
     HomePageRoutingModule, 
     ReactiveFormsModule
   ],
-  declarations: [HomePage]
+  declarations: [HomePage],
+  exports: [CommonPipeModule]
 })
 export class HomePageModule {}

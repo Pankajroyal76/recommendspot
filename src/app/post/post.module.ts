@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { PostPageRoutingModule } from './post-routing.module';
 
 import { PostPage } from './post.page';
-import { CommonPipeModule } from '../services/commonPipe.module';
+import { CommonPipeModule } from '../commonPipe.module';
 
 @NgModule({
   imports: [
@@ -19,6 +19,7 @@ import { CommonPipeModule } from '../services/commonPipe.module';
     ReactiveFormsModule,
    // NgxSocialShareModule
   ],
-  declarations: [PostPage]
+  declarations: [PostPage],
+  exports: [CommonPipeModule]
 })
 export class PostPageModule {}

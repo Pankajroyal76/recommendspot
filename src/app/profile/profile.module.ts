@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { ProfilePageRoutingModule } from './profile-routing.module';
-import { CommonPipeModule } from '../services/commonPipe.module';
+import { CommonPipeModule } from '../commonPipe.module';
 
 import { ProfilePage } from './profile.page';
 
@@ -17,6 +17,7 @@ import { ProfilePage } from './profile.page';
     CommonPipeModule,
     ProfilePageRoutingModule
   ],
-  declarations: [ProfilePage]
+  declarations: [ProfilePage],
+  exports: [CommonPipeModule]
 })
 export class ProfilePageModule {}

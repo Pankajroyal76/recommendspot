@@ -1,10 +1,10 @@
 <div headerWeb>
-  <a href="javascript:void(0)" logo>Favreet</a>
+  <a href="javascript:void(0)" routerLink="/tabs/home" logo>Recommendspot</a>
   <div ritHeader>
     <ul>
       <li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
       <li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
-      <li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Save Reccomendation</a></li>
+      <li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Save Recommendation</a></li>
        
     </ul>
     <a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon></a>
@@ -38,20 +38,30 @@
 
   <div container>
   <div profileinfo>
-    <div profileimg [style.backgroundImage]="'url(' + bgImage + ')'">
-    <label  (click)="selectCoverImage('cover')" class="cover-label">
+    <div profileimg >
+       <img *ngIf="is_live_image_updated_cover == true" [src]="sanitizer.bypassSecurityTrustUrl(image_cover_url)">
+       <img *ngIf="errors.indexOf(profile?.cover_image) == -1 && getimage(profile?.cover_image) == false && is_live_image_updated_cover == false" src="{{IMAGES_URL + '/images/' + profile?.cover_image}}">
+       <img *ngIf="errors.indexOf(profile?.cover_image) >= 0 && is_live_image_updated_cover == false" src="assets/img/no-image.png">
+
+    <label  for="editcoverphoto" class="cover-label">
+      <!-- (click)="selectCoverImage('cover')"  -->
          <ion-icon name="create-outline" class="cover"></ion-icon>
       </label>
+      <input type="file" name="editcoverphoto" id="editcoverphoto" style="display:none" (change)="uploadCoverImage($event)"/>
       <!-- <img src="assets/img/bg-profile.jpg"/> -->
     </div>
     <div userimg>
-      <label for="editphoto" (click)="selectImage('profile')">
+      <!-- (click)="selectImage('profile')" -->
+      <label for="editphoto" >
          <ion-icon name="create-outline"></ion-icon>
       </label>
       <!-- <input type="file" id="editphoto"  name="editphoto" style="display:none;"/> -->
+      <input type="file" name="editphoto" id="editphoto" style="display:none" (change)="uploadProImage($event)"/>
       <img *ngIf="errors.indexOf(profile?.image) == -1 && getimage(profile?.image) == false && is_live_image_updated_profile == false" src="{{IMAGES_URL + '/images/' + profile?.image}}">
       <img *ngIf="errors.indexOf(profile?.image) == -1 && getimage(profile?.image) == true  && is_live_image_updated_profile == false" src="{{profile?.image}}">
-      <img *ngIf="image_type == 'profile'  && is_live_image_updated_profile == true" [src]="win.Ionic.WebView.convertFileSrc(live_image_url)">
+      <!-- <img *ngIf="image_type == 'profile'  && is_live_image_updated_profile == true" [src]="win.Ionic.WebView.convertFileSrc(live_image_url)"> -->
+      <img *ngIf="is_live_image_updated_profile == true" [src]="sanitizer.bypassSecurityTrustUrl(image_url)">
+
       <img *ngIf="errors.indexOf(profile?.image) >= 0 && is_live_image_updated_profile == false" src="assets/img/default.png">
       <h2>{{profile?.name}}</h2>
     </div>
@@ -65,7 +75,8 @@
 		   Change Password
 		  </ion-segment-button>
     </ion-segment>
-  
+
+   
     <div [ngSwitch]="profiletab">
 
     	<ion-list *ngSwitchCase="'Basic'">
@@ -76,10 +87,10 @@
             <ion-label>
               <ion-icon name="person-outline"></ion-icon>
             </ion-label>
-            <ion-input clearOnEdit="false" type="text"  placeholder="Enter Name" [(ngModel)]="name"  [ngModelOptions]="{standalone: true}"  formControlName="name"></ion-input>
+            <ion-input clearOnEdit="false" type="text"  placeholder="Enter Name"  formControlName="name"></ion-input>
           </ion-item>
-          <span error *ngIf="errors.indexOf(name) >= 0 && is_submit == true">Please enter your full name</span>
-          <span error *ngIf="errors.indexOf(name) == -1 && is_submit == true && !reg_exp_letters.test(name)">Please enter valid name should starts with alphabet</span>
+          <span error *ngIf="errors.indexOf(authForm.value.name) >= 0 && is_submit == true">Please enter your full name</span>
+          <span error *ngIf="errors.indexOf(authForm.value.name) == -1 && is_submit == true && !reg_exp_letters.test(authForm.value.name)">Please enter valid name should starts with alphabet</span>
         </div>
 
         <div form-group>
@@ -88,10 +99,10 @@
             <ion-label>
             <ion-icon name="mail-outline"></ion-icon>
             </ion-label>
-            <ion-input clearOnEdit="false" type="email"  placeholder="Enter Email"  [(ngModel)]="email" [ngModelOptions]="{standalone: true}"  formControlName="email"></ion-input>
+            <ion-input clearOnEdit="false" type="email"  placeholder="Enter Email" formControlName="email"></ion-input>
           </ion-item>
-          <span error *ngIf="errors.indexOf(email) >= 0 && is_submit == true">Please enter your email</span>
-          <span error *ngIf="errors.indexOf(email) == -1 && is_submit == true && !reg_exp.test(email.toLowerCase())">Please enter valid email</span>
+          <span error *ngIf="errors.indexOf(authForm.value.email) >= 0 && is_submit == true">Please enter your email</span>
+          <span error *ngIf="errors.indexOf(authForm.value.email) == -1 && is_submit == true && !reg_exp.test(authForm.value.email.toLowerCase())">Please enter valid email</span>
         </div>
 
         <div form-group>
@@ -100,11 +111,11 @@
             <ion-label>
             <ion-icon name="call-outline"></ion-icon>
             </ion-label>
-            <ion-input clearOnEdit="false" type="text"  placeholder="Enter Contact Number"  [(ngModel)]="contact" [ngModelOptions]="{standalone: true}"  formControlName="contact"></ion-input>
+            <ion-input clearOnEdit="false" type="text"  placeholder="Enter Contact Number"  formControlName="contact"></ion-input>
           </ion-item>
 
-          <span error *ngIf="errors.indexOf(contact) >= 0 && is_submit == true">Please enter your phone number</span>
-          <span error *ngIf="!reg_exp_digits.test(contact) && errors.indexOf(contact) == -1 && is_submit == true">Phone number should consist min. 6 digits and max. 10 digits</span>
+          <span error *ngIf="errors.indexOf(authForm.value.contact) >= 0 && is_submit == true">Please enter your phone number</span>
+          <span error *ngIf="!reg_exp_digits.test(authForm.value.contact) && errors.indexOf(authForm.value.contact) == -1 && is_submit == true">Phone number should consist min. 6 digits and max. 10 digits</span>
         </div>
 
         <ion-button  type="submit" color="secondary"  expand="full" shape="round" (click)="update_profile()">Submit</ion-button>
@@ -121,12 +132,12 @@
             <ion-label>
             <ion-icon name="lock-closed-outline"></ion-icon>
             </ion-label>
-            <ion-input clearOnEdit="false" type="password"  placeholder="Enter Current Password" [(ngModel)]="password" [ngModelOptions]="{standalone: true}"  formControlName="password"></ion-input>
+            <ion-input clearOnEdit="false" type="password"  placeholder="Enter Current Password" formControlName="password"></ion-input>
           </ion-item>
          
-          <span error *ngIf="profile?.medium == 'simple' && errors.indexOf(password) >= 0 && is_submit_pass == true">Please enter your current password</span>  
-          <span error *ngIf="errors.indexOf(password) == -1 && is_submit_pass == true && password.length < 6 && withoutspace.test(password)">Please enter atleast 6 digits password</span>
-           <span error *ngIf="errors.indexOf(password) == -1 && is_submit_pass == true && !withoutspace.test(password)">Please enter valid password containing no space</span>
+          <span error *ngIf="profile?.medium == 'simple' && errors.indexOf(authForm1.value.password) >= 0 && is_submit_pass == true">Please enter your current password</span>  
+          <span error *ngIf="errors.indexOf(authForm1.value.password) == -1 && is_submit_pass == true && authForm1.value.password.length < 6 && withoutspace.test(authForm1.value.password)">Please enter atleast 6 digits password</span>
+           <span error *ngIf="errors.indexOf(authForm1.value.password) == -1 && is_submit_pass == true && !withoutspace.test(authForm1.value.password)">Please enter valid password containing no space</span>
         </div>
 
       	<div form-group>
@@ -135,11 +146,11 @@
             <ion-label>
             <ion-icon name="lock-closed-outline"></ion-icon>
             </ion-label>
-            <ion-input clearOnEdit="false" type="password"  placeholder="Enter New Password" [(ngModel)]="confirm_password" [ngModelOptions]="{standalone: true}"  formControlName="confirm_password"></ion-input>
+            <ion-input clearOnEdit="false" type="password"  placeholder="Enter New Password" formControlName="confirm_password"></ion-input>
           </ion-item>
-          <span error *ngIf="errors.indexOf(confirm_password) >= 0 && is_submit_pass == true">Please enter your new password</span>  
-          <span error *ngIf="errors.indexOf(confirm_password) == -1 && is_submit_pass == true && confirm_password.length < 6 && withoutspace.test(confirm_password)">Please enter atleast 6 digits password</span>
-           <span error *ngIf="errors.indexOf(confirm_password) == -1 && is_submit_pass == true && !withoutspace.test(confirm_password)">Please enter valid new password containing no space</span>
+          <span error *ngIf="errors.indexOf(authForm1.value.confirm_password) >= 0 && is_submit_pass == true">Please enter your new password</span>  
+          <span error *ngIf="errors.indexOf(authForm1.value.confirm_password) == -1 && is_submit_pass == true && authForm1.value.confirm_password.length < 6 && withoutspace.test(authForm1.value.confirm_password)">Please enter atleast 6 digits password</span>
+           <span error *ngIf="errors.indexOf(authForm1.value.confirm_password) == -1 && is_submit_pass == true && !withoutspace.test(authForm1.value.confirm_password)">Please enter valid new password containing no space</span>
         </div>
 
       	<div form-group>
@@ -148,12 +159,12 @@
             <ion-label>
             <ion-icon name="lock-closed-outline"></ion-icon>
             </ion-label>
-            <ion-input clearOnEdit="false" type="password"  placeholder="Enter Confirm New Password" [(ngModel)]="confirm_new_password" [ngModelOptions]="{standalone: true}"  formControlName="confirm_new_password"></ion-input>
+            <ion-input clearOnEdit="false" type="password"  placeholder="Enter Confirm New Password"  formControlName="confirm_new_password"></ion-input>
           </ion-item>
-          <span error *ngIf="errors.indexOf(confirm_new_password) >= 0 && is_submit_pass == true">Please enter your confirm new password</span>  
+          <span error *ngIf="errors.indexOf(authForm1.value.confirm_new_password) >= 0 && is_submit_pass == true">Please enter your confirm new password</span>  
           <!-- <span error *ngIf="errors.indexOf(confirm_new_password) == -1 && is_submit_pass == true && confirm_new_password.length < 6 && withoutspace.test(confirm_new_password)">Please enter atleast 6 digits password</span> -->
-          <span error *ngIf="errors.indexOf(confirm_new_password) == -1 && is_submit_pass == true && confirm_password!=confirm_new_password && withoutspace.test(confirm_new_password)">Please enter correct password</span>
-           <span error *ngIf="errors.indexOf(confirm_new_password) == -1 && is_submit_pass == true && !withoutspace.test(confirm_new_password)">Please enter valid confirm new password containing no space</span>
+          <span error *ngIf="errors.indexOf(authForm1.value.confirm_new_password) == -1 && is_submit_pass == true && authForm1.value.confirm_password!= authForm1.value.confirm_new_password && withoutspace.test(authForm1.value.confirm_new_password)">Please enter correct password</span>
+           <span error *ngIf="errors.indexOf(authForm1.value.confirm_new_password) == -1 && is_submit_pass == true && !withoutspace.test(authForm1.value.confirm_new_password)">Please enter valid confirm new password containing no space</span>
         </div>
 
         <ion-button type="submit" color="secondary"  expand="full" shape="round" (click)="update_password()">Submit</ion-button>
@@ -165,6 +176,6 @@
 </div>
 </ion-content>
 <div footerWeb>
-  <p>© 2020 Favreet. All rights reserved.</p>
+  <p>© 2020 Recommendspot. All rights reserved.</p>
 </div>
 

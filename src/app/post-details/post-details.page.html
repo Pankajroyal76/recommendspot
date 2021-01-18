@@ -1,10 +1,10 @@
 <div headerWeb>
-	<a href="javascript:void(0)" logo>Favreet</a>
+	<a href="javascript:void(0)" routerLink="/tabs/home" logo>Recommendspot</a>
 	<div ritHeader [style.height]="errors.indexOf(user_id) >= 0 ? '66px' : '' ">
 		<ul>
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
 			<li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
-			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Save Reccomendation</a></li>
+			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Save Recommendation</a></li>
 			 
 		</ul>
 		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon></a>
@@ -61,18 +61,18 @@
 
 								<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
 								<span (click)="openLink(post?.web_link)">{{post?.web_link}}</span>
-								<div class="linkcontent" *ngIf=" post?.web_link_content != null" (click)="openLinkPreview(post?.web_link_content.url)">
+								<div class="linkcontent" *ngIf=" post?.web_link_content != null" (click)="openLinkPreview(post?.web_link_content.data?.url)">
 				
 								<ion-row>
-									<ion-col size="3" *ngIf="post?.web_link_content?.image != ''">
-										<img src="{{post?.web_link_content?.image}}" />
+									<ion-col size="3" *ngIf="post?.web_link_content?.data?.image != ''">
+										<img src="{{post?.web_link_content?.data?.image}}" />
 									</ion-col>
 
-									<ion-col size="{{post?.web_link_content?.title != '' ? 9 : 12}}">
-										<p *ngIf="post?.web_link_content?.title != ''">{{post?.web_link_content?.title}}</p>
-										<p *ngIf="post?.web_link_content?.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
-										<p *ngIf="post?.web_link_content?.title != ''">{{post?.web_link_content?.description}}</p>
-										<p *ngIf="post?.web_link_content?.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
+									<ion-col size="{{post?.web_link_content?.data?.title != '' ? 9 : 12}}">
+										<p *ngIf="post?.web_link_content?.data?.title != ''">{{post?.web_link_content?.data?.title}}</p>
+										<p *ngIf="post?.web_link_content?.data?.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
+										<p *ngIf="post?.web_link_content?.data?.title != ''">{{post?.web_link_content?.data?.description}}</p>
+										<p *ngIf="post?.web_link_content?.data?.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
 									</ion-col>
 								</ion-row>
 								
@@ -109,16 +109,16 @@
 			 		 <img class="adm-usr" *ngIf="errors.indexOf(post?.user_image) >= 0" src="assets/img/default.png">
 
 					<h5> {{post?.user_name}} </h5>
-					<span class="time-al" *ngIf="errors.indexOf(post?.created_at) == -1"> {{post?.created_at | timeAgo}} </span>
+					<span class="time-al" *ngIf="errors.indexOf(post?.created_at) == -1"> {{post?.created_at | dateAgo}} </span>
 					<div class="icon-rut">
 
 
-						<span *ngIf="post?.fav == '0' && errors.indexOf(userId) == -1" (click)="addRemoveReccomdation(post, '1', i)">
+						<span *ngIf="post?.fav == '0' && errors.indexOf(userId) == -1" (click)="addRemoveReccomdation(post, '1')">
 							<ion-icon class="heart-icon" name="heart-outline" ></ion-icon>
 										
 						</span>
 
-						<span *ngIf="post?.fav == '1' && errors.indexOf(userId) == -1" (click)="addRemoveReccomdation(post, '0', i)">
+						<span *ngIf="post?.fav == '1' && errors.indexOf(userId) == -1" (click)="addRemoveReccomdation(post, '0')">
 							<ion-icon class="heart-icon" name="heart" class="liked"></ion-icon>
 						</span>
 
@@ -163,12 +163,12 @@
 					  <img class="adm-usr" *ngIf="errors.indexOf(item?.image) == -1 && getimage(item?.image) == true" src="{{item?.image}}">
 			    	 <img class="adm-usr" *ngIf="errors.indexOf(item?.image) == -1 && getimage(item?.image) == false" src="{{IMAGES_URL + '/images/' + item?.image}}">
 			 		 <img class="adm-usr" *ngIf="errors.indexOf(item?.image) >= 0" src="assets/img/default.png">
-					<h5> {{item?.user}} <span class="time-al"> {{item?.created_on | timeAgo}} </span> </h5>
+					<h5> {{item?.user}} <span class="time-al"> {{item?.created_on | dateAgo}} </span> </h5>
 					<p> {{item?.comment}} </p>
 				</div>
 				<!-- <div class="commnts">
 					<img src="assets/imgs/user1.jpg" class="adm-usr"> 
-					<h5> John Smith <span class="time-al"> {{post?.created_on | timeAgo}} </span> </h5>
+					<h5> John Smith <span class="time-al"> {{post?.created_on | dateAgo}} </span> </h5>
 					<p> Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto. </p>
 				</div>
 				<div class="commnts">
@@ -192,5 +192,5 @@
 </ion-content>
 
 <!-- <div footerWeb>
-	<p>© 2020 Favreet. All rights reserved.</p>
+	<p>© 2020 Recommendspot. All rights reserved.</p>
 </div> -->

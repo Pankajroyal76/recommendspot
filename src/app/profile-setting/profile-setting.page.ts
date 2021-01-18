@@ -11,6 +11,7 @@ import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-nati
 import { Crop } from '@ionic-native/crop/ngx';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 declare var window: any; 
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-profile-setting',
@@ -19,7 +20,7 @@ declare var window: any;
 })
 export class ProfileSettingPage implements OnInit {
 	
-	private win: any = window;
+	public win: any = window;
 	MyprofessionValue : string ;
  	profiletab: string = "Basic";
   	isAndroid: boolean = false;
@@ -57,8 +58,15 @@ export class ProfileSettingPage implements OnInit {
     user_id: any;
     authForm: FormGroup;
     authForm1: FormGroup;
+    allowedMimes:any = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/webp', 'image/svg'];
+	image_error: any = false;
+	image_file: any;
+	image_url: any;
+	image_cover_error: any = false;
+	image_cover_file: any;
+	image_cover_url: any;
 
-  	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath, private transfer: FileTransfer,private globalFooService: GlobalFooService,private formBuilder: FormBuilder) { 
+  	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath, private transfer: FileTransfer,private globalFooService: GlobalFooService,private formBuilder: FormBuilder, public sanitizer:DomSanitizer) { 
 
   		this.createForm();
   		this.reg_exp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -129,6 +137,14 @@ export class ProfileSettingPage implements OnInit {
 	    this.apiService.postData(dict,'getProfile').subscribe((result) => {
 	      this.apiService.stopLoading();
 	      if(result.status == 1){
+
+	      	this.authForm.patchValue({
+	          	name: result.data.name,
+	          	email: result.data.email,
+	          	contact: result.data.contact
+	          	
+	        });
+
 	      	this.profile = result.data;
 	      	this.email = result.data.email;
 	      	this.name = result.data.name;
@@ -147,7 +163,7 @@ export class ProfileSettingPage implements OnInit {
   	update_profile(){
 
   		this.is_submit = true;
-  		if(this.errors.indexOf(this.name) >= 0 || this.errors.indexOf(this.contact) >= 0 || this.errors.indexOf(this.email) >= 0 || !this.reg_exp.test(String(this.email).toLowerCase())  || !this.reg_exp_digits.test(String(this.contact))|| !this.reg_exp_letters.test(String(this.name))){
+  		if(this.errors.indexOf(this.authForm.value.name) >= 0 || this.errors.indexOf(this.authForm.value.contact) >= 0 || this.errors.indexOf(this.authForm.value.email) >= 0 || !this.reg_exp.test(String(this.authForm.value.email).toLowerCase())  || !this.reg_exp_digits.test(String(this.authForm.value.contact))|| !this.reg_exp_letters.test(String(this.authForm.value.name))){
 	      return false;
 	    };
 
@@ -167,11 +183,12 @@ export class ProfileSettingPage implements OnInit {
   		this.apiService.presentLoading();  
   		let dict ={
 	      _id: localStorage.getItem('userId'),
-	      name: this.name,
-	      contact: this.contact,
-	      email: this.email,
+	      name: this.authForm.value.name,
+	      contact: this.authForm.value.contact,
+	      email: this.authForm.value.email,
 	      image: this.profile.image,
 	      cover_image: this.profile.cover_image,
+	      medium: this.profile.medium,
 	    };
 	    console.log(dict)
 
@@ -182,9 +199,9 @@ export class ProfileSettingPage implements OnInit {
 
 	      	this.profile.name = this.name;
 
-	      	localStorage.setItem('user_name', this.name);
-  			localStorage.setItem('user_image', this.profile.image);
-  			localStorage.setItem('user_email', this.email);
+	      	localStorage.setItem('user_name', this.authForm.value.name);
+  			localStorage.setItem('user_image', this.authForm.value.image);
+  			localStorage.setItem('user_email', this.authForm.value.email);
 
 	      	this.apiService.presentToast(result.msg, 'success');
 	      	this.globalFooService.publishSomeData({
@@ -201,24 +218,24 @@ export class ProfileSettingPage implements OnInit {
   	update_password(){
 
   		this.is_submit_pass = true;
-  		if(this.errors.indexOf(this.confirm_password) >= 0 || this.confirm_password.length < 6 || this.errors.indexOf(this.confirm_new_password) >= 0 || this.confirm_new_password.length < 6 || !this.withoutspace.test(this.confirm_password) ){
+  		if(this.errors.indexOf(this.authForm1.value.confirm_password) >= 0 || this.authForm1.value.confirm_password.length < 6 || this.errors.indexOf(this.authForm1.value.confirm_new_password) >= 0 || this.authForm1.value.confirm_new_password.length < 6 || !this.withoutspace.test(this.authForm1.value.confirm_password) ){
 	      return false;
 	    };
 
 	    if(this.profile.medium == 'simple'){
-	    	if(this.errors.indexOf(this.password) >= 0 || this.password.length < 6 || !this.withoutspace.test(this.password)){
+	    	if(this.errors.indexOf(this.password) >= 0 || this.authForm1.value.password.length < 6 || !this.withoutspace.test(this.authForm1.value.password)){
 	    		return false;
 	    	}
 	    }
 
-	    if(this.confirm_password != this.confirm_new_password){
+	    if(this.authForm1.value.confirm_password != this.authForm1.value.confirm_new_password){
 	    	return false;
 	    }
 
 	    let dict ={
 	      _id: localStorage.getItem('userId'),
-	      password: this.password,
-	      new_password: this.confirm_password
+	      password: this.authForm1.value.password,
+	      new_password: this.authForm1.value.confirm_password
 	    };
 	    console.log(dict)
 
@@ -226,9 +243,9 @@ export class ProfileSettingPage implements OnInit {
 	    this.apiService.postData(dict,'updatePassword').subscribe((result) => {
 	      this.apiService.stopLoading();
 	      if(result.status == 1){
-	      	this.password = '';
-	      	this.confirm_password = '';
-	      	this.confirm_new_password = '';
+	      	this.authForm1.value.password = '';
+	      	this.authForm1.value.confirm_password = '';
+	      	this.authForm1.value.confirm_new_password = '';
 	      	this.is_submit_pass = false;
 	      	this.apiService.presentToast(result.msg, 'success');
 	      }else{
@@ -383,11 +400,11 @@ export class ProfileSettingPage implements OnInit {
 	    // this.apiService.presentLoading();
 	    const frmData = new FormData();
 	    if(type == 'profile'){
-	      frmData.append('file', this.imgBlobProfile, this.live_file_name_profile);
-	      frmData.append("live_image", this.live_file_name_profile.replace(/ /g,"_")); 
+	      frmData.append('file', this.image_file, this.image_file.name);
+	      frmData.append("live_image", this.image_file.name.replace(/ /g,"_")); 
 	    }else{
-	    	frmData.append('file', this.imgBlobCover, this.live_file_name_cover);
-	      	frmData.append("live_image", this.live_file_name_cover.replace(/ /g,"_")); 
+	    	frmData.append('file', this.image_cover_file, this.image_cover_file.name);
+	      	frmData.append("live_image", this.image_cover_file.name.replace(/ /g,"_")); 
 	    }
 	    frmData.append("userId", localStorage.getItem('userId'));
 	    frmData.append("type", type);
@@ -434,5 +451,45 @@ export class ProfileSettingPage implements OnInit {
   	update_user_image(){
 
   	}
+
+  	uploadProImage(event){
+   		this.image_type = 'profile';
+	    var self = this;
+	    if (event.target.files && event.target.files[0]) {
+	      var reader = new FileReader();
+	      var image_file = event.target.files[0];
+	      if(self.allowedMimes.indexOf(image_file.type) == -1){
+	        self.is_live_image_updated_profile = true;
+	      }
+	      else{
+	        console.log('type is profile');
+	          self.image_file = image_file;
+	          self.image_url = window.URL.createObjectURL(image_file);
+	          self.is_live_image_updated_profile = true;
+	        
+	      }
+	    }
+	  }
+
+	  uploadCoverImage(event){
+   		
+   		this.image_bg_type = 'cover';
+	    var self = this;
+	    if (event.target.files && event.target.files[0]) {
+	      var reader = new FileReader();
+	      var image_cover_file = event.target.files[0];
+	      if(self.allowedMimes.indexOf(image_cover_file.type) == -1){
+	        self.is_live_image_updated_cover = true;
+	      }
+	      else{
+	        console.log('type is cover');
+	          self.image_cover_file = image_cover_file;
+	          self.image_cover_url = window.URL.createObjectURL(image_cover_file);
+	          self.bgImage = self.sanitizer.bypassSecurityTrustUrl(self.image_cover_url);
+	          self.is_live_image_updated_cover = true;
+	        
+	      }
+	    }
+	  }
 
 }

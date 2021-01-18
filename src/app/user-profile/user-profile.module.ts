@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { UserProfilePageRoutingModule } from './user-profile-routing.module';
 
 import { UserProfilePage } from './user-profile.page';
-import { CommonPipeModule } from '../services/commonPipe.module';
+import { CommonPipeModule } from '../commonPipe.module';
 @NgModule({
   imports: [
     CommonModule,
@@ -16,6 +16,7 @@ import { CommonPipeModule } from '../services/commonPipe.module';
     UserProfilePageRoutingModule,
     CommonPipeModule
   ],
-  declarations: [UserProfilePage]
+  declarations: [UserProfilePage],
+  exports: [CommonPipeModule]
 })
 export class UserProfilePageModule {}

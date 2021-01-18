@@ -4,6 +4,8 @@
   </ion-toolbar>
 </ion-header-->
 <ion-content  class="ion-padding">
+
+	<div container>
 <div loginform>
 <div logo  class="ion-text-center">
   <img src="assets/img/logo.png"/>
@@ -16,10 +18,10 @@
 <ion-label>
 <ion-icon name="mail-outline"></ion-icon>
 </ion-label>
-<ion-input clearOnEdit="false" type="email"  placeholder="Enter Email" [(ngModel)]="email" [ngModelOptions]="{standalone: true}"  formControlName="password"></ion-input>
+<ion-input clearOnEdit="false" type="email"  placeholder="Enter Email"  formControlName="email"></ion-input>
 </ion-item>
-<span error *ngIf="errors.indexOf(email) >= 0 && is_submit == true">Please enter your email</span>
-<span error *ngIf="errors.indexOf(email) == -1 && !reg_exp.test(email) && is_submit == true">Please enter valid email</span>
+<span error *ngIf="errors.indexOf(authForm.value.email) >= 0 && is_submit == true">Please enter your email</span>
+<span error *ngIf="errors.indexOf(authForm.value.email) == -1 && !reg_exp.test(authForm.value.email) && is_submit == true">Please enter valid email</span>
 </div>
 <div form-group>
 <label>Password</label>
@@ -27,11 +29,11 @@
 <ion-label>
 <ion-icon name="lock-closed-outline"></ion-icon>
 </ion-label>
-<ion-input clearOnEdit="false" type="password"  placeholder="Enter Password" [(ngModel)]="password" [ngModelOptions]="{standalone: true}" formControlName="password">  </ion-input>
+<ion-input clearOnEdit="false" type="password"  placeholder="Enter Password"  formControlName="password">  </ion-input>
 
 </ion-item>
-<span error *ngIf="errors.indexOf(password) >= 0 && is_submit == true">Please enter your password</span>
-<span error *ngIf="errors.indexOf(password) == -1 && is_submit == true && !withoutspace.test(password)">Please enter valid password containing no space</span>
+<span error *ngIf="errors.indexOf(authForm.value.password) >= 0 && is_submit == true">Please enter your password</span>
+<span error *ngIf="errors.indexOf(authForm.value.password) == -1 && is_submit == true && !withoutspace.test(authForm.value.password)">Please enter valid password containing no space</span>
 </div>
 <div form-group forgot class="ion-text-right">
 <a routerLink="/forgotpassword" href="javascript:void(0)">Forgot Password ?</a>
@@ -58,5 +60,5 @@ Login
 </ion-button>
 
 </div>
-</div>
+</div></div>
 </ion-content>

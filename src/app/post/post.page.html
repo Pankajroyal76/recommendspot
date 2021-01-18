@@ -1,12 +1,20 @@
 <div headerWeb>
-	<a href="javascript:void(0)" logo>Favreet</a>
+	<a href="javascript:void(0)" routerLink="/tabs/home" logo>Recommendspot</a>
 	<div ritHeader style="height: 66px;">
 		<ul>
-			<li><a routerLink="/login" href="javascript:void(0)">Add Reccomendation</a></li>
+			<li><a routerLink="/login" href="javascript:void(0)">Add Recommendation</a></li>
 			<li><a routerLink="/login" href="javascript:void(0)">Login</a></li>
 			<li><a routerLink="/signup" href="javascript:void(0)">Signup</a></li>
 			 
 		</ul>
+		<!-- <ion-item lines="none"> -->
+			<ion-label style="display: none;"><span>Select Category</span></ion-label>
+			<ion-select style="color: #fff;font-size: 15px;font-weight: 500;    margin-top: 3px;" interface="alert" [(ngModel)]="cat" (ionChange)="catChange(type, 'web')">
+				<ion-select-option value="All"> All Categories </ion-select-option>
+				<ion-select-option value="{{cat._id}}" *ngFor="let cat of categories"> {{cat.name}} </ion-select-option>
+				
+			</ion-select>
+		<!-- </ion-item> -->
 		<!-- <a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon></a>
 		<span proImg routerLink="/tabs/profile">
 			<img src="assets/img/user4.jpg" alt="">
@@ -32,34 +40,64 @@
 			<li> <a href="javascript:void(0)" routerLink="/login" (click)="hide()">Add Recommendation</a> </li>
 			<li> <a  href="javascript:void(0)" routerLink="/login" (click)="hide()">Login</a> </li>
 			<li> <a routerLink="/signup" href="javascript:void(0)" (click)="hide()">Sign Up</a> </li>
+			<!-- <li><ion-button class="btn" ion-button full (click)="add_to_home($event)"  >
+			Install</ion-button></li> -->
 		</ul>
 	</div>  
 </ion-header>
 <ion-content>
 	<div container>
+		<div class="search">
+			<!-- (ngSubmit)="search()"  -->
+			<ion-item lines="none" displayabovePhn style="    background: #fff;border-radius: 50px;margin-bottom: 10px;font-size: 13px;" >
+			<ion-label style="display: none;"><span>Select Category</span></ion-label>
+				<ion-select style="max-width: 100% !important;" interface="alert" [(ngModel)]="cat" (ionChange)="catChange(type, 'app')">
+					<ion-select-option value="All"> All Categories </ion-select-option>
+						<ion-select-option value="{{cat._id}}" *ngFor="let cat of categories"> {{cat.name}} </ion-select-option>
+						
+				</ion-select>
+			</ion-item>
+			<form [formGroup]="authForm"  >
+				<ion-searchbar placeholder="Search here..." formControlName="keyword">
+
+				</ion-searchbar>
+				<!-- <ion-icon class="icon-dots" name="search" style="float: right;" (click)="search()"></ion-icon> -->
+			</form>
+			<ion-item lines="none" sortbyWeb>
+
+
+				<ion-label><span>Sort By</span></ion-label>
+				<ion-select interface="alert" [(ngModel)]="type" (ionChange)="typeChange(type)">
+					<ion-select-option value="Saved"> Saved </ion-select-option>
+					<ion-select-option value="Likes"> Likes </ion-select-option>
+					<ion-select-option value="Comments"> Comments   </ion-select-option>
+					<ion-select-option value="Random"> Random   </ion-select-option>
+				</ion-select>
+			</ion-item>
+
+
+		</div>
 	<div class="home-sec">
 		<div class="mn-heading">
 			<h2><ion-icon name="receipt-outline"></ion-icon> recommend anything you find meaningful to anyone that might find it useful</h2>
 			<p>Look at what these people are recommending</p>
 		</div>
 		<!--  (ngSubmit)="search()"  -->
-		<form [formGroup]="authForm" (ngSubmit)="search()">
-			<ion-searchbar placeholder="Search here..."  formControlName="keyword">
+		<div webPostsearch>
+			<!-- <form [formGroup]="authForm" (ngSubmit)="search()">
+				<ion-searchbar placeholder="Search here..."  formControlName="keyword">
 
-			</ion-searchbar>
-		</form>
-
-		<ion-item lines="none">
-
-
-			<ion-label><span>Sort By</span></ion-label>
-			<ion-select [interfaceOptions]="customAlertOptions" interface="alert" [(ngModel)]="type" (ionChange)="typeChange(type)">
-				<!-- <ion-select-option value="Saved"> Saved </ion-select-option> -->
-				<ion-select-option value="Likes"> Likes </ion-select-option>
-				<ion-select-option value="Comments"> Comments   </ion-select-option>
-				<ion-select-option value="Random"> Random   </ion-select-option>
-			</ion-select>
-		</ion-item>
+				</ion-searchbar>
+			</form> -->
+		<!-- 	<ion-item lines="none">
+				<ion-label><span>Sort By</span></ion-label>
+				<ion-select interface="alert" [(ngModel)]="type" (ionChange)="typeChange(type)">
+					<ion-select-option value="Likes"> Likes </ion-select-option>
+					<ion-select-option value="Comments"> Comments   </ion-select-option>
+					<ion-select-option value="Random"> Random   </ion-select-option>
+				</ion-select>
+			</ion-item> -->
+		</div>
 
 		<ion-card post-sec-mn *ngFor="let item of posts | appFilter: authForm.value.keyword; let i = index;">
 			<div class="post-name">	
@@ -71,13 +109,14 @@
 					</ion-avatar>
 					<ion-label  (click)="viewUser(item)">
 						<h2>{{item.user_name}}</h2>
-						<p>{{item.created_at  | timeAgo}}</p>
+						<p>{{item.created_at  | dateAgo}}</p>
 					</ion-label>
-					<span (click)="viewPost(item)" class="servcs-badge">{{item.category}}</span>
+					<!-- <span (click)="viewPost(item)" class="servcs-badge">{{item.category}}</span> -->
 				</ion-item>
 			</div>
 			<div class="cart-mn-pd">
 				<div class="post-content padding-left-3" (click)="viewPost(item)">
+					<h6 style="font-size: 14px;color: #000;">{{item.title}}</h6>
 					<p>{{item.description}}<!-- <a class="readmore" href="javascript:void(0)">Read More</a> --></p>
 				</div>
 
@@ -85,18 +124,18 @@
 
 					<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
 					<span class="weblink"  (click)="openLink(item.web_link)"><a (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
-					<div class="linkcontent" *ngIf="item.web_link_content != null" (click)="openLinkPreview(item.web_link_content.url)">
+					<div class="linkcontent" *ngIf="item.web_link_content != null" (click)="openLinkPreview(item.web_link_content.data.link)">
 				
 					<ion-row>
-						<ion-col size="3" *ngIf="item.web_link_content?.image != ''">
-							<img src="{{item.web_link_content?.image}}" />
+						<ion-col size="3" size-md="1" *ngIf="item.web_link_content?.data.image != ''">
+							<img src="{{item.web_link_content?.data.image}}" />
 						</ion-col>
 
-						<ion-col size="{{item.web_link_content?.title != '' ? 9 : 12}}">
-							<p *ngIf="item.web_link_content?.title != ''">{{item.web_link_content?.title}}</p>
-							<p *ngIf="item.web_link_content?.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
-							<p *ngIf="item.web_link_content?.title != ''">{{item.web_link_content?.description}}</p>
-							<p *ngIf="item.web_link_content?.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
+						<ion-col size="{{item.web_link_content?.data.title != '' ? 9 : 12}}">
+							<p *ngIf="item.web_link_content?.data.title != ''">{{item.web_link_content?.data.title}}</p>
+							<p *ngIf="item.web_link_content?.data.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
+							<p *ngIf="item.web_link_content?.data.title != ''">{{item.web_link_content?.data.description}}</p>
+							<p *ngIf="item.web_link_content?.data.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
 						</ion-col>
 					</ion-row>
 					
@@ -120,11 +159,12 @@
 						<ion-col size="9" class="ion-text-right">
 							<ion-button class="socl-btn" (click)="viewPost(item)"><ion-icon name="chatbubble-outline"></ion-icon> <span class="padding-8"> {{item.comments.length}} </span></ion-button>
 							<div *ngIf="platform1 == false">
-								<a (click)="viewPostSocial(item)" href="http://www.facebook.com/share.php?u=http://18.219.109.190/weblive/" target="_blank"><ion-icon name="logo-facebook"></ion-icon></a>
-								<a (click)="viewPostSocial(item)" href="https://twitter.com/share?url=http://18.219.109.190/weblive/&amp;text=aa&amp;hashtags=YOUR_HASHTAGS" target="_blank"><ion-icon name="logo-twitter"></ion-icon></a>
-								<a (click)="viewPostSocial(item)" href="https://web.whatsapp.com/send?text=http://18.219.109.190/weblive/" target="_blank"><ion-icon name="logo-whatsapp"></ion-icon></a>
-								<a (click)="viewPostSocial(item)" href="https://plus.google.com/share?url=http://18.219.109.190/weblive/" target="_blank"><ion-icon name="logo-google"></ion-icon></a>
-								<a (click)="viewPostSocial(item)" href="http://www.linkedin.com/shareArticle?mini=true&amp;url=http://18.219.109.190/weblive/" target="_blank"><ion-icon name="logo-linkedin"></ion-icon></a>
+								<span style="padding: 5px;" (click)="viewPostSocial(item, 'http://www.facebook.com/share.php?u=http://18.219.109.190/weblive/')" ><ion-icon name="logo-facebook"></ion-icon></span>
+
+								<span style="padding: 5px;"  (click)="viewPostSocial(item, 'https://twitter.com/share?url=http://18.219.109.190/weblive/&amp;text=aa&amp;hashtags=YOUR_HASHTAGS')"  ><ion-icon name="logo-twitter"></ion-icon></span>
+								<span style="padding: 5px;"  (click)="viewPostSocial(item, 'https://web.whatsapp.com/send?text=http://18.219.109.190/weblive/')"><ion-icon name="logo-whatsapp"></ion-icon></span>
+								<span style="padding: 5px;"  (click)="viewPostSocial(item, 'https://plus.google.com/share?url=http://18.219.109.190/weblive/')" ><ion-icon name="logo-google"></ion-icon></span>
+								<span style="padding: 5px;"  (click)="viewPostSocial(item, 'http://www.linkedin.com/shareArticle?mini=true&amp;url=http://18.219.109.190/weblive/')"><ion-icon name="logo-linkedin"></ion-icon></span>
 							</div>
 
 							<ion-button class="socl-btn"  (click)="socialsharebranch(item)" *ngIf="platform1 == true"><ion-icon name="share-social-outline"></ion-icon></ion-button>		
@@ -164,5 +204,5 @@
 </div>
 </ion-content>
 <div footerWeb>
-	<p>© 2020 Favreet. All rights reserved.</p>
+	<p>© 2020 Recommendspot. All rights reserved.</p>
 </div>
