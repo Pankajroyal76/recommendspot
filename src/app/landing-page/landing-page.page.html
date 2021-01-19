@@ -1,0 +1,167 @@
+<div headerwebs>
+	<a href="javascript:void(0)" routerLink="/tabs/home" logo>Recommendspot</a>
+	<div ritHeader style="height: 66px;">
+		<ul>
+			<li search-head class="dropdown-dots">
+			<a href="javascript:void(0)" (click)="hide()"><ion-icon name="search-outline"></ion-icon></a>
+			<ul class="list-post-fl" *ngIf="hideMe">
+			    <div class="search">
+			      <ion-searchbar placeholder="Search here..."></ion-searchbar>
+			    </div>
+			</ul>			
+			</li>
+			<li><a routerLink="/login" href="javascript:void(0)">Login</a></li>
+			<li><a routerLink="/signup" href="javascript:void(0)">Signup</a></li>
+			 
+		</ul>
+	</div>
+</div>
+
+<ion-header>
+	<ion-toolbar color="secondary">   
+		<ion-title class="ion-text-center"><img src="assets/img/logo-white.png" alt="" ></ion-title>
+	</ion-toolbar>
+	<div  class="drop-sec">
+		<div  class="dropdown-dots">
+			<a  href="javascript:void(0)" class="search-btn" (click)="hide1()"> <ion-icon name="search-outline"></ion-icon> </a>
+			<ul class="search-mob" *ngIf="hideMe1">
+				<li>
+					<div class="search">
+						<ion-searchbar placeholder="Search here..."></ion-searchbar>
+					</div>
+				</li>
+			</ul>
+		</div> 
+		<div  class="dropdown-dots">
+			<a  href="javascript:void(0)" class="rift-flt" (click)="hide()"> <ion-icon name="ellipsis-vertical-outline"></ion-icon> </a>
+			<ul class="list-post-fl" *ngIf="hideMe">
+				<li> <a  href="javascript:void(0)" routerLink="/login" (click)="hide()">Login</a> </li>
+				<li> <a routerLink="/signup" href="javascript:void(0)" (click)="hide()">Sign Up</a> </li>
+			</ul>
+		</div>  
+	</div>  
+</ion-header>
+
+<ion-content>
+	<div banner>
+		<ion-slides pager="true" [options]="slideOpts">
+			<ion-slide bg>
+			    <div container>
+				    <div slider-content>
+					    <h3>A Community Where People Recommend Things To Others In Life Such As Movies To Watch , Books To Read , Places To Vist And Much More.</h3>
+					</div>
+				</div>
+			</ion-slide>
+		</ion-slides>
+	</div>
+	<div categories-sec>
+		<ion-row>
+		    <ion-col size="12">
+				<div form-group>
+					<ion-item lines="none">
+						<ion-select value="allCategories" okText="Save" cancelText="Cancel">
+							<ion-select-option value="allCategories">All Categories</ion-select-option>
+							<ion-select-option value="Categories1">Categories1</ion-select-option>
+							<ion-select-option value="Categories2">Categories2</ion-select-option>
+							<ion-select-option value="Categories3">Categories3</ion-select-option>
+						</ion-select>
+					</ion-item>
+			        <ion-buttons>Go</ion-buttons>
+				</div>								
+			</ion-col>
+		</ion-row>
+	</div>
+	<div how-works-sec>
+	    <div container>
+		    <ion-row>
+			<ion-col size="12">
+			    <div how-work-head>
+				    <h2>How It Works</h2>
+				</div>
+			</ion-col>
+			    <ion-col size="12" size-sm="6" size-lg="3" class="mb-15">
+				    <div work-content>
+					    <span><ion-icon name="log-in-outline"></ion-icon></span>
+					    <h4>Sign Up</h4>
+					</div>
+				</ion-col>
+			    <ion-col size="12" size-sm="6" size-lg="3" class="mb-15">
+				    <div work-content>
+					    <span><ion-icon name="layers-outline"></ion-icon></span>
+					    <h4>Follow Categories Of Your Interest</h4>
+					</div>
+				</ion-col>
+			    <ion-col size="12" size-sm="6" size-lg="3" class="mb-15">
+				    <div work-content>
+					    <span><ion-icon name="people-outline"></ion-icon></span>
+					    <h4>Follow Friends , Celebrities And The World</h4>
+					</div>
+				</ion-col>
+			    <ion-col size="12" size-sm="6" size-lg="3" class="mb-15">
+				    <div work-content>
+					    <span><ion-icon name="person-add-outline"></ion-icon></span>
+					    <h4>Add Recommendations</h4>
+					</div>
+				</ion-col>
+			</ion-row>
+		</div>
+	</div>
+	<div new-users-sec>
+	    <div container>
+		    <ion-row>
+				<ion-col size="12">
+					<div new-users-head>
+						<h2>New Users</h2>
+					</div>
+				</ion-col>			
+				<ion-col size="12">
+					<ion-slides pager="true" [options]="slideOpts1">
+						<ion-slide>			
+							<div new-users-mn>
+								<img src="assets/img/user1.jpg" alt="" />
+								<h4>John Smith</h4>
+								<p>johnsmith@gmail.com</p>
+							</div>
+						</ion-slide>
+						<ion-slide>			
+							<div new-users-mn>
+								<img src="assets/img/user2.jpg" alt="" />
+								<h4>Mitchell John</h4>
+								<p>john@gmail.com</p>
+							</div>
+						</ion-slide>
+						<ion-slide>			
+							<div new-users-mn>
+								<img src="assets/img/user3.jpg" alt="" />
+								<h4>David Doe</h4>
+								<p>david_doe@gmail.com</p>
+							</div>
+						</ion-slide>
+						<ion-slide>			
+							<div new-users-mn>
+								<img src="assets/img/user4.jpg" alt="" />
+								<h4>Smith John</h4>
+								<p>smithjohn@gmail.com</p>
+							</div>
+						</ion-slide>
+					</ion-slides>				
+				</ion-col>
+			</ion-row>
+		</div>
+	</div>
+<div footerwebs>
+	<div container>
+	<ion-row>
+		<ion-col order1 size="12" size-md="6" class="ion-text-left ion-align-items-center">
+			<p>© 2020 Recommendspot. All rights reserved.</p>	
+		</ion-col>
+		<ion-col order2 size="12" size-md="6" class="ion-text-right ion-align-self-center">
+			<ul>
+			    <li><a routerLink="/login" href="javascript:void(0)">Login</a></li>
+			    <li><a routerLink="/signup" href="javascript:void(0)">Sign Up</a></li>
+			</ul>	
+		</ion-col>
+	</ion-row>
+	</div>
+</div>	
+</ion-content>

@@ -98,7 +98,8 @@ export class AppComponent {
       this.splashScreen.hide();
 
      if (!this.apiService.gettoken()) {
-        this.router.navigate([""]);
+        //this.router.navigate([""]);
+		this.router.navigate(["landing-page"]);
       } else {
         this.router.navigate(["/tabs/home"]);
       }
