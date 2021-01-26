@@ -4,7 +4,7 @@
 		<ul>
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
 			<li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
-			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Save Recommendation</a></li>
+			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
 			 
 		</ul>
 		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon></a>
@@ -48,7 +48,7 @@
 				<ion-row>
 					<ion-col size="12">
 						<div class="slide">
-							<div class="img-bx-sly storis" style="height: auto;max-height: 225px;">
+							<div class="img-bx-sly storis">
 
 								<span class="servcs-badge">{{post?.category}}</span>
 							<div class="post-content">
@@ -58,9 +58,10 @@
 							
 
 							<div *ngIf="errors.indexOf(post?.web_link) == -1" class="weblink">
-
-								<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
-								<span (click)="openLink(post?.web_link)">{{post?.web_link}}</span>
+								<div weblink-sec>
+									<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
+									<span (click)="openLink(post?.web_link)">{{post?.web_link}}</span>
+								</div>	
 								<div class="linkcontent" *ngIf=" post?.web_link_content != null" (click)="openLinkPreview(post?.web_link_content.data?.url)">
 				
 								<ion-row>
@@ -69,10 +70,10 @@
 									</ion-col>
 
 									<ion-col size="{{post?.web_link_content?.data?.title != '' ? 9 : 12}}">
-										<p *ngIf="post?.web_link_content?.data?.title != ''">{{post?.web_link_content?.data?.title}}</p>
-										<p *ngIf="post?.web_link_content?.data?.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
-										<p *ngIf="post?.web_link_content?.data?.title != ''">{{post?.web_link_content?.data?.description}}</p>
-										<p *ngIf="post?.web_link_content?.data?.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
+										<p title-cont *ngIf="post?.web_link_content?.data?.title != ''"><b>{{post?.web_link_content?.data?.title}}</b></p>
+										<p desc-cont *ngIf="post?.web_link_content?.data?.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
+										<p desc-cont *ngIf="post?.web_link_content?.data?.title != ''">{{post?.web_link_content?.data?.description}}</p>
+										<p desc-cont *ngIf="post?.web_link_content?.data?.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
 									</ion-col>
 								</ion-row>
 								
@@ -95,6 +96,40 @@
 					</ion-col>
 				</ion-row>
 			</div>
+					<div class="icon-rut">
+						<span class="likes-number cont-icon"(click)="like(post?.likes, post?.dislikes)" *ngIf="post?.likes?.length > 0"> <!-- <img src="{{isLikedPost(post?.likes)}}">  -->
+						<ion-icon name="{{isLikedPost(post?.likes)}}" [ngClass]="{'liked': isLikedPost(post?.likes) == 'thumbs-up'}"></ion-icon>
+
+						{{post?.likes?.length}} </span>
+
+						<span class="likes-number cont-icon"(click)="dislike(post?.likes, post?.dislikes)" *ngIf="post?.dislikes?.length > 0"> <!-- <img src="{{isLikedPost(post?.likes)}}">  -->
+						<ion-icon name="{{isDisLikedPost(post?.dislikes)}}" [ngClass]="{'liked': isDisLikedPost(post?.dislikes) == 'thumbs-down'}"></ion-icon>
+
+						{{post?.dislikes?.length}} </span>
+
+
+
+
+						<span class="likes-number cont-icon"(click)="like(post?.likes, post?.dislikes)" *ngIf="post?.likes?.length == 0"> <!-- <img src="{{isLikedPost(post?.likes)}}">  -->
+						<ion-icon name="thumbs-up-outline"></ion-icon>
+
+						{{post?.likes?.length}} </span>
+
+
+						<span class="likes-number cont-icon"(click)="like(post?.likes, post?.dislikes)" *ngIf="post?.dislikes?.length == 0"> <!-- <img src="{{isLikedPost(post?.likes)}}">  -->
+						<ion-icon name="thumbs-down-outline"></ion-icon>
+
+						{{post?.dislikes?.length}} </span>
+						<span class="cont-icon" *ngIf="post?.fav == '0' && errors.indexOf(userId) == -1" (click)="addRemoveReccomdation(post, '1')">
+							<ion-icon class="heart-icon" name="bookmark-outline" ></ion-icon>
+										
+						</span>
+
+						<span class="cont-icon" *ngIf="post?.fav == '1' && errors.indexOf(userId) == -1" (click)="addRemoveReccomdation(post, '0')">
+							<ion-icon class="heart-icon" name="bookmark" class="liked"></ion-icon>
+						</span>
+						<span class="mesgs-number cont-icon"> <ion-icon name="chatbubble-outline"></ion-icon> {{post?.comments?.length}}  </span>					
+					</div>			
 			<div class="content-all-pst">
 				
 				<div class="top-useer-s">
@@ -110,62 +145,24 @@
 
 					<h5> {{post?.user_name}} </h5>
 					<span class="time-al" *ngIf="errors.indexOf(post?.created_at) == -1"> {{post?.created_at | dateAgo}} </span>
-					<div class="icon-rut">
 
-
-						<span *ngIf="post?.fav == '0' && errors.indexOf(userId) == -1" (click)="addRemoveReccomdation(post, '1')">
-							<ion-icon class="heart-icon" name="heart-outline" ></ion-icon>
-										
-						</span>
-
-						<span *ngIf="post?.fav == '1' && errors.indexOf(userId) == -1" (click)="addRemoveReccomdation(post, '0')">
-							<ion-icon class="heart-icon" name="heart" class="liked"></ion-icon>
-						</span>
-
-
-						<span class="likes-number"(click)="like(post?.likes, post?.dislikes)" *ngIf="post?.likes?.length > 0"> <!-- <img src="{{isLikedPost(post?.likes)}}">  -->
-						<ion-icon name="{{isLikedPost(post?.likes)}}" [ngClass]="{'liked': isLikedPost(post?.likes) == 'thumbs-up'}"></ion-icon>
-
-						{{post?.likes?.length}} </span>
-
-						<span class="likes-number"(click)="dislike(post?.likes, post?.dislikes)" *ngIf="post?.dislikes?.length > 0"> <!-- <img src="{{isLikedPost(post?.likes)}}">  -->
-						<ion-icon name="{{isDisLikedPost(post?.dislikes)}}" [ngClass]="{'liked': isDisLikedPost(post?.dislikes) == 'thumbs-down'}"></ion-icon>
-
-						{{post?.dislikes?.length}} </span>
-
-
-
-
-						<span class="likes-number"(click)="like(post?.likes, post?.dislikes)" *ngIf="post?.likes?.length == 0"> <!-- <img src="{{isLikedPost(post?.likes)}}">  -->
-						<ion-icon name="thumbs-up-outline"></ion-icon>
-
-						{{post?.likes?.length}} </span>
-
-
-						<span class="likes-number"(click)="like(post?.likes, post?.dislikes)" *ngIf="post?.dislikes?.length == 0"> <!-- <img src="{{isLikedPost(post?.likes)}}">  -->
-						<ion-icon name="thumbs-down-outline"></ion-icon>
-
-						{{post?.dislikes?.length}} </span>
-
-						<span class="mesgs-number"> <ion-icon name="chatbubble-outline"></ion-icon> {{post?.comments?.length}}  </span>
-					</div>
 				</div>
-				<h4 class="ttl-main mt-20"> Comments ({{post?.comments?.length}})</h4>
-				<div class="commnts" *ngIf="post?.comments?.length == 0">
+				<!--h4 class="ttl-main mt-20"> Comments ({{post?.comments?.length}})</h4-->
+				<!--div class="commnts" *ngIf="post?.comments?.length == 0">
 					<p>No comment posted yet!</p>
-				</div>
-				<div class="commnts" *ngFor="let item of post?.comments">
+				</div-->
+				<!--div class="commnts" *ngFor="let item of post?.comments"-->
 					<!-- <img src="assets/imgs/default.png" class="adm-usr">  -->
 			<!-- 		<img class="adm-usr" *ngIf="errors.indexOf(item?.image) == -1 && item?.medium == 'simple'" src="{{IMAGES_URL + '/images/' + item?.image}}">
 					<img class="adm-usr" *ngIf="errors.indexOf(item?.image) == -1 && item?.medium != 'simple'" src="{{item?.image}}">
 					 <img class="adm-usr" *ngIf="errors.indexOf(item?.image) >= 0" src="assets/img/default.png"> -->
-
-					  <img class="adm-usr" *ngIf="errors.indexOf(item?.image) == -1 && getimage(item?.image) == true" src="{{item?.image}}">
+ 
+					  <!--<img class="adm-usr" *ngIf="errors.indexOf(item?.image) == -1 && getimage(item?.image) == true" src="{{item?.image}}">
 			    	 <img class="adm-usr" *ngIf="errors.indexOf(item?.image) == -1 && getimage(item?.image) == false" src="{{IMAGES_URL + '/images/' + item?.image}}">
 			 		 <img class="adm-usr" *ngIf="errors.indexOf(item?.image) >= 0" src="assets/img/default.png">
 					<h5> {{item?.user}} <span class="time-al"> {{item?.created_on | dateAgo}} </span> </h5>
 					<p> {{item?.comment}} </p>
-				</div>
+				</div>-->
 				<!-- <div class="commnts">
 					<img src="assets/imgs/user1.jpg" class="adm-usr"> 
 					<h5> John Smith <span class="time-al"> {{post?.created_on | dateAgo}} </span> </h5>
@@ -181,16 +178,28 @@
 					<h5>  Marry James  <span class="time-al"> 3 hours ago </span> </h5>
 					<p> At vero eos et accusamus et iusto odio dignissimos . </p>
 				</div> -->
-				<div class="add-commnt" *ngIf="errors.indexOf(userId) == -1">
+				<!--div class="add-commnt" *ngIf="errors.indexOf(userId) == -1">
 					<ion-input placeholder="Add comment here..." [(ngModel)]="comment"></ion-input>
 					<a (click)="postComment(comment)" class="btn-send" > <ion-icon name="send-outline"></ion-icon> </a>
-				</div>
+				</div-->
 			</div>
 		</div>
 	</div>
 </div>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button mnfab-btn>
+      <ion-icon name="share-social"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button><ion-icon name="logo-facebook"></ion-icon></ion-fab-button>
+      <ion-fab-button><ion-icon name="logo-twitter"></ion-icon></ion-fab-button>
+      <ion-fab-button><ion-icon name="logo-whatsapp"></ion-icon></ion-fab-button>
+      <ion-fab-button><ion-icon name="logo-google"></ion-icon></ion-fab-button>
+      <ion-fab-button><ion-icon name="logo-linkedin"></ion-icon></ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
 </ion-content>
 
 <!-- <div footerWeb>
-	<p>© 2020 Recommendspot. All rights reserved.</p>
+	<p>© 2021 Recommendspot. All rights reserved.</p>
 </div> -->

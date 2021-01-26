@@ -28,6 +28,7 @@ export class PostDetailsPage implements OnInit {
     user_image: any;
     user_email: any;
     user_id: any;
+    hideMe=false;	
 
   	constructor(public location: Location, public toastController: ToastController, public apiService: ApiserviceService, public loadingController: LoadingController, public router: Router, private globalFooService: GlobalFooService, private iab: InAppBrowser, public modalController: ModalController, private photoViewer: PhotoViewer) { 
       
@@ -42,7 +43,9 @@ export class PostDetailsPage implements OnInit {
           this.user_id = localStorage.getItem('userId');
       });
     }
-
+	hide() {
+	this.hideMe = !this.hideMe;
+	}
   	ngOnInit() {
   		this.profile = JSON.parse(localStorage.getItem('profile'));
   	}

@@ -76,6 +76,10 @@ const routes: Routes = [
   },  {
     path: 'landing-page',
     loadChildren: () => import('./landing-page/landing-page.module').then( m => m.LandingPagePageModule)
+  },
+  {
+    path: 'comments',
+    loadChildren: () => import('./comments/comments.module').then( m => m.CommentsPageModule)
   }
 
 ];

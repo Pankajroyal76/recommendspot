@@ -1,0 +1,116 @@
+	.content-all-pst {
+		padding: 7px 20px 20px;
+	    background: #fff;
+	    z-index: 111;
+	    margin-bottom: 50px;
+	    position: relative;
+	    border-radius: 0px;
+	    min-height: 100%;
+		h4.ttl-main  {
+			font-size: 16px;
+		}
+		p {
+			font-size: 14px;
+			color: #8a8a8a;
+			font-weight: 300;
+			letter-spacing: 0.2px;
+			line-height: 23px;
+			margin-top: 0px;
+			margin-bottom: 10px;
+		}
+		.commnts {
+			position: relative;
+			padding-left: 53px;
+			z-index: 11;
+			margin-top: 20px;
+			display: block;
+			img.adm-usr {
+				position: absolute;
+				width: 42px;
+				height: 42px;
+				left: 0;
+				border-radius: 50%;
+				border: 1px solid rgba(238, 98, 52, 0.38);
+				box-shadow: 0px 4px 14px rgba(4, 158, 102, 0.18);
+				top: 3px;
+			}
+			h5  {
+				font-size: 14px;
+				padding-top: 6px;
+				margin: 0px;
+				color: #000;
+				text-transform: capitalize;
+				span.time-al {
+					float: right;
+					font-size: 10px;
+					color: #b5b5b5;
+				}
+			}
+			p {
+				font-size: 12px;
+				line-height: 18px;
+				margin-top: 4px;
+				margin-bottom: 0px;
+			}
+		}
+	.add-commnt {
+	    position: fixed;
+	    margin-top: 25px;
+	    padding-right: 60px;
+	    bottom: 14px;
+	    width: calc(100% - 45px);
+	    background: #fff;
+		ion-input {
+			background: #f9f9f9;
+			--padding: 14px;
+			--padding-start: 20px;
+			font-family: 'Poppins', sans-serif !important;
+			font-size: 14px;
+			color: #000;
+			--border-radius: 50px;
+			border-radius: 50px;
+			box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.06);
+			border: 1px solid #f3f3f3;
+			height: 45px;
+		}
+		a.btn-send {
+			width: 45px;
+			height: 45px;
+			background: linear-gradient(to top, #e8ae9a, #ee6234);
+			position: absolute;
+			right: 0;
+			top: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: 50%;
+			color: #fff;
+			font-size: 19px;
+			box-shadow: 0px 4px 18px rgba(4, 158, 102, 0.3686274509803922);
+		}
+	}		
+	}
+@media (min-width:1025px)
+{
+	[headerWeb] 
+	{
+		[ritHeader] 
+		{
+			[proImg] 
+			{
+				[profileDropdown]
+				{
+				    z-index: 999;
+				}
+			}
+		}
+	}
+	.content-all-pst
+	{ 
+		.add-commnt
+		{
+			width:100%;
+			max-width:800px;
+		}	
+	}	
+}	

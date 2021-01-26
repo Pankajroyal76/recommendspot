@@ -392,10 +392,7 @@ ion-content
     {
 	    order:1;
 	}	
-	[container]
-	{
-		margin-top:0px;
-	}	
+	
     ul
 	{
 	    list-style-type:none;
@@ -485,7 +482,7 @@ ion-content
 		}	
 		[how-works-sec]
 		{
-			padding: 10px 15px 45px;
+			padding: 45px 15px;
 			.mb-15
 			{
 				margin-bottom:0px;
@@ -544,7 +541,7 @@ ion-content
 		}
 		[new-users-sec]
 		{
-			padding: 10px 15px 45px;
+			padding: 45px 15px;
 			[new-users-head]
 			{
 				h2 
@@ -635,4 +632,11 @@ ion-content
     ion-header{  
         display: none !important;
     }	
+}
+@media (min-width:1025px){
+	[containers]
+	{
+        max-width: 1070px;
+        margin:0px auto 0px;
+	}
 }

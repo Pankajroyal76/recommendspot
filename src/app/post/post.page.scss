@@ -73,7 +73,54 @@ display:none!important;
 ion-content
 {
 --background:#f8f9fd  url(../../assets/img/pattern.png)  -160px -65px/contain no-repeat;
-
+	[category-sec]
+	{
+		background: var(--ion-color-white);
+		border-radius: 5px;
+		padding: 10px 10px 10px;
+		box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.05);
+		margin: 0px 10px 20px 0px;
+		ion-list
+		{
+		    [category-head]
+			{
+				margin: 10px 0px 15px;
+				font-size: 17px;
+				border-bottom: 1px solid var(--ion-color-grey3);
+				padding: 0px 0px 12px;
+				position: relative;
+				z-index: 1;
+                &:after
+				{
+				    position:absolute;
+					content:"";
+					bottom:-1px;
+					left:0px;
+					width:40px;
+					height:4px;
+					background:var(--ion-color-secondary);
+					z-index:-1;
+				}				
+			}
+			ion-item
+			{
+				--padding-start: 6px;
+				--inner-padding-end: 6px;
+				--min-height: 42px;
+				border-bottom: 1px dashed var(--ion-color-ltgrey);		
+                --background: transparent;    				
+				ion-label
+				{
+					font-size: 13px;
+					color: var(--ion-color-grey4);				
+				}
+				ion-checkbox
+				{
+				    margin:0px 10px 0px 0px;
+				}
+			}
+		}
+	}
 ion-searchbar {
 div .searchbar-input-container{
 	.searchbar-input{
@@ -99,7 +146,7 @@ ion-select {
 .search
 {
     background:var(--ion-color-secondary);
-    padding: 15px 15px 30px;
+    padding: 18px 15px;
     position: relative;
     z-index: 2;
     ion-searchbar{
@@ -160,7 +207,7 @@ ion-select {
 			--padding-start:15px;
 			--inner-padding-end:0px;
 			--background:transparent;
-			overflow:visible;
+			/*overflow:visible;*/
 			ion-avatar		
 			{
 				width: 50px;
@@ -194,6 +241,10 @@ ion-select {
 				font-size: 12px;
 				padding: 5px 12px;
 				border-radius: 20px 0px 0px 20px;
+				max-width: 105px;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				overflow: hidden;
 			}			
 		}
 	}
@@ -229,7 +280,7 @@ ion-select {
     --padding-end: 0px;
     --background: transparent;
     --color: #989898;
-    font-size: 13px;
+    font-size: 11px;
 }
 
 	.post-coment
@@ -285,16 +336,35 @@ ion-select {
 }
 }
 }
-
-.weblink {
-	color: #ed6234;
-    font-style: oblique;
-    min-width: 50%;
-    position: absolute;
-    margin-left: 2%;
-    text-decoration: underline;
+[weblink-sec]
+{
+    align-items: flex-start;
+    display: flex;
+    margin-bottom: 10px;
+    width: 100%;	
+	ion-icon
+	{
+	    min-width:20px;
+	}
+	.weblink 
+	{
+		color: #ed6234;
+		font-style: oblique;
+		display:block;
+		min-width: 50%;
+		margin-left: 5px;
+		text-decoration: underline;
+	}
 }
-
+.linkcontent
+{
+    background: #fbfbfb;
+    padding: 10px;
+	[title-my2]
+	{
+	    margin: 0px 0px 10px;
+	}
+}
 .padding-8 {
     padding: 2px;
 }

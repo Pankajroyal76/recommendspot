@@ -117,13 +117,14 @@ ion-content
 [post-sec-mn] 
 {
     border-radius: 5px;
-    padding: 10px 15px 10px;
+    padding: 10px 0px 10px;
 	box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.05);
     margin:0px 0px 20px	;
 	.post-img
 	{
 		height: 170px;
 		border-radius: 5px;
+		padding:0px 15px;
 		overflow: hidden;	
 		position:relative;
 		img 
@@ -164,6 +165,7 @@ ion-content
 }
 	.post-name
 	{
+	    padding: 0px 0px 0px 15px;
 		ion-item
 		{
 			--padding-start:0px;
@@ -203,11 +205,16 @@ ion-content
 				font-size: 12px;
 				padding: 5px 12px;
 				border-radius: 20px 0px 0px 20px;
+				max-width: 105px;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				overflow: hidden;
 			}	
 		}
 	}
 	.post-coment
 	{
+	    padding: 0px 15px 0px;
 		ion-item
 		{
 			--padding-start:0px;
@@ -238,9 +245,13 @@ ion-content
 			}
 		}
 	}
-	
+	.post-share
+	{
+	    padding:0px 9px;
+	}	
 .post-content
 {
+    padding: 0px 15px 0px;
     p
 	{
 	    font-size:13px;
@@ -254,15 +265,41 @@ ion-content
 }
 }
 
-.weblink {
-	color: #ed6234;
-    font-style: oblique;
-    min-width: 50%;
-    position: absolute;
-    margin-left: 2%;
-    text-decoration: underline;
+[weblink-sec]
+{
+    align-items: flex-start;
+    display: flex;
+    margin-bottom: 10px;
+    width: 100%;	
+	ion-icon
+	{
+	    min-width:20px;
+	}
+	.weblink 
+	{
+		color: #ed6234;
+		font-style: oblique;
+		display:block;
+		min-width: 50%;
+		margin-left: 5px;
+		text-decoration: underline;
+	}
 }
-
+[post-fav-icon]
+{
+	display: inline-flex;
+	align-items: center;
+	.heart-fav
+	{
+	    font-size: 20px;
+	    color: #989898;
+		margin-right:5px;
+	    &.fav-save
+		{
+			color: #ee6234;
+		}		
+    }		
+}
 .padding-8 {
     padding: 2px;
 }
@@ -270,7 +307,43 @@ ion-content
 .padding-left-3 {
 	padding-left: 3px;
 }
-
+[dots-edit]
+{
+    position:relative;
+	display:inline-block;
+	ion-icon 
+	{
+		font-size: 18px;
+		padding: 4px 0px 0px;
+		margin-right: 6px;
+	}	
+	.list-post-edit 
+	{
+		position: absolute;
+		bottom: 100%;
+		right: 0px;
+		z-index: 1;
+		list-style: none;
+		background: #fff;
+		border-radius: 5px;
+		padding: 7px 9px;
+		margin: 0px;
+		min-width: 110px;
+		box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.1);
+		li 
+		{
+			padding: 3px 0px;
+			a 
+			{
+				text-decoration: none;
+				color: #333;
+				font-size: 12px;
+				display: block;
+				text-align: left;
+			}	
+		}		
+	}	
+}
 .weblink-icon {
     position: absolute;
     /* bottom: 15px; */

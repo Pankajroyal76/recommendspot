@@ -4,7 +4,7 @@
 		<ul>
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
 			<li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
-			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Save Recommendation</a></li>
+			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
 			 
 		</ul>
 		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon></a>
@@ -88,12 +88,12 @@
 					<h2>{{item.user_name}}</h2>
 					<p>{{item.created_at  | dateAgo}}</p>
 					</ion-label>
-					<ion-icon class="icon-dots" name="ellipsis-vertical" *ngIf="userId == item.user_id" (click)="openUpdate(i)"></ion-icon>
+					<!--ion-icon class="icon-dots" name="ellipsis-vertical" *ngIf="userId == item.user_id" (click)="openUpdate(i)"></ion-icon>
 					<ul class="list-post-fl displaynonediv" id="doc{{i}}" *ngIf="userId == item.user_id" [class.displaydiv]="selectedItemm == i">
 						
 					<li> <a href="javascript:void(0)" (click)="editPost(item, i)">Edit</a> </li>
 					<li> <a  (click)="presentAlertConfirm(item, i)" href="javascript:void(0)">Delete</a> </li>
-					</ul>
+					</ul-->
 					<span (click)="viewPost(item)" class="servcs-badge">{{item.category}}</span>
 					<!-- <ion-icon class="icon-dots" name="ellipsis-vertical"></ion-icon> -->
 				</ion-item>
@@ -101,16 +101,17 @@
 			<div class="post-content"  style="position: relative;">
 				<h6 style="font-size: 14px;color: #000;">{{item.title}}</h6>
 				<p (click)="viewPost(item)">{{item.description}}</p>
-				<ng-container *ngIf="item?.type == 'Words'">
-					<ion-icon class="heart-icon weblink-icon" name="heart-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)" style="    bottom: 0%"></ion-icon>
-					<ion-icon class="heart-icon weblink-icon" name="heart" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)" style="    bottom: 0%"></ion-icon>
-				</ng-container>
+				<!--ng-container *ngIf="item?.type == 'Words'">
+					<ion-icon class="heart-icon weblink-icon" name="bookmark-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)" style="    bottom: 0%"></ion-icon>
+					<ion-icon class="heart-icon weblink-icon" name="bookmark" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)" style="    bottom: 0%"></ion-icon>
+				</ng-container-->
 			</div>
 
 			<div *ngIf="errors.indexOf(item.web_link) == -1">
-
-				<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
-				<span class="weblink"><a  (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
+                <div weblink-sec>
+					<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
+					<span class="weblink"><a  (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
+				</div>
 				<div class="linkcontent" *ngIf="item.web_link_content != null" (click)="openLinkPreview(item.web_link_content.data.link)">
 				
 					<ion-row>
@@ -119,7 +120,7 @@
 						</ion-col>
 
 						<ion-col size="{{item.web_link_content?.data.title != '' ? 9 : 12}}">
-							<p style="margin:0;" *ngIf="item.web_link_content?.data.title != ''">{{item.web_link_content?.data.title}}</p>
+							<p style="margin:0 0 5px;" *ngIf="item.web_link_content?.data.title != ''"><b>{{item.web_link_content?.data.title}}</b></p>
 							<p style="margin:0;" *ngIf="item.web_link_content?.data.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
 							<p style="margin:0;" *ngIf="item.web_link_content?.data.title != ''">{{item.web_link_content?.data.description}}</p>
 							<p style="margin:0;" *ngIf="item.web_link_content?.data.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
@@ -128,36 +129,51 @@
 					
 				</div>
 
-				<ng-container *ngIf="errors.indexOf(item.web_link) == -1">
-					<ion-icon style="z-index: 999;bottom: 135px;right: 25px;" class="heart-icon weblink-icon" name="heart-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
-					<ion-icon style="z-index: 999;bottom: 135px;right: 25px;" class="heart-icon weblink-icon" name="heart" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon>
-				</ng-container>
+				<!--ng-container *ngIf="errors.indexOf(item.web_link) == -1">
+					<ion-icon style="z-index: 999;bottom: 135px;right: 25px;" class="heart-icon weblink-icon" name="bookmark-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
+					<ion-icon style="z-index: 999;bottom: 135px;right: 25px;" class="heart-icon weblink-icon" name="bookmark" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon>
+				</ng-container-->
 			</div>
 			<div class="post-img" *ngIf="errors.indexOf(item.image) == -1 || item.image" (click)="viewPost(item)" >
 				<img   src="{{IMAGES_URL + '/images/' + item.image}}">
 
-				<ng-container >
-					<ion-icon class="heart-icon" name="heart-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
-					<ion-icon class="heart-icon" name="heart" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon>
-				</ng-container>
+				<!--ng-container >
+					<ion-icon class="heart-icon" name="bookmark-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
+					<ion-icon class="heart-icon" name="bookmark" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon>
+				</ng-container-->
 				
 			</div>		
 			<div class="post-share">
 				<ion-row>
 					<ion-col size="6">
 					<!-- <ion-button class="socl-btn" *ngIf="item.fav == '0' && errors.indexOf(loggedUserId) == -1" (click)="addRemoveReccomdation(item, '1', i)">
-					<ion-icon class="heart-icon" name="heart-outline" ></ion-icon>
+					<ion-icon class="heart-icon" name="bookmark-outline" ></ion-icon>
 					</ion-button>
 
 					<ion-button class="socl-btn" *ngIf="item.fav == '1' && errors.indexOf(loggedUserId) == -1" (click)="addRemoveReccomdation(item, '0', i)">
 
-					<ion-icon class="heart-icon" name="heart" class="liked" ></ion-icon>
+					<ion-icon class="heart-icon" name="bookmark" class="liked" ></ion-icon>
 					</ion-button> -->
 
 					<ion-button class="socl-btn" (click)="like(item.likes, i)"><ion-icon name="{{isLikedPost(item.likes)}}" [ngClass]="{'liked': isLikedPost(item.likes) == 'thumbs-up'}"></ion-icon> <span class="padding-8">{{item.likes.length}}</span></ion-button>
 					</ion-col>
 					<ion-col size="6" class="ion-text-right">
-					<ion-button class="socl-btn" (click)="viewPost(item)"><ion-icon name="chatbubble-outline"></ion-icon> <span class="padding-8">{{item.comments.length}}</span> </ion-button>
+					<div post-fav-icon>
+						<div dots-edit>
+							<ul class="list-post-edit displaynonediv" id="doc{{i}}" *ngIf="userId == item.user_id" [class.displaydiv]="selectedItemm == i">
+								
+							<li> <a href="javascript:void(0)" (click)="editPost(item, i)">Edit</a> </li>
+							<li> <a  (click)="presentAlertConfirm(item, i)" href="javascript:void(0)">Delete</a> </li>
+							</ul>	
+							<ion-icon class="icon-dots" name="ellipsis-horizontal" *ngIf="userId == item.user_id" (click)="openUpdate(i)"></ion-icon>
+						</div>						
+						<ng-container>
+							<ion-icon class="heart-fav" name="bookmark-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
+							<ion-icon class="heart-fav fav-save" name="bookmark" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon>
+						</ng-container>					
+						<ion-button class="socl-btn" (click)="viewPost(item)"><ion-icon name="chatbubble-outline"></ion-icon> <span class="padding-8">{{item.comments.length}}</span> </ion-button>					
+						<!--ion-button class="socl-btn" (click)="viewPost(item)"><ion-icon name="chatbubble-outline"></ion-icon> <span class="padding-8">{{item.comments.length}}</span> </ion-button-->
+					</div>
 					<div *ngIf="platform1 == false">
 								<span style="padding: 5px;" (click)="viewPostSocial(item, 'http://www.facebook.com/share.php?u=http://18.219.109.190/weblive/')" ><ion-icon name="logo-facebook"></ion-icon></span>
 
@@ -194,5 +210,5 @@
 </div>
 </ion-content>
 <div footerWeb>
-	<p>© 2020 Recommendspot. All rights reserved.</p>
+	<p>© 2021 Recommendspot. All rights reserved.</p>
 </div>

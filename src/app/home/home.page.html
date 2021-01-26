@@ -7,12 +7,12 @@
 			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
 			 
 		</ul>
-		<ion-label style="display: none;"><span>Select Category</span></ion-label>
-		<ion-select  style="color: #fff;font-size: 15px;font-weight: 500;    margin-top: 3px;" interface="alert" [(ngModel)]="cat" (ionChange)="catChange(type, 'web')">
+		<!--ion-label style="display: none;"><span>Select Category</span></ion-label-->
+		<!--ion-select  style="color: #fff;font-size: 15px;font-weight: 500;    margin-top: 3px;" interface="alert" [(ngModel)]="cat" (ionChange)="catChange(type, 'web')">
 			<ion-select-option value="All"> All Categories </ion-select-option>
 			<ion-select-option value="{{cat._id}}" *ngFor="let cat of categories"> {{cat.name}} </ion-select-option>
 			
-		</ion-select>
+		</ion-select-->
 		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon></a>
 		<span proImg>
 			<!-- <img src="assets/img/user4.jpg" alt=""> -->
@@ -41,7 +41,7 @@
 			<ion-title class="ion-text-center">Discover
 				
 			</ion-title>
-			
+			<ion-buttons addbtn slot="end" routerLink="/tabs/add-recommendation"><ion-icon name="add-outline"></ion-icon></ion-buttons>
 		</ion-toolbar>
 	</ion-header>
 
@@ -91,6 +91,8 @@
 			</ion-item>
 
 			<div class="home-sec">
+			<ion-row>
+			<ion-col size="12">
 				<ion-segment [(ngModel)]="profiletab" (ionChange)="onSegmentChange()" >
 					<ion-segment-button value="Basic">
 						For You
@@ -101,11 +103,103 @@
 					<ion-segment-button value="Saved">
 						Saved
 					</ion-segment-button>
-				</ion-segment>
+				</ion-segment>			
+			</ion-col>
+			<ion-col size="4" mobile-none>
+			    <div category-sec>
+					<ion-list>
+					    <h3 category-head>All Categories</h3>
+						<ion-item lines="none">
+							<ion-label>Games</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Services</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Articles</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Motivational videos</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Netflix Series</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Netflix Movies</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Books</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Music</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Inspirational/Motivational</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>
+						<ion-item lines="none">
+							<ion-label>Products</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>
+						<ion-item lines="none">
+							<ion-label>Podcasts</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Finance/Make Money</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Life Lessons</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Fitness/Workout</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>		
+						<ion-item lines="none">
+							<ion-label>Health</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>		
+						<ion-item lines="none">
+							<ion-label>Stock Market</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>		
+						<ion-item lines="none">
+							<ion-label>Food/Restaurants</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>		
+						<ion-item lines="none">
+							<ion-label>Places To Visit</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+					</ion-list> 					
+				</div>
+			</ion-col>
+			<ion-col size="8" moble-width100>
+				<!--ion-segment [(ngModel)]="profiletab" (ionChange)="onSegmentChange()" >
+					<ion-segment-button value="Basic">
+						For You
+					</ion-segment-button>
+					<ion-segment-button value="Today">
+						Today
+					</ion-segment-button>
+					<ion-segment-button value="Saved">
+						Saved
+					</ion-segment-button>
+				</ion-segment-->
 				<div>
 					<ion-list>
 						<ion-card post-sec-mn *ngFor="let item of posts| appFilter: authForm.value.keyword; let i = index;" >
-							<div class="post-name">	
+							<div class="post-name post-sec">	
 								<ion-item lines="none">
 									<ion-avatar (click)="viewUser(item)">
 										<img *ngIf="errors.indexOf(item.user_image) == -1 && getimage(item.user_image) == true" src="{{item.user_image}}">
@@ -117,40 +211,43 @@
 										<p>{{item.created_at  | dateAgo}}</p>
 									</ion-label>
 									<!-- <ion-icon class="icon-dots" name="ellipsis-vertical" *ngIf="userId == item.user_id" (click)="openUpdate(i)"></ion-icon> -->
-									<ul class="list-post-fl displaynonediv" id="doc{{i}}" *ngIf="userId == item.user_id" [class.displaydiv]="selectedItemm == i">
+									<!--><ul class="list-post-fl displaynonediv" id="doc{{i}}" *ngIf="userId == item.user_id" [class.displaydiv]="selectedItemm == i">
 
 										<li> <a  (click)="editPost(item, i)">Edit</a> </li>
 										<li> <a  (click)="presentAlertConfirm(item, i)" >Delete</a> </li>
 									</ul>
-									<ion-icon class="icon-dots" name="ellipsis-vertical" *ngIf="userId == item.user_id" (click)="openUpdate(i)"></ion-icon>
+										<ion-icon class="icon-dots" name="ellipsis-vertical" *ngIf="userId == item.user_id" (click)="openUpdate(i)"></ion-icon></-->
+									
 									<!-- </div> -->
 
-									<!-- <span (click)="viewPost(item)" class="servcs-badge" *ngIf="item.category != ''">{{item.category}}</span> -->
+									<span (click)="viewPost(item)" class="servcs-badge" *ngIf="item.category != ''">{{item.category}}</span>
 								</ion-item>
+								
 							</div>
 							<div class="post-content" style="position: relative;">
-								<h6 style="font-size: 14px;color: #000;">{{item.title}}</h6>
+								<h6 style="font-size: 14px;color: #000; font-weight:600;">{{item.title}}</h6>
 								<p style="margin-right: 35px;" (click)="viewPost(item)">{{item.description}}</p>
 
-								<ng-container *ngIf="item?.type == 'Words'">
-									<ion-icon class="heart-icon weblink-icon" name="heart-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)" style="    bottom: 0%"></ion-icon>
-									<ion-icon class="heart-icon weblink-icon" name="heart" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)" style="    bottom: 0%"></ion-icon>
-								</ng-container>
+								<!--ng-container *ngIf="item?.type == 'Words'">
+									<ion-icon class="heart-icon weblink-icon" name="bookmark-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)" style="    bottom: 0%"></ion-icon>
+									<ion-icon class="heart-icon weblink-icon" name="bookmark" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)" style="    bottom: 0%"></ion-icon>
+								</ng-container-->
 							</div>
 
 							<div *ngIf="errors.indexOf(item.web_link) == -1">
-								<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
-			
-								<span class="weblink"> <a (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
+								<div weblink-sec>
+									<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>			
+									<span class="weblink"> <a (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
+								</div>
 								<div class="linkcontent" *ngIf="item.web_link_content?.data != null" (click)="openLinkPreview(item.web_link_content?.data.link)">
 				
 									<ion-row>
-										<ion-col size="3" size-md="1" *ngIf="item.web_link_content?.data.image != ''">
+										<ion-col size="3" size-md="4" *ngIf="item.web_link_content?.data.image != ''">
 											<img src="{{item.web_link_content?.data.image}}" />
 										</ion-col>
 
-										<ion-col size="{{item.web_link_content?.data.title != '' ? 9 : 12}}">
-											<p style="margin:0;" *ngIf="item.web_link_content?.data.title != ''">{{item.web_link_content?.data.title}}</p>
+										<ion-col size="{{item.web_link_content?.data.title != '' ? 9 : 12}}" size-md="8">
+											<p style="margin:0;" *ngIf="item.web_link_content?.data.title != ''"><b>{{item.web_link_content?.data.title}}</b></p>
 											<p style="margin:0;" *ngIf="item.web_link_content?.data.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
 											<p style="margin:0;" *ngIf="item.web_link_content?.data.title != ''">{{item.web_link_content?.data.description}}</p>
 											<p style="margin:0;" *ngIf="item.web_link_content?.data.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
@@ -158,31 +255,32 @@
 									</ion-row>
 									
 								</div>
-								<ng-container *ngIf="errors.indexOf(item.web_link) == -1">
-									<ion-icon style="z-index: 999;bottom: 135px;right: 25px;" class="heart-icon weblink-icon" name="heart-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
-									<ion-icon style="z-index: 999;bottom: 135px;right: 25px;" class="heart-icon weblink-icon" name="heart" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon>
-								</ng-container>
+								<!--ng-container *ngIf="errors.indexOf(item.web_link) == -1">
+									<ion-icon style="z-index: 999;bottom: 135px;right: 25px;" class="heart-icon weblink-icon" name="bookmark-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
+									<ion-icon style="z-index: 999;bottom: 135px;right: 25px;" class="heart-icon weblink-icon" name="bookmark" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon>
+								</ng-container-->
 							</div>
 
 
 							<div class="post-img" *ngIf="errors.indexOf(item.image) == -1 || item.image">
 								<img (click)="viewPost(item)"  src="{{IMAGES_URL + '/images/' + item.image}}">
 
-								<ng-container >
-									<ion-icon  class="heart-icon" name="heart-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
-									<ion-icon class="heart-icon" name="heart" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon>
-								</ng-container>
+								<!--ng-container >
+									<ion-icon  class="heart-icon" name="bookmark-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
+									<ion-icon class="heart-icon" name="bookmark" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon>
+								</ng-container-->
 							</div>	
+
 							<div class="post-share">
 								<ion-row>
 									<ion-col size="6">
 
 						<!-- <ion-button class="socl-btn" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)">
 
-							<ion-icon class="heart-icon" name="heart-outline" ></ion-icon>
+							<ion-icon class="heart-icon" name="bookmark-outline" ></ion-icon>
 						</ion-button>
 						<ion-button class="socl-btn" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)">
-							<ion-icon class="heart-icon" name="heart" class="liked"></ion-icon>
+							<ion-icon class="heart-icon" name="bookmark" class="liked"></ion-icon>
 						</ion-button> -->
 
 
@@ -199,14 +297,29 @@
 
 					</ion-col>
 					<ion-col size="6" class="ion-text-right" >
-						<ion-button (click)="viewPost(item)" class="socl-btn"><ion-icon name="chatbubble-outline"></ion-icon> <span class="padding-8">{{item.comments.length}}</span> </ion-button>
-						<div *ngIf="platform1 == false">
+						<div post-fav-icon>
+							<div dots-edit>
+							<ul class="list-post-edit displaynonediv" id="doc{{i}}" *ngIf="userId == item.user_id" [class.displaydiv]="selectedItemm == i">
+
+								<li> <a  (click)="editPost(item, i)">Edit</a> </li>
+								<li> <a  (click)="presentAlertConfirm(item, i)" >Delete</a> </li>
+							</ul>
+							<ion-icon class="icon-dots" name="ellipsis-horizontal" *ngIf="userId == item.user_id" (click)="openUpdate(i)"></ion-icon>	
+                            </div>							
+							<ng-container>
+								<ion-icon class="heart-fav" name="bookmark-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
+								<ion-icon class="heart-fav fav-save" name="bookmark" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon>
+							</ng-container>							
+						<ion-button routerLink="/comments" class="socl-btn"><ion-icon name="chatbubble-outline"></ion-icon> <span class="padding-8">{{item.comments.length}}</span> </ion-button>					
+						<!--ion-button (click)="viewPost(item)" class="socl-btn"><ion-icon name="chatbubble-outline"></ion-icon> <span class="padding-8">{{item.comments.length}}</span> </ion-button-->
+						</div>						
+						<!--div *ngIf="platform1 == false">
 								<span style="padding: 5px;" (click)="viewPostSocial(item, 'http://www.facebook.com/share.php?u=http://18.219.109.190/weblive/')" target="_blank"><ion-icon name="logo-facebook"></ion-icon></span>
 								<span style="padding: 5px;"  (click)="viewPostSocial(item, 'https://twitter.com/share?url=http://18.219.109.190/weblive/&amp;text=aa&amp;hashtags=YOUR_HASHTAGS')"  target="_blank"><ion-icon name="logo-twitter"></ion-icon></span>
 								<span style="padding: 5px;"  (click)="viewPostSocial(item, 'https://web.whatsapp.com/send?text=http://18.219.109.190/weblive/')" target="_blank"><ion-icon name="logo-whatsapp"></ion-icon></span>
 								<span style="padding: 5px;"  (click)="viewPostSocial(item, 'https://plus.google.com/share?url=http://18.219.109.190/weblive/')" target="_blank"><ion-icon name="logo-google"></ion-icon></span>
 								<span style="padding: 5px;"  (click)="viewPostSocial(item, 'http://www.linkedin.com/shareArticle?mini=true&amp;url=http://18.219.109.190/weblive/')" target="_blank"><ion-icon name="logo-linkedin"></ion-icon></span>
-							</div>
+							</div-->
 
 							<ion-button class="socl-btn"  (click)="socialsharebranch(item)" *ngIf="platform1 == true"><ion-icon name="share-social-outline"></ion-icon></ion-button>			
 					</ion-col>
@@ -248,7 +361,7 @@
 			<div class="post-img">
 				<img src="assets/img/post1.jpg" />
 				<span class="servcs-badge">Netflix Series</span>
-				<ion-icon class="heart-icon" name="heart-outline"></ion-icon>
+				<ion-icon class="heart-icon" name="bookmark-outline"></ion-icon>
 			</div>	
 			<div class="post-share">
 				<ion-row>
@@ -294,7 +407,7 @@
 			<div class="post-img">
 				<img src="assets/img/post2.jpg" />
 				<span class="servcs-badge">Stock Market</span>
-				<ion-icon class="heart-icon" name="heart-outline"></ion-icon>
+				<ion-icon class="heart-icon" name="bookmark-outline"></ion-icon>
 			</div>	
 			<div class="post-share">
 				<ion-row>
@@ -321,10 +434,11 @@
 		</ion-card>	
 	</ion-list>  --> 
 </div>	
-</div>
-
 <div class="no-record" *ngIf="posts?.length == 0 && is_response == true">
 	No Record Found
+</div>
+</ion-col>
+</ion-row>
 </div>
 
 <!--  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="is_response == true">
@@ -335,6 +449,6 @@
 </div>
 </ion-content>
 <div footerWeb>
-	<p>© 2020 Recommendspot. All rights reserved.</p>
+	<p>© 2021 Recommendspot. All rights reserved.</p>
 </div>
 
