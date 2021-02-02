@@ -32,6 +32,7 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+<div container>
 <div categorytab>
   <ion-segment [(ngModel)]="categorytab">
   		<ion-segment-button value="category">
@@ -45,9 +46,9 @@
 <div [ngSwitch]="categorytab">
     	<ion-list *ngSwitchCase="'category'">
            <ion-row>
-			<ion-col size-lg="3" size-md="4"  size-sm="6" *ngFor="let cat of categories;">
+			<ion-col size-lg="4" size-md="6"  size-sm="6" *ngFor="let cat of categories;">
 			    <div category-sec>
-					<ion-list>
+					<ion-list>   
 					    <h3 category-head>
 						   {{cat.name}}
 						</h3>
@@ -55,7 +56,7 @@
 							<ion-label>Entrepreneurship/business</ion-label>
 							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
 							 <ion-buttons slot="end">
-							    <img width="20px" src="assets/img/category-follow.png"/>
+							    <img width="20px" src="assets/img/category-follow2.png"/>
 							</ion-buttons>
 						</ion-item>	
 						<ion-item lines="none">
@@ -74,7 +75,7 @@
 						</ion-item>	
 						<ion-item lines="none">
 							<ion-label>Romance </ion-label>
-							<ion-checkbox slot="start"></ion-checkbox>
+							<ion-checkbox  color="secondary" slot="start"></ion-checkbox>
 						</ion-item>	
 						<ion-item lines="none">
 							<ion-label>Nonfiction </ion-label>
@@ -82,11 +83,11 @@
 						</ion-item>	
 						<ion-item lines="none">
 							<ion-label>Mystery & thriller </ion-label>
-							<ion-checkbox slot="start"></ion-checkbox>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
 						</ion-item>	
 						<ion-item lines="none">
 							<ion-label>Food & Cookbooks </ion-label>
-							<ion-checkbox slot="start"></ion-checkbox>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
 						</ion-item>	
 						<ion-item lines="none">
 							<ion-label>Children’s </ion-label>
@@ -94,7 +95,7 @@
 						</ion-item>	
 						<ion-item lines="none">
 							<ion-label>Horror</ion-label>
-							<ion-checkbox slot="start"></ion-checkbox>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
 						</ion-item>	
 					</ion-list> 					
 				</div>
@@ -324,16 +325,96 @@
         </ion-list>
         <ion-list people *ngSwitchCase="'people'"> 
 		    <ion-row>	
-				<ion-col size-lg="3" size-md="4"  size-sm="6">
+				<ion-col size-lg="6" size-md="6"  size-sm="12">
 				   <ion-item lines="none">
 				   <ion-avatar>
 					<img src="assets/img/100_2.jpg"/>
 				   </ion-avatar>
 								<ion-label>John Smith </ion-label>
-								
+								 <ion-buttons>
+								   <ion-icon name="person-add-outline"></ion-icon>
+								 </ion-buttons>
+					</ion-item>	
+				</ion-col>
+				<ion-col size-lg="6" size-md="6"  size-sm="12">
+				   <ion-item lines="none">
+				   <ion-avatar>
+					<img src="assets/img/100_3.jpg"/>
+				   </ion-avatar>
+								<ion-label>David Jones </ion-label>
+								 <ion-buttons>
+								   <ion-icon name="person-add-outline"></ion-icon>
+								 </ion-buttons>
+					</ion-item>	
+				</ion-col>
+				<ion-col size-lg="6" size-md="6"  size-sm="12">
+				   <ion-item lines="none">
+				   <ion-avatar>
+					<img src="assets/img/100_1.jpg"/>
+				   </ion-avatar>
+								<ion-label>Johnson Charles </ion-label>
+								 <ion-buttons>
+								   <ion-icon name="person-add-outline"></ion-icon>
+								 </ion-buttons>
+					</ion-item>	
+				</ion-col>
+				<ion-col size-lg="6" size-md="6"  size-sm="12">
+				   <ion-item lines="none">
+				   <ion-avatar>
+					<img src="assets/img/100_4.jpg"/>
+				   </ion-avatar>
+								<ion-label>Andrew Philip </ion-label>
+								 <ion-buttons>
+								   <ion-icon name="person-add-outline"></ion-icon>
+								 </ion-buttons>
+					</ion-item>	
+				</ion-col>
+				<ion-col size-lg="6" size-md="6"  size-sm="12">
+				   <ion-item lines="none">
+				   <ion-avatar>
+					<img src="assets/img/100_2.jpg"/>
+				   </ion-avatar>
+								<ion-label>John Smith </ion-label>
+								 <ion-buttons>
+								   <ion-icon name="person-add-outline"></ion-icon>
+								 </ion-buttons>
+					</ion-item>	
+				</ion-col>
+				<ion-col size-lg="6" size-md="6"  size-sm="12">
+				   <ion-item lines="none">
+				   <ion-avatar>
+					<img src="assets/img/100_3.jpg"/>
+				   </ion-avatar>
+								<ion-label>David Jones </ion-label>
+								 <ion-buttons>
+								   <ion-icon name="person-add-outline"></ion-icon>
+								 </ion-buttons>
+					</ion-item>	
+				</ion-col>
+				<ion-col size-lg="6" size-md="6"  size-sm="12">
+				   <ion-item lines="none">
+				   <ion-avatar>
+					<img src="assets/img/100_1.jpg"/>
+				   </ion-avatar>
+								<ion-label>Johnson Charles </ion-label>
+								 <ion-buttons>
+								   <ion-icon name="person-add-outline"></ion-icon>
+								 </ion-buttons>
+					</ion-item>	
+				</ion-col>
+				<ion-col size-lg="6" size-md="6"  size-sm="12">
+				   <ion-item lines="none">
+				   <ion-avatar>
+					<img src="assets/img/100_4.jpg"/>
+				   </ion-avatar>
+								<ion-label>Andrew Philip </ion-label>
+								 <ion-buttons>
+								   <ion-icon name="person-add-outline"></ion-icon>
+								 </ion-buttons>
 					</ion-item>	
 				</ion-col>
 			</ion-row>	
 		</ion-list>
+</div>
 </div>
 </ion-content>

@@ -37,6 +37,30 @@ display:none!important;
 
 ion-content
 {
+/*Follow Category/People Css Start*/
+.follow-category
+{    text-align: center;
+    min-height: 510px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0 , 0 , .07);
+	[followimg]
+	{
+	img
+	{
+	    max-width: 280px;
+    margin-bottom: 25px;
+	}
+  ion-button
+  {    min-height: 48px;
+  --box-shadow:none;
+  }
+}
+}
+/*Follow Category/People Css Ends*/
 	[category-sec]
 	{
 		background: var(--ion-color-white);
@@ -177,6 +201,7 @@ padding: 30px 15px 20px;
     --padding-end: 0px;
     --background: transparent;
     --color: #989898;
+	    height: auto;
     font-size: 13px;
 }
 	.post-name
@@ -195,6 +220,8 @@ padding: 30px 15px 20px;
 			ion-label
 			{
 				padding-left: 10px;
+				
+				
 				h2
 				{
 					font-size:14px;
@@ -214,18 +241,28 @@ padding: 30px 15px 20px;
 				color:#d5d5d5;
 			}
 		}
-		span.servcs-badge 
+		/*Category & Subcategory Css Start*/
+		span.servcs-badge  
 			{
 				background: var(--ion-color-secondary);
 				color: #fff;
-				font-size: 12px;
+				font-size: 13px;
 				padding: 5px 12px;
 				border-radius: 20px 0px 0px 20px;
-				max-width: 105px;
+				max-width: 115px;
+				font-weight: 600;
 				white-space: nowrap;
 				text-overflow: ellipsis;
 				overflow: hidden;
+				small
+				{
+				  display: flex;
+			      align-items: center;
+			      font-size: 10px;
+			      font-weight: 400;
+				}
 			}	
+			/*Category & Subcategory Css Ends*/
 	}
 	.post-coment
 	{
@@ -245,6 +282,7 @@ padding: 30px 15px 20px;
 			{
 				padding-left: 10px;
 			    white-space: normal;
+				
 				h2
 				{
 					font-size:13px;
@@ -263,10 +301,26 @@ padding: 30px 15px 20px;
 	.post-share
 	{
 	    padding:0px 9px;
+		/*Comment Title Css Start*/
+		.commentstitle {
+			display: block;
+			font-size: 13px;
+			text-align: right;
+			font-weight: 600;
+			margin-right: 12px;
+			margin-top: 10px;
+		}
+		/*Comment Title Css Ends*/
 	}
 .post-content
 {
     padding: 0px 15px 0px;
+	[posttitle]
+				{ 
+					font-size: 14px;
+					color: #000;
+					font-weight:600;
+				}
     p
 	{
 	    font-size:13px;
@@ -366,6 +420,35 @@ padding: 30px 15px 20px;
 	{
 		display: inline-flex;
 		align-items: center;
+		/*Share Css Start*/
+		[sharebtn]
+		{    margin-right: 40px;
+             margin-left: -18px;
+		  [fab-btn]
+		  {
+		    --background: transparent;
+			--box-shadow: none;
+			--color: #989898;
+			ion-icon
+			{
+			 font-size: 20px;
+			}
+		  }
+		  ion-fab-list
+		  {margin-bottom: 45px;
+		    ion-fab-button
+			{    width: 35px;
+			    margin: 2px 0;
+                  height: 35px;
+			 --box-shadow: none;
+			 ion-icon
+			{
+			 font-size: 15px;
+			}
+			}
+		  }
+		}
+		/*Share Css Ends*/
 		.heart-fav
 		{
 		    font-size: 20px;
@@ -377,5 +460,4 @@ padding: 30px 15px 20px;
 			}		
         }		
 	}
-
 

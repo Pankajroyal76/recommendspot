@@ -30,6 +30,24 @@ ion-list
 background:transparent;
 padding:0px;
 margin:0px;
+&[people]
+{
+  ion-item
+  {border-radius: 8px;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0 , 0 , .07);
+	ion-avatar
+	{
+	   width:65px;
+	   height:65px;
+	   margin-right:10px;
+	}
+	ion-buttons
+	{
+	 color:var(--ion-color-secondary);
+	 font-size:22px;
+	}
+  }
+}
 [category-sec]
 	{
 		background: var(--ion-color-white);
@@ -49,7 +67,7 @@ margin:0px;
 				z-index: 1;
 				display: flex;
                 justify-content: space-between;
-				
+				text-transform:capitalize;
                 &:after
 				{
 				    position:absolute;

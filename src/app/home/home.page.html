@@ -210,6 +210,7 @@
 									<ion-label (click)="viewUser(item)">
 										<h2>{{item.user_name}}</h2>
 										<p>{{item.created_at  | dateAgo}}</p>
+										
 									</ion-label>
 									<!-- <ion-icon class="icon-dots" name="ellipsis-vertical" *ngIf="userId == item.user_id" (click)="openUpdate(i)"></ion-icon> -->
 									<!--><ul class="list-post-fl displaynonediv" id="doc{{i}}" *ngIf="userId == item.user_id" [class.displaydiv]="selectedItemm == i">
@@ -221,12 +222,12 @@
 									
 									<!-- </div> -->
 
-									<span (click)="viewPost(item)" class="servcs-badge" *ngIf="item.category != ''">{{item.category}}</span>
+									<span (click)="viewPost(item)" class="servcs-badge" *ngIf="item.category != ''">{{item.category}}<small><ion-icon name="chevron-forward-outline"></ion-icon> Dramas</small></span>
 								</ion-item>
 								
 							</div>
 							<div class="post-content" style="position: relative;">
-								<h6 style="font-size: 14px;color: #000; font-weight:600;">{{item.title}}</h6>
+								<h6>{{item.title}}</h6>
 								<p style="margin-right: 35px;" (click)="viewPost(item)">{{item.description}}</p>
 
 								<!--ng-container *ngIf="item?.type == 'Words'">
@@ -273,6 +274,7 @@
 							</div>	
 
 							<div class="post-share">
+							<span class="padding-8 commentstitle">{{item.comments.length}} Comments</span> 
 								<ion-row>
 									<ion-col size="6">
 
@@ -291,10 +293,10 @@
 							<ion-icon name="{{isLikedPost(item.likes)}}"  [ngClass]="{'liked': isLikedPost(item.likes) == 'thumbs-up'}"></ion-icon> {{item.likes.length}}
 						</ion-button>
 
-						<ion-button class="socl-btn" (click)="dislike(item.likes, item.dislikes, i)">
+						<!--ion-button class="socl-btn" (click)="dislike(item.likes, item.dislikes, i)">
 
 							<ion-icon name="{{isDisLikedPost(item.dislikes)}}"  [ngClass]="{'liked': isDisLikedPost(item.dislikes) == 'thumbs-down'}"></ion-icon>{{item.dislikes.length}}
-						</ion-button>
+						</ion-button-->
 
 					</ion-col>
 					<ion-col size="6" class="ion-text-right" >
@@ -306,12 +308,27 @@
 								<li> <a  (click)="presentAlertConfirm(item, i)" >Delete</a> </li>
 							</ul>
 							<ion-icon class="icon-dots" name="ellipsis-horizontal" *ngIf="userId == item.user_id" (click)="openUpdate(i)"></ion-icon>	
-                            </div>							
+                            </div>
+						<ion-button routerLink="/comments" class="socl-btn"><ion-icon name="chatbubble-outline"></ion-icon> <!--span class="padding-8">{{item.comments.length}}</span--> </ion-button>					
+							
 							<ng-container>
 								<ion-icon class="heart-fav" name="bookmark-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
 								<ion-icon class="heart-fav fav-save" name="bookmark" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon>
-							</ng-container>							
-						<ion-button routerLink="/comments" class="socl-btn"><ion-icon name="chatbubble-outline"></ion-icon> <span class="padding-8">{{item.comments.length}}</span> </ion-button>					
+							</ng-container>	
+						<ion-buttons sharebtn>		
+						 <ion-fab>
+							<ion-fab-button fab-btn size="small">
+							  <ion-icon name="share-social"></ion-icon>
+							</ion-fab-button>
+							<ion-fab-list side="top">
+							  <ion-fab-button size="small"><ion-icon name="logo-facebook"></ion-icon></ion-fab-button>
+							  <ion-fab-button size="small"><ion-icon name="logo-twitter"></ion-icon></ion-fab-button>
+							  <ion-fab-button size="small"><ion-icon name="logo-whatsapp"></ion-icon></ion-fab-button>
+							  <ion-fab-button size="small"><ion-icon name="logo-google"></ion-icon></ion-fab-button>
+							  <ion-fab-button size="small"><ion-icon name="logo-linkedin"></ion-icon></ion-fab-button>
+							</ion-fab-list>
+						  </ion-fab>					
+						</ion-buttons>							
 						<!--ion-button (click)="viewPost(item)" class="socl-btn"><ion-icon name="chatbubble-outline"></ion-icon> <span class="padding-8">{{item.comments.length}}</span> </ion-button-->
 						</div>						
 						<!--div *ngIf="platform1 == false">
@@ -435,6 +452,14 @@
 		</ion-card>	
 	</ion-list>  --> 
 </div>	
+<div class="follow-category">
+	<div followimg>
+	<img src="assets/img/followimg.png"/>
+		<ion-button color="secondary" shape="round" >
+			Follow Category / People
+		</ion-button>
+	</div>
+</div>
 <div class="no-record" *ngIf="posts?.length == 0 && is_response == true">
 	No Record Found
 </div>

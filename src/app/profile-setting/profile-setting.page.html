@@ -117,7 +117,17 @@
           <span error *ngIf="errors.indexOf(authForm.value.contact) >= 0 && is_submit == true">Please enter your phone number</span>
           <span error *ngIf="!reg_exp_digits.test(authForm.value.contact) && errors.indexOf(authForm.value.contact) == -1 && is_submit == true">Phone number should consist min. 6 digits and max. 10 digits</span>
         </div>
+  <div form-group>
+          <label>BIO</label>
+          <ion-item lines="none">
+            <ion-label>
+            <ion-icon name="person-outline"></ion-icon>
+            </ion-label>
+            <ion-textarea    placeholder="Enter BIO" ></ion-textarea>
+          </ion-item>
 
+          
+        </div>
         <ion-button  type="submit" color="secondary"  expand="full" shape="round" (click)="update_profile()">Submit</ion-button>
       </form>
 
