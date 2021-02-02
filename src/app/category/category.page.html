@@ -2,6 +2,7 @@
 	<a href="javascript:void(0)" routerLink="/tabs/home" logo>Recommendspot</a>
 	<div ritHeader >
 		<ul>
+			<li><a routerLink="/category" href="javascript:void(0)">Category</a></li>
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
 			<li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
 			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
@@ -44,11 +45,11 @@
 <div [ngSwitch]="categorytab">
     	<ion-list *ngSwitchCase="'category'">
            <ion-row>
-			<ion-col size-lg="3" size-md="4"  size-sm="6" >
+			<ion-col size-lg="3" size-md="4"  size-sm="6" *ngFor="let cat of categories;">
 			    <div category-sec>
 					<ion-list>
 					    <h3 category-head>
-						   BOOKS
+						   {{cat.name}}
 						</h3>
 						<ion-item lines="none">
 							<ion-label>Entrepreneurship/business</ion-label>
@@ -98,7 +99,7 @@
 					</ion-list> 					
 				</div>
 			</ion-col>
-			<ion-col size-lg="3" size-md="4"  size-sm="6" >
+			<!-- <ion-col size-lg="3" size-md="4"  size-sm="6" >
 			    <div category-sec>
 					<ion-list>
 					    <h3 category-head>
@@ -318,7 +319,7 @@
 						</h3>
 					</ion-list>					
 				</div>
-			</ion-col>
+			</ion-col> -->
 	</ion-row>		
         </ion-list>
         <ion-list people *ngSwitchCase="'people'"> 
