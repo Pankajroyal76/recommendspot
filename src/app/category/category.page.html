@@ -1,0 +1,338 @@
+<div headerWeb>
+	<a href="javascript:void(0)" routerLink="/tabs/home" logo>Recommendspot</a>
+	<div ritHeader >
+		<ul>
+			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
+			<li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
+			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
+			 
+		</ul>
+		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon></a>
+		<span proImg>
+	       <img routerLink="/tabs/profile" src="assets/img/default.png">
+
+			<p routerLink="/tabs/profile"><span class="username">user_name </span><small>user_email</small></p>
+			<div profileDropdown>
+				<ul>
+					<li><a href="javascript:void(0)" routerLink="/profile-setting/">Profile Settings</a></li>
+					<li (click)="logout()"><a href="javascript:void(0)">Logout</a></li>
+				</ul>
+			</div>
+		</span>
+	</div>
+</div>
+<ion-header class="ion-no-border heder-main" align-title="center">
+	<ion-toolbar color="secondary">
+		
+    	<ion-back-button slot="start">
+        </ion-back-button> 
+		<ion-title class="ion-text-center"> Category </ion-title>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+<div categorytab>
+  <ion-segment [(ngModel)]="categorytab">
+  		<ion-segment-button value="category">
+  		  Category
+  		</ion-segment-button>
+			<ion-segment-button value="people">
+		 People
+		  </ion-segment-button>
+    </ion-segment>
+</div>
+<div [ngSwitch]="categorytab">
+    	<ion-list *ngSwitchCase="'category'">
+           <ion-row>
+			<ion-col size-lg="3" size-md="4"  size-sm="6" >
+			    <div category-sec>
+					<ion-list>
+					    <h3 category-head>
+						   BOOKS
+						</h3>
+						<ion-item lines="none">
+							<ion-label>Entrepreneurship/business</ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+							 <ion-buttons slot="end">
+							    <img width="20px" src="assets/img/category-follow.png"/>
+							</ion-buttons>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Fiction </ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+							 <ion-buttons slot="end">
+							   <img width="20px" src="assets/img/category-follow.png"/>
+							</ion-buttons>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Humor </ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+							 <ion-buttons slot="end">
+							    <img width="20px" src="assets/img/category-follow.png"/>
+							</ion-buttons>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Romance </ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Nonfiction </ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Mystery & thriller </ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Food & Cookbooks </ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Children’s </ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Horror</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+					</ion-list> 					
+				</div>
+			</ion-col>
+			<ion-col size-lg="3" size-md="4"  size-sm="6" >
+			    <div category-sec>
+					<ion-list>
+					    <h3 category-head>
+						   PODCASTS
+						</h3>
+						<ion-item lines="none">
+							<ion-label>Comedy </ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+							 <ion-buttons slot="end">
+							   <img width="20px" src="assets/img/category-follow.png"/>
+							</ion-buttons>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>News  </ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+							 <ion-buttons slot="end">
+							    <img width="20px" src="assets/img/category-follow.png"/>
+							</ion-buttons>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Society & Culture  </ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+							 <ion-buttons slot="end">
+							  <img width="20px" src="assets/img/category-follow.png"/>
+							</ion-buttons>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Sports </ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>True Crime </ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Arts </ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Business </ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Religion & Spirituality </ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Music</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+					</ion-list> 					
+				</div>
+			</ion-col>
+			<ion-col size-lg="3" size-md="4"  size-sm="6" >
+			    <div category-sec>
+					<ion-list>
+					    <h3 category-head>
+						  NETFLIX Series & Movies
+						</h3>
+						<ion-item lines="none">
+							<ion-label>Documentaries </ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+							 <ion-buttons slot="end">
+							    <img width="20px" src="assets/img/category-follow.png"/>
+							</ion-buttons>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Dramas  </ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+							 <ion-buttons slot="end">
+							    <img width="20px" src="assets/img/category-follow.png"/>
+							</ion-buttons>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Anime  </ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+							 <ion-buttons slot="end">
+							   <img width="20px" src="assets/img/category-follow.png"/>
+							</ion-buttons>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Comedies </ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Sports </ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Action and Adventure </ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Music </ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Romance </ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Sci-fi & Fantasy</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+					</ion-list> 					
+				</div>
+			</ion-col>
+			<ion-col size-lg="3" size-md="4"  size-sm="6" >
+			    <div category-sec>
+					<ion-list>
+					    <h3 category-head>MUSIC
+						</h3>
+						<ion-item lines="none">
+							<ion-label>Pop </ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+							 <ion-buttons slot="end">
+							   <img width="20px" src="assets/img/category-follow.png"/>
+							</ion-buttons>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Classical  </ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+							 <ion-buttons slot="end">
+							   <img width="20px" src="assets/img/category-follow.png"/>
+							</ion-buttons>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Metal  </ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+							 <ion-buttons slot="end">
+							   <img width="20px" src="assets/img/category-follow.png"/>
+							</ion-buttons>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Hip Hop/ Rap </ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Techno </ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>R&B </ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Country </ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Rock </ion-label>
+							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
+						</ion-item>	
+						<ion-item lines="none">
+							<ion-label>Latin</ion-label>
+							<ion-checkbox slot="start"></ion-checkbox>
+						</ion-item>	
+					</ion-list> 					
+				</div>
+			</ion-col>
+			<ion-col size-lg="3" size-md="4"  size-sm="6" >
+			    <div category-sec>
+					<ion-list>
+					    <h3 category-head>
+						    <label class="category">HOW TO MAKE MONEY
+								<input type="checkbox" id="checkbox"> 
+								<span> <ion-icon name="checkmark-done"></ion-icon></span>
+						    </label>
+						     <ion-buttons slot="end">
+							    <img width="20px" src="assets/img/category-follow.png"/>
+							</ion-buttons>
+						</h3>
+					</ion-list>					
+				</div>
+			</ion-col>
+			<ion-col size-lg="3" size-md="4"  size-sm="6" >
+			    <div category-sec>
+					<ion-list>
+					    <h3 category-head>
+						    <label class="category">FOOD & DRINK 
+								<input type="checkbox" id="checkbox"> 
+								<span> <ion-icon name="checkmark-done"></ion-icon></span>
+						    </label>
+						     <ion-buttons slot="end">
+							    <img width="20px" src="assets/img/category-follow.png"/>
+							</ion-buttons>
+						</h3>
+					</ion-list>					
+				</div>
+			</ion-col>
+			<ion-col size-lg="3" size-md="4"  size-sm="6" >
+			    <div category-sec>
+					<ion-list>
+					    <h3 category-head>
+						    <label class="category">LIFE LESSONS
+								<input type="checkbox" id="checkbox"> 
+								<span> <ion-icon name="checkmark-done"></ion-icon></span>
+						    </label>
+						     <ion-buttons slot="end">
+							    <img width="20px" src="assets/img/category-follow.png"/>
+							</ion-buttons>
+						</h3>
+					</ion-list>					
+				</div>
+			</ion-col>
+			<ion-col size-lg="3" size-md="4"  size-sm="6" >
+			    <div category-sec>
+					<ion-list>
+					    <h3 category-head>
+						    <label class="category">MOTIVATIONAL/INSPIRATIONAL
+								<input type="checkbox" id="checkbox"> 
+								<span> <ion-icon name="checkmark-done"></ion-icon></span>
+						    </label>
+						     <ion-buttons slot="end">
+							    <img width="20px" src="assets/img/category-follow.png"/>
+							</ion-buttons>
+						</h3>
+					</ion-list>					
+				</div>
+			</ion-col>
+	</ion-row>		
+        </ion-list>
+        <ion-list people *ngSwitchCase="'people'"> 
+		    <ion-row>	
+				<ion-col size-lg="3" size-md="4"  size-sm="6">
+				   <ion-item lines="none">
+				   <ion-avatar>
+					<img src="assets/img/100_2.jpg"/>
+				   </ion-avatar>
+								<ion-label>John Smith </ion-label>
+								
+					</ion-item>	
+				</ion-col>
+			</ion-row>	
+		</ion-list>
+</div>
+</ion-content>
