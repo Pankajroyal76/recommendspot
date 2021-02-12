@@ -210,7 +210,8 @@ padding: 30px 15px 20px;
     --background: transparent;
     --color: #989898;
 	    height: auto;
-    font-size: 13px;
+    font-size: 13px;margin: 0;
+	    text-transform: capitalize
 }
 	.post-name
 	{
@@ -309,6 +310,11 @@ padding: 30px 15px 20px;
 	.post-share
 	{
 	    padding:0px 9px;
+		.postlikecomt {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 		/*Comment Title Css Start*/
 		.commentstitle {
 			display: block;
@@ -370,6 +376,31 @@ padding: 30px 15px 20px;
     background: #fbfbfb;
     padding: 10px;
 	margin:0px 15px;
+	&.ion-no-padding
+	{
+	padding:0px;
+	}
+	&.contfull
+	{
+	   img
+	   {
+	     border-radius:12px 12px 0px 0px;
+	   }
+	   .link-cnt {
+        padding: 15px 15px 7px;
+        font-size: 13px;
+     }
+		[weblink-sec] {
+			font-size: 11px;
+			ion-icon
+			{
+				font-size: 17px!important;
+			}
+			a{
+			color: initial;
+			}
+		}
+	}
 }
 
 .padding-8 {
