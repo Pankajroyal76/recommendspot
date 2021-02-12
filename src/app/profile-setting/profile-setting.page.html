@@ -2,6 +2,7 @@
   <a href="javascript:void(0)" routerLink="/tabs/home" logo>Recommendspot</a>
   <div ritHeader>
     <ul>
+      <li><a routerLink="/category" href="javascript:void(0)">Categories</a></li>
       <li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
       <li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
       <li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
@@ -38,18 +39,16 @@
 
   <div container>
   <div profileinfo>
-    <div profileimg >
+    <!-- <div profileimg >
        <img *ngIf="is_live_image_updated_cover == true" [src]="sanitizer.bypassSecurityTrustUrl(image_cover_url)">
        <img *ngIf="errors.indexOf(profile?.cover_image) == -1 && getimage(profile?.cover_image) == false && is_live_image_updated_cover == false" src="{{IMAGES_URL + '/images/' + profile?.cover_image}}">
        <img *ngIf="errors.indexOf(profile?.cover_image) >= 0 && is_live_image_updated_cover == false" src="assets/img/no-image.png">
 
     <label  for="editcoverphoto" class="cover-label">
-      <!-- (click)="selectCoverImage('cover')"  -->
          <ion-icon name="create-outline" class="cover"></ion-icon>
       </label>
       <input type="file" name="editcoverphoto" id="editcoverphoto" style="display:none" (change)="uploadCoverImage($event)"/>
-      <!-- <img src="assets/img/bg-profile.jpg"/> -->
-    </div>
+    </div> -->
     <div userimg>
       <!-- (click)="selectImage('profile')" -->
       <label for="editphoto" >
@@ -117,14 +116,27 @@
           <span error *ngIf="errors.indexOf(authForm.value.contact) >= 0 && is_submit == true">Please enter your phone number</span>
           <span error *ngIf="!reg_exp_digits.test(authForm.value.contact) && errors.indexOf(authForm.value.contact) == -1 && is_submit == true">Phone number should consist min. 6 digits and max. 10 digits</span>
         </div>
-  <div form-group>
-          <label>BIO</label>
+        <div form-group>
+          <label>Location</label>
+          <ion-item lines="none">
+            <ion-label>
+            <ion-icon name="location-outline"></ion-icon>
+            </ion-label>
+            <ion-input  formControlName="location"  placeholder="Enter Location" ></ion-input>
+          </ion-item>
+          <span error *ngIf="errors.indexOf(authForm.value.location) >= 0 && is_submit == true">Please enter your location</span>
+
+          
+        </div>
+        <div form-group>
+          <label>Bio</label>
           <ion-item lines="none">
             <ion-label>
             <ion-icon name="person-outline"></ion-icon>
             </ion-label>
-            <ion-textarea    placeholder="Enter BIO" ></ion-textarea>
+            <ion-textarea  formControlName="bio"  placeholder="Enter Bio" ></ion-textarea>
           </ion-item>
+          <span error *ngIf="errors.indexOf(authForm.value.bio) >= 0 && is_submit == true">Please enter your bio</span>
 
           
         </div>

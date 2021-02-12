@@ -38,6 +38,7 @@ export class EditReccomendationPage implements OnInit {
 	is_submit = false;
 	post: any;
 	categories: any;
+	subcategories: any;
 	user_name: any;
     user_image: any;
     user_email: any;
@@ -50,6 +51,7 @@ export class EditReccomendationPage implements OnInit {
 	image_file: any;
 	image_url: any;
 	is_image_uploaded: any;
+	typeTab = 'Photo';
 
  	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, public location: Location, private globalFooService: GlobalFooService,private formBuilder: FormBuilder, public sanitizer:DomSanitizer) { 
   		
@@ -77,6 +79,7 @@ export class EditReccomendationPage implements OnInit {
 	      type: ['', Validators.compose([Validators.required])],
 	      description: ['', Validators.compose([Validators.required])],
 	      category: ['', Validators.compose([Validators.required])],
+	      sub_category: ['', Validators.compose([Validators.required])],
 	      web_link: ['', Validators.compose([Validators.required])],
 	    });
   	};
@@ -118,7 +121,7 @@ export class EditReccomendationPage implements OnInit {
 
   	logout(){
 	    localStorage.clear();
-	    this.router.navigate(['/']);
+	    this.router.navigate(['/landing-page']);
   	}
 
   	typeChange(type){
@@ -173,7 +176,7 @@ export class EditReccomendationPage implements OnInit {
 	    }
 	  
 	    this.apiService.postData(dict,'categories').subscribe((result) => { 
-	     this.apiService.stopLoading();  
+	     //this.apiService.stopLoading();  
 	      if(result.status == 1){
 	        this.categories = result.data;	        
 	        this.getData();
@@ -187,6 +190,32 @@ export class EditReccomendationPage implements OnInit {
 	    });
   	}
 
+  	getSubCategories(cat_id){
+
+  		//this.apiService.presentLoading();
+  		var dict = {
+	    	cat_id: cat_id
+	    }
+	  
+	    this.apiService.postData(dict,'subCategoryListingAdmin').subscribe((result) => { 
+	      //this.apiService.stopLoading();  
+	      if(result.status == 1){
+	        this.subcategories = result.data;
+	      }
+	      else{
+	        //this.apiService.presentToast('Error while sending request,Please try after some time','success');
+	      }
+	    },
+	    err => {
+	        this.apiService.presentToast('Technical error,Please try after some time','success');
+	    });
+  	}
+
+  	yourFunction(event){
+  		console.log(event);
+  		this.getSubCategories(this.authForm.value.category);
+  	}
+
   	getData(){
       let dict = {
         'postId': localStorage.getItem('postId'),
@@ -195,13 +224,14 @@ export class EditReccomendationPage implements OnInit {
 
       // this.apiService.presentLoading();
         this.apiService.postData(dict,'postDetail').subscribe((result) => {
-          // this.apiService.stopLoading();
+          this.apiService.stopLoading();
           console.log(result)
           if(result.status == 1){
           	this.authForm.patchValue({
 	          	title: result.data[0].title,
 	          	type: result.data[0].type,
 	          	category: result.data[0].category_id,
+	          	sub_category: result.data[0].sub_category_id,
 	          	description: result.data[0].description,
 	          	web_link: result.data[0].web_link,
 	          	
@@ -226,12 +256,13 @@ export class EditReccomendationPage implements OnInit {
 				
 			};
               this.post = result.data[0];
-              this.authForm.value.type = result.data[0].type;
+            	  this.authForm.value.type = result.data[0].type;
               this.authForm.value.category = result.data[0].category_id;
               this.authForm.value.description = result.data[0].description;
               this.authForm.value.web_link = result.data[0].web_link;
               this.image = result.data[0].image;
               this.link_content = result.data[0].web_link_content
+              this.getSubCategories(result.data[0].category_id);
           }
           else{
               this.apiService.presentToast('Technical error,Please try after some time.','danger');
@@ -382,6 +413,7 @@ export class EditReccomendationPage implements OnInit {
 	    	type: this.authForm.value.type,
 	    	description: this.authForm.value.description,
 	    	category: this.authForm.value.category,
+	    	sub_category: this.authForm.value.sub_category,
 	    	web_link: this.authForm.value.web_link,
 	    	image: this.image,
 	    	user_id: localStorage.getItem('userId'),

@@ -31,6 +31,8 @@ export class UserProfilePage implements OnInit {
   user_email: any;
   user_id: any;
   platform1: any;
+  selectedItemm = -1;
+  posts: any;
   	
   	constructor(public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService, private iab: InAppBrowser, private socialSharing: SocialSharing,public location: Location, private platform: Platform) { 
 
@@ -52,6 +54,57 @@ export class UserProfilePage implements OnInit {
       this.platform1 = this.platform.is('cordova');
   	}
 
+    openUpdate(i){
+      if(this.selectedItemm == i){
+        this.selectedItemm = -1;
+      }else{
+      this.selectedItemm = i;
+      }
+    }
+
+    viewComments(post){
+      this.selectedItemm = -1;
+      localStorage.setItem('item', JSON.stringify(post));
+      localStorage.setItem('postId', post._id);
+      this.router.navigate(['/comments']);
+    }
+
+    editPost(item, i){
+      console.log(item, i);
+      this.selectedItemm = -1;
+      localStorage.setItem('postId', item._id);
+      localStorage.setItem('route', '/tabs/home');
+      this.router.navigate(['/edit-reccomendation'])
+    }
+
+
+    //delete post
+    deletePost(item, i){
+      console.log(item, i);
+      this.selectedItemm = -1;
+      let dict = {
+            _id: item._id
+          };
+
+
+          this.apiService.presentLoading();
+          this.apiService.postData(dict,'deleteRecc').subscribe((result) => {
+            this.apiService.stopLoading();
+            if(result.status == 1){
+              this.data.post.splice(i, 1);
+              this.apiService.presentToast(result.msg,'success');
+            }
+            else{
+              this.apiService.presentToast('Technical error,Please try after some time.','danger');
+            }
+          },
+          err => {
+            this.apiService.stopLoading();
+              this.apiService.presentToast('Technical error,Please try after some time.','danger');
+          });
+    }
+
+
     openLinkPreview(web_link){
       if(web_link.includes('http') == false  || web_link.includes('https') == false){
 
@@ -68,7 +121,7 @@ export class UserProfilePage implements OnInit {
 
     logout(){
       localStorage.clear();
-      this.router.navigate(['/']);
+      this.router.navigate(['/landing-page']);
     }
 
 
@@ -222,7 +275,7 @@ export class UserProfilePage implements OnInit {
       }
 
       let dict = {
-        userId: this.userId,
+        userId: localStorage.getItem('userId'),
         _id: likeId,
         postId: this.data.post[index]._id
       };
@@ -244,7 +297,7 @@ export class UserProfilePage implements OnInit {
           }else{
             for(var i=0; i < likesArray.length; i++)
             {
-              if(likesArray[i].userId == this.userId){
+              if(likesArray[i].userId == localStorage.getItem('userId')){
                 this.data.post[index].likes.splice(i, 1);
               }
             }
@@ -443,5 +496,29 @@ export class UserProfilePage implements OnInit {
       }).catch(function(err) {
           alert('Error: ' + JSON.stringify(err))
       });
+  }
+
+  async presentAlertConfirm(item, i) {
+      const alert = await this.apiService.alertController.create({
+        header: 'Confirm Delete',
+        message: 'Are you sure to delete?',
+        buttons: [
+         {
+            text: 'OK',
+            handler: () => {
+              console.log('Confirm Okay');
+              this.deletePost(item, i);
+              
+            }
+          },
+          {
+            text: 'Cancel',
+            handler: () => {
+            }
+          }
+        ]
+      });
+
+      await alert.present();
   }
 }

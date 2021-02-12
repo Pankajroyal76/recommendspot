@@ -25,6 +25,32 @@ ion-content{
 }
 }
 }
+
+
+/*Follow Category/People Css Start*/
+.follow-category
+{    text-align: center;
+    min-height: 510px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0 , 0 , .07);
+	[followimg]
+	{
+	img
+	{
+	    max-width: 280px;
+    margin-bottom: 25px;
+	}
+  ion-button
+  {    min-height: 48px;
+  --box-shadow:none;
+  }
+}
+}
+/*Follow Category/People Css Ends*/
 ion-list
 {
 background:transparent;

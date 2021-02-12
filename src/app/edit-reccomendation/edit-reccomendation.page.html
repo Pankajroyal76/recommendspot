@@ -2,8 +2,8 @@
 	<a href="javascript:void(0)" routerLink="/tabs/home" logo>Recommendspot</a>
 	<div ritHeader>
 		<ul>
-			<li><a routerLink="/category" href="javascript:void(0)">Category</a></li>
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
+			<li><a routerLink="/category" href="javascript:void(0)">Categories</a></li>
 			<li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
 			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
 			 
@@ -36,15 +36,20 @@
   </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
+	<ion-segment [(ngModel)]="typeTab">
+		<ion-segment-button value="Photo">
+			Photo/Image
+		</ion-segment-button>
+		<ion-segment-button value="Website">
+			Website Link
+		</ion-segment-button>
+		<ion-segment-button value="Words">
+			Text Only
+		</ion-segment-button>
+	</ion-segment>
 	<div container>
 		<form [formGroup]="authForm" (keyup.enter)="add_recc()">
-			<div form-group>
-		    	<label>Title</label>
-				<ion-item lines="none">
-					<ion-input rows="3" placeholder="Enter Title" formControlName="title"></ion-input>
-				</ion-item>
-				<span error *ngIf="errors.indexOf(authForm.value.title) >= 0 && is_submit == true">Please enter title</span>
-			</div>
+			
 
 			<div form-group>
 				<label>Type</label>
@@ -67,11 +72,31 @@
 						<ion-icon name="layers-outline"></ion-icon>
 						<span style="display: none;">Category</span>
 					</ion-label>
-					<ion-select interface="alert"  placeholder="Select"formControlName="category">
+					<ion-select interface="alert"  placeholder="Select"formControlName="category" (ionChange)="yourFunction($event)">
 						<ion-select-option value="{{doc._id}}" *ngFor="let doc of categories; let i = index;"> {{doc.name}} </ion-select-option>
 					</ion-select>
 				</ion-item>
 				<span error *ngIf="errors.indexOf(authForm.value.category) >= 0 && is_submit == true">Please choose category</span>
+			</div>
+			<div form-group>
+				<label>Sub Category</label>
+				<ion-item lines="none">
+					<ion-label>
+						<ion-icon name="layers-outline"></ion-icon>
+						<span style="display: none;">Sub Category</span>
+					</ion-label>
+					<ion-select interface="alert"  placeholder="Select"formControlName="sub_category">
+						<ion-select-option value="{{doc._id}}" *ngFor="let doc of subcategories; let i = index;"> {{doc.name}} </ion-select-option>
+					</ion-select>
+				</ion-item>
+				<span error *ngIf="errors.indexOf(authForm.value.category) >= 0 && is_submit == true">Please choose sub category</span>
+			</div>
+			<div form-group>
+		    	<label>Title</label>
+				<ion-item lines="none">
+					<ion-input rows="3" placeholder="Enter Title" formControlName="title"></ion-input>
+				</ion-item>
+				<span error *ngIf="errors.indexOf(authForm.value.title) >= 0 && is_submit == true">Please enter title</span>
 			</div>
 			<div form-group>
 	    		<label>Description</label>

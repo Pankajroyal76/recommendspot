@@ -136,6 +136,17 @@ ion-searchbar {
 
 
 
+@media only screen and (max-width:767px){
+    [sortbyPhn]{
+        display: block;
+    }
+
+    ion-item{
+        --min-height: 1px;
+        border-radius: 50px;
+        min-width: 350px;
+    }
+}
 
 @media (min-width:1025px){
     [webPostsearch]{

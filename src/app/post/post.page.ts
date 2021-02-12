@@ -33,7 +33,7 @@ export class PostPage implements OnInit {
   authForm: FormGroup;
   hideMe=false;
 	selectedItem:any = 'item1';
- 	profiletab: string = "Basic";
+ 	profiletab: string = "Today";
 	isAndroid: boolean = false;
 	posts: any = [];
 	is_response = false;
@@ -50,6 +50,9 @@ export class PostPage implements OnInit {
   deferredPrompt: any;
 	categories: any;
   cat: any = "All";
+  filter_cat_array = [];
+  categoriesCheck = [];
+  categoriesChecked = JSON.parse(localStorage.getItem('categoriesCheck'));
 
 	hide() {
 		this.hideMe = !this.hideMe;
@@ -215,10 +218,34 @@ export class PostPage implements OnInit {
       this.apiService.postData(dict,'categories').subscribe((result) => { 
         //this.apiService.stopLoading();
         console.log('this.categories', result.data)  
+
+        for(var i = 0; i < result.data.length; i++){
+          if(this.filter_cat_array.indexOf(result.data[i]._id) >= 0){
+            result.data[i].checked = true;
+          }else{
+            result.data[i].checked = false;
+          }
+          
+        }
+        this.categories = result.data;
+
+        for(var i = 0; i < result.data.length; i++){
+
+          var dict = {
+            name: result.data[i].name,
+            type: 'checkbox',
+            label: result.data[i].name,
+            value: result.data[i]._id,
+            checked: false
+          };
+          this.categoriesCheck.push(dict);
+        }
+
+        this.categories = result.data;
+        // this.cat = this.categories[0]._id;
+        this.getAllReccomdations(false, '');
         if(result.status == 1){
-          this.categories = result.data;
-          // this.cat = this.categories[0]._id;
-          this.getAllReccomdations(false, '');
+         
         }
         else{
           this.apiService.presentToast('Error while sending request,Please try after some time','success');
@@ -237,16 +264,17 @@ export class PostPage implements OnInit {
       skip: this.page_number, 
       cat: this.cat, 
       limit: this.page_limit,
-      type: this.profiletab,
-      keyword: this.authForm.value.keyword
+      type: 'Today',
+      keyword: this.authForm.value.keyword,
+      filter_cat_array: this.filter_cat_array
     };
     console.log(dict)
     if(this.counter == 0 && this.errors.indexOf(this.userId) >= 0){
     	//this.apiService.presentLoading();
     }
-    
+    this.apiService.presentLoading();
     this.apiService.postData(dict,'getAllRecc').subscribe((result) => {
-      	//this.apiService.stopLoading();
+      	this.apiService.stopLoading();
       	console.log(result);
       	
       	this.is_response = true;
@@ -360,6 +388,12 @@ export class PostPage implements OnInit {
     this.iab.create(link, '_system', {location: 'yes', closebuttoncaption: 'done'});
   }
 
+  viewComments(post){
+      localStorage.setItem('item', JSON.stringify(post));
+      localStorage.setItem('postId', post._id);
+      this.router.navigate(['/comments']);
+    }
+
 
   viewUser(item){
     localStorage.setItem('item', JSON.stringify(item));
@@ -431,6 +465,114 @@ export class PostPage implements OnInit {
       }).catch(function(err) {
           alert('Error: ' + JSON.stringify(err))
       });
+  }
+
+  selectCat(cat){
+      console.log(cat);
+      if(this.filter_cat_array.indexOf(cat._id) == -1){
+        this.filter_cat_array.push(cat._id);
+      }else{
+        this.filter_cat_array.splice(this.filter_cat_array.indexOf(cat._id),1);
+      }
+
+      localStorage.setItem('categoriesCheck', JSON.stringify(this.filter_cat_array));
+
+      this.getAllReccomdations(false, '');
+
+      console.log(this.filter_cat_array);
+      
+    }
+
+  async presentAlertRadio() {
+    const alert = await this.apiService.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Radio',
+      inputs: [
+        {
+          name: 'Saved',
+          type: 'radio',
+          label: 'Saved',
+          value: 'Saved',
+          checked: this.type == 'Saved' ? true : false
+        },
+        {
+          name: 'Likes',
+          type: 'radio',
+          label: 'Likes',
+          value: 'Likes',
+          checked: this.type == 'Likes' ? true : false
+        },
+        {
+          name: 'Comments',
+          type: 'radio',
+          label: 'Comments',
+          value: 'Comments',
+          checked: this.type == 'Comments' ? true : false
+        },
+        {
+          name: 'Random',
+          type: 'radio',
+          label: 'Random',
+          value: 'Random',
+          checked: this.type == 'Random' ? true : false
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Ok',
+          handler: (data) => {
+            console.log('Confirm Ok', data);
+            this.typeChange(data);
+            this.type = data;
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async presentAlert() {
+    const alert = await this.apiService.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Categories',
+      inputs: this.categoriesCheck,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Ok',
+          handler: (data) => {
+            console.log('Confirm Ok', data);
+            this.categoriesChecked = data;
+            for(var i = 0; i < this.categoriesCheck.length; i++){
+              if(data.indexOf(this.categoriesCheck[i].value) >= 0){
+                this.categoriesCheck[i].checked = true;
+              }else{
+                this.categoriesCheck[i].checked = false;
+              }
+            }
+            localStorage.setItem('categoriesCheck', JSON.stringify(this.categoriesChecked))
+            this.filter_cat_array = JSON.parse(localStorage.getItem('categoriesCheck'));
+            this.getAllReccomdations(false, '');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
 }

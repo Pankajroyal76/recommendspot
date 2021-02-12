@@ -33,6 +33,7 @@ export class AddRecommendationPage implements OnInit {
 	expression: any;
 	is_submit = false;
 	categories: any;
+	subcategories: any;
 	user_name: any;
     user_image: any;
     user_email: any;
@@ -46,6 +47,7 @@ export class AddRecommendationPage implements OnInit {
 	image_file: any;
 	image_url: any;
 	is_image_uploaded: any;
+	typeTab = 'Photo';
 
   	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, private globalFooService: GlobalFooService,private formBuilder: FormBuilder, public sanitizer:DomSanitizer) { 
 
@@ -71,9 +73,10 @@ export class AddRecommendationPage implements OnInit {
   	createForm(){
 	    this.authForm = this.formBuilder.group({
 	      title: ['', Validators.compose([Validators.required])],
-	      type: ['Photo', Validators.compose([Validators.required])],
+	      //type: ['Photo', Validators.compose([Validators.required])],
 	      description: ['', Validators.compose([Validators.required])],
 	      category: ['', Validators.compose([Validators.required])],
+	      subcategory: ['', Validators.compose([Validators.required])],
 	      web_link: ['', Validators.compose([Validators.required])],
 	    });
 	    this.opencontent = false;
@@ -82,12 +85,14 @@ export class AddRecommendationPage implements OnInit {
 
   	logout(){
 	    localStorage.clear();
-	    this.router.navigate(['/']);
+	    this.router.navigate(['/landing-page']);
   	}
 
   	closeLinkContent(){
   		this.opencontent = false;
   	}
+
+  	
 
   	checklink(link){
   		console.log(link);
@@ -179,6 +184,38 @@ export class AddRecommendationPage implements OnInit {
 	    });
   	}
 
+
+
+  	getSubCategories(cat_id){
+
+  		this.apiService.presentLoading();
+  		var dict = {
+	    	cat_id: cat_id
+	    }
+	  
+	    this.apiService.postData(dict,'subCategoryListingAdmin').subscribe((result) => { 
+	      this.apiService.stopLoading();  
+	      if(result.status == 1){
+	        this.subcategories = result.data;
+	      }
+	      else{
+	        //this.apiService.presentToast('Error while sending request,Please try after some time','success');
+	      }
+	    },
+	    err => {
+	        this.apiService.presentToast('Technical error,Please try after some time','success');
+	    });
+  	}
+
+  	yourFunction(event){
+  		console.log(event);
+  		this.getSubCategories(this.authForm.value.category);
+  	}
+
+
+
+
+
   	add_recc(){
 
   		this.is_submit = true;
@@ -186,7 +223,7 @@ export class AddRecommendationPage implements OnInit {
   		if(this.errors.indexOf(this.authForm.value.category) >= 0 || this.errors.indexOf(this.authForm.value.title) >= 0){
 	      return false;
 	    }
-  		if(this.authForm.value.type != 'Website'){
+  		/*if(this.authForm.value.type != 'Website'){
   			if(this.errors.indexOf(this.authForm.value.description) >= 0){
 		      return false;
 		    }
@@ -203,10 +240,34 @@ export class AddRecommendationPage implements OnInit {
 	    	if(this.errors.indexOf(this.image_file) >= 0){
 		      return false;
 		    }
+	    }*/
+
+	    if(this.typeTab != 'Website'){
+  			if(this.errors.indexOf(this.authForm.value.description) >= 0){
+		      return false;
+		    }
+  		}
+  		
+
+	    if(this.typeTab == 'Website'){
+	    	if(this.errors.indexOf(this.authForm.value.web_link) >= 0 || !this.expression.test(this.authForm.value.web_link)){
+		      return false;
+		    }
+	    }
+
+	    if(this.typeTab == 'Photo'){
+	    	if(this.errors.indexOf(this.image_file) >= 0){
+		      return false;
+		    }
 	    }
 	    
 	    
-	    if(this.authForm.value.type == 'Photo'){
+	    // if(this.authForm.value.type == 'Photo'){
+	    // 	this.uploadImage();
+	    // }else{
+	    // 	this.profileImageSubmit();
+	    // }
+	    if(this.typeTab == 'Photo'){
 	    	this.uploadImage();
 	    }else{
 	    	this.profileImageSubmit();
@@ -314,9 +375,11 @@ export class AddRecommendationPage implements OnInit {
 	    this.apiService.presentLoading();
 	    var dict = {
 	    	title: this.authForm.value.title,
-	    	type: this.authForm.value.type,
+	    	// type: this.authForm.value.type,
+	    	type: this.typeTab,
 	    	description: this.authForm.value.description,
 	    	category: this.authForm.value.category,
+	    	sub_category: this.authForm.value.sub_category,
 	    	web_link: this.authForm.value.web_link,
 	    	image: this.image,
 	    	user_id: localStorage.getItem('userId'),

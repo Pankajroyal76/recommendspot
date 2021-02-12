@@ -166,7 +166,19 @@ ion-content
 				--padding-start: 18px;
 				--min-height: 52px;
 				--background: var(--ion-color-ltgrey);
-			    min-width: 200px;	
+			    min-width: 200px;
+			    .categories{
+			    	max-width: 150px;
+				    white-space: nowrap;
+				    text-overflow: ellipsis;
+				    overflow: hidden;
+			    }
+			    .dropicon{
+				    float: right;
+					right: 10px;
+					position: absolute;
+					color: #afa8a8;
+				}	
 				ion-select
 				{
 					color:var( --ion-color-dgrey);
@@ -451,6 +463,19 @@ ion-content
 				ion-item
 				{
 					min-width: 250px;
+					.dropicon{
+					    float: right;
+						right: 10px;
+						position: absolute;
+						color: #afa8a8;
+					}
+					.categories{
+				    	max-width: 160px;
+					    white-space: nowrap;
+					    text-overflow: ellipsis;
+					    overflow: hidden;
+				    }
+				
 				}
 				ion-buttons
 				{

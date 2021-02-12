@@ -234,18 +234,28 @@ ion-select {
 				font-size:22px;
 				color:#d5d5d5;
 			}*/
-			span.servcs-badge 
-			{
-				background: var(--ion-color-secondary);
-				color: #fff;
-				font-size: 12px;
-				padding: 5px 12px;
-				border-radius: 20px 0px 0px 20px;
-				max-width: 105px;
-				white-space: nowrap;
-				text-overflow: ellipsis;
-				overflow: hidden;
-			}			
+			/*Category & Subcategory Css Start*/
+			span.servcs-badge  
+				{
+					background: var(--ion-color-secondary);
+					color: #fff;
+					font-size: 13px;
+					padding: 5px 12px;
+					border-radius: 20px 0px 0px 20px;
+					max-width: 115px;
+					font-weight: 600;
+					white-space: nowrap;
+					text-overflow: ellipsis;
+					overflow: hidden;
+					small
+					{
+					  display: flex;
+				      align-items: center;
+				      font-size: 10px;
+				      font-weight: 400;
+					}
+				}	
+				/*Category & Subcategory Css Ends*/			
 		}
 	}
 .cart-mn-pd	
@@ -281,6 +291,8 @@ ion-select {
     --background: transparent;
     --color: #989898;
     font-size: 11px;
+    z-index: 9999;
+    position: relative;
 }
 
 	.post-coment
@@ -314,6 +326,20 @@ ion-select {
 				}
 			}
 		}
+	}
+	.post-share
+	{
+	    padding:0px 9px;
+		/*Comment Title Css Start*/
+		.commentstitle {
+			display: block;
+			font-size: 13px;
+			text-align: right;
+			font-weight: 600;
+			/*margin-right: 12px;*/
+			margin-top: 10px;
+		}
+		/*Comment Title Css Ends*/
 	}
 	
 .post-content
@@ -372,3 +398,87 @@ ion-select {
 .padding-left-3 {
 	padding-left: 3px;
 }
+
+[sharebtn]
+		{    margin-right: 40px;
+             margin-left: -18px;
+		  [fab-btn]
+		  {
+		    --background: transparent;
+			--box-shadow: none;
+			--color: #989898;
+			ion-icon
+			{
+			 font-size: 20px;
+			}
+		  }
+		  ion-fab-list
+		  {margin-bottom: 45px;
+		    ion-fab-button
+			{    width: 35px;
+			    margin: 2px 0;
+                  height: 35px;
+			 --box-shadow: none;
+			 ion-icon
+			{
+			 font-size: 15px;
+			}
+			}
+		  }
+		}
+		/*Share Css Ends*/
+
+[post-fav-icon]
+	{
+		display: inline-flex;
+		align-items: center;
+		/*Share Css Start*/
+		[sharebtn]
+		{    margin-right: 40px;
+             margin-left: -18px;
+		  [fab-btn]
+		  {
+		    --background: transparent;
+			--box-shadow: none;
+			--color: #989898;
+			ion-icon
+			{
+			 font-size: 20px;
+			}
+		  }
+		  ion-fab-list
+		  {margin-bottom: 45px;
+		    ion-fab-button
+			{    width: 35px;
+			    margin: 2px 0;
+                  height: 35px;
+			 --box-shadow: none;
+			 ion-icon
+			{
+			 font-size: 15px;
+			}
+			}
+		  }
+		}
+		/*Share Css Ends*/
+		.heart-fav
+		{
+		    font-size: 20px;
+		    color: #989898;
+			margin-right:5px;
+			z-index: 9999;
+			position: relative;
+		    &.fav-save
+			{
+				color: #ee6234;
+			}		
+        }		
+	}
+
+.sorticon{
+	text-align: center;
+    font-size: 25px;
+    color: #fff;
+    padding: 15px;
+}
+

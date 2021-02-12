@@ -18,6 +18,29 @@ display:none!important;
 ion-content
 {
 --padding-bottom: 40px;
+ion-segment {
+    background:#ffffff;
+    border-radius: 30px;
+    padding: 5px;
+    margin-bottom: 20px;
+    max-width: 500px;
+    margin: 0 auto;    
+    ion-segment-button
+    {    text-transform: capitalize;
+        min-height: 35px!important;
+    height: 30px!important;
+    color: #000;
+    &.segment-button-checked{
+    --indicator-color: transparent !important;
+    --indicator-color-checked: transparent !important;
+    background: var(--ion-color-secondary);
+    border-radius: 30px;--border-radius: 30px;
+    color: var(--ion-color-white);
+       --color-checked: var(--ion-color-white)!important;
+    font-weight: 500;
+}
+}
+}
 [form-group]
  {       margin-bottom: 12px;
 

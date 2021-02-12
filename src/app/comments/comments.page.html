@@ -1,28 +1,29 @@
 <div headerWeb>
 	<a href="javascript:void(0)" routerLink="/tabs/home" logo>Recommendspot</a>
-	<div ritHeader >
+	<div ritHeader [style.height]="errors.indexOf(user_id) >= 0 ? '66px' : '' ">
 		<ul>
-			<li><a routerLink="/category" href="javascript:void(0)">Category</a></li>
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
+			<li><a routerLink="/category" href="javascript:void(0)">Categories</a></li>
 			<li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
 			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
 			 
 		</ul>
 		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon></a>
-		<span proImg>
-	       <img routerLink="/tabs/profile" src="assets/img/default.png">
+		<span proImg *ngIf="errors.indexOf(user_id) == -1">
+			<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
+	       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
+	      <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) >= 0" src="assets/img/default.png">
 
-			<p routerLink="/tabs/profile"><span class="username">user_name </span><small>user_email</small></p>
+			 <p routerLink="/tabs/profile"><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
 			<div profileDropdown>
 				<ul>
-					<li><a href="javascript:void(0)" routerLink="/profile-setting/">Profile Settings</a></li>
+					<li><a href="javascript:void(0)" routerLink="/profile-setting">Profile Settings</a></li>
 					<li (click)="logout()"><a href="javascript:void(0)">Logout</a></li>
 				</ul>
 			</div>
 		</span>
 	</div>
 </div>
-
 <ion-header class="ion-no-border heder-main" align-title="center">
 	<ion-toolbar color="secondary">
 		
@@ -34,24 +35,25 @@
 <ion-content>
 	<div container>
 		<div class="content-all-pst">
-			<div class="commnts">
-				<img src="assets/img/user1.jpg" class="adm-usr"> 
-				<h5> John Smith <span class="time-al"> 1 hour ago </span> </h5>
-				<p> Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto. </p>
+			<div class="commnts" *ngFor="let doc of comments; let i = index;">
+				<img *ngIf="errors.indexOf(doc.image) == -1 && getimage(doc.image) == true" src="{{doc.image}}" class="adm-usr">
+				<img *ngIf="errors.indexOf(doc.image) == -1 && getimage(doc.image) == false" src="{{IMAGES_URL + '/images/' + doc.image}}" class="adm-usr">
+				<img *ngIf="errors.indexOf(doc.image) >= 0" src="assets/img/default.png" class="adm-usr">
+				<h5> {{doc.user}} <span class="time-al"> {{doc.created_on| dateAgo}} </span> </h5>
+				<p> {{doc.comment}} </p>
 			</div>
-			<div class="commnts">
-				<img src="assets/img/user2.jpg" class="adm-usr"> 
-				<h5>Christon Hanry <span class="time-al"> 1 hour ago </span> </h5>
-				<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
+			<div class="follow-category" *ngIf="comments?.length == 0 && is_response == true">
+				<div followimg>
+				<img style="max-width: 100%; padding: 60px;" src="assets/img/nodata.png"/>
+					
+				</div>
 			</div>
-			<div class="commnts">
-				<img src="assets/img/user3.jpg" class="adm-usr"> 
-				<h5>  Marry James  <span class="time-al"> 3 hours ago </span> </h5>
-				<p> At vero eos et accusamus et iusto odio dignissimos . </p>
-			</div>
-			<div class="add-commnt">
-				<ion-input placeholder="Add comment here..."></ion-input>
-				<a (click)="postComment(comment)" class="btn-send" > <ion-icon name="send-outline"></ion-icon> </a>
+			
+			<div class="add-commnt" *ngIf="errors.indexOf(user_id) == -1">
+				<form [formGroup]="authForm" (keyup.enter)="postComment()">
+					<ion-input placeholder="Add comment here..." formControlName="comment"></ion-input>
+					<a class="btn-send" (click)="postComment()"> <ion-icon name="send-outline"></ion-icon> </a>
+				</form>
 			</div>
 		</div>
 	</div>

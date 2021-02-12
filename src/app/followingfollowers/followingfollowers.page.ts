@@ -54,7 +54,7 @@ export class FollowingfollowersPage implements OnInit {
 
   	logout(){
 	    localStorage.clear();
-	    this.router.navigate(['/']);
+	    this.router.navigate(['/landing-page']);
   	}
 
   	ngOnInit() {

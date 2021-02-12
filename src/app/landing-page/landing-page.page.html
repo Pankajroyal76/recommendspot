@@ -13,6 +13,7 @@
 			<!-- <li><a routerLink="/category" href="javascript:void(0)">Category</a></li> -->
 			<li><a routerLink="/login" href="javascript:void(0)">Login</a></li>
 			<li><a routerLink="/signup" href="javascript:void(0)">Signup</a></li>
+			<li><a routerLink="/posts" href="javascript:void(0)">Recommendations</a></li>
 			 
 		</ul>
 	</div>
@@ -38,6 +39,7 @@
 			<ul class="list-post-fl" *ngIf="hideMe">
 				<li> <a  href="javascript:void(0)" routerLink="/login" (click)="hide()">Login</a> </li>
 				<li> <a routerLink="/signup" href="javascript:void(0)" (click)="hide()">Sign Up</a> </li>
+				<li><a routerLink="/posts" href="javascript:void(0)">Recommendations</a></li>
 			</ul>
 		</div>  
 	</div>  
@@ -59,15 +61,25 @@
 		<ion-row>
 		    <ion-col size="12">
 				<div form-group>
-					<ion-item lines="none">
-						<ion-select value="allCategories" okText="Save" cancelText="Cancel">
-							<ion-select-option value="allCategories">All Categories</ion-select-option>
-							<ion-select-option value="Categories1">Categories1</ion-select-option>
-							<ion-select-option value="Categories2">Categories2</ion-select-option>
-							<ion-select-option value="Categories3">Categories3</ion-select-option>
-						</ion-select>
+
+					<ion-item lines="none" (click)="presentAlert()">
+						<!-- <ion-label>
+							<span style="display: none;">Category</span>
+						</ion-label> -->
+						<!-- <ion-select value="allCategories" okText="Save" cancelText="Cancel" placeholder="Choose">
+							<ion-select-option value="{{cat._id}}" *ngFor="let cat of categories">{{cat.name}}</ion-select-option>
+						</ion-select> -->
+						<div class="categories">
+							<span *ngIf="categoriesChecked?.length == 0">Categories</span><ion-icon class="dropicon" name="caret-down-outline"></ion-icon>
+							<ng-container *ngIf="categoriesChecked?.length > 0">
+								<div><span *ngFor="let doc of categoriesCheck"><span *ngIf="doc.checked == true">{{doc.name}}<span *ngIf="categoriesCheck?.length > 1">,</span></span></span></div>
+							</ng-container>
+						</div>
 					</ion-item>
-			        <ion-buttons>Go</ion-buttons>
+
+
+
+			        <ion-buttons (click)="goto()">Go</ion-buttons>
 				</div>								
 			</ion-col>
 		</ion-row>
@@ -117,34 +129,17 @@
 				</ion-col>			
 				<ion-col size="12">
 					<ion-slides pager="true" [options]="slideOpts1">
-						<ion-slide>			
+						<ion-slide *ngFor="let user of users;">			
 							<div new-users-mn>
-								<img src="assets/img/user1.jpg" alt="" />
-								<h4>John Smith</h4>
-								<p>johnsmith@gmail.com</p>
+								<!-- <img src="assets/img/user1.jpg" alt="" /> -->
+								<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user.image) == -1 && getimage(user.image) == true" src="{{user.image}}">
+						        <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user.image) == -1 && getimage(user.image) == false" src="{{IMAGES_URL + '/images/' + user.image}}">
+						       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user.image) >= 0" src="assets/img/default.png">
+								<h4>{{user.name}}</h4>
+								<p>{{user.email}}</p>
 							</div>
 						</ion-slide>
-						<ion-slide>			
-							<div new-users-mn>
-								<img src="assets/img/user2.jpg" alt="" />
-								<h4>Mitchell John</h4>
-								<p>john@gmail.com</p>
-							</div>
-						</ion-slide>
-						<ion-slide>			
-							<div new-users-mn>
-								<img src="assets/img/user3.jpg" alt="" />
-								<h4>David Doe</h4>
-								<p>david_doe@gmail.com</p>
-							</div>
-						</ion-slide>
-						<ion-slide>			
-							<div new-users-mn>
-								<img src="assets/img/user4.jpg" alt="" />
-								<h4>Smith John</h4>
-								<p>smithjohn@gmail.com</p>
-							</div>
-						</ion-slide>
+						
 					</ion-slides>				
 				</ion-col>
 			</ion-row>

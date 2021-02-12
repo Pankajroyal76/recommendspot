@@ -2,8 +2,8 @@
 	<a href="javascript:void(0)" routerLink="/tabs/home" logo>Recommendspot</a>
 	<div ritHeader [style.height]="errors.indexOf(user_id) >= 0 ? '66px' : '' ">
 		<ul>
-			<li><a routerLink="/category" href="javascript:void(0)">Category</a></li>
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
+			<li><a routerLink="/category" href="javascript:void(0)">Categories</a></li>
 			<li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
 			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
 			 
@@ -51,7 +51,7 @@
 						<div class="slide">
 							<div class="img-bx-sly storis">
 
-								<span class="servcs-badge">{{post?.category}}</span>
+								<span class="servcs-badge">{{post?.category}}<small *ngIf="post?.sub_category != ''"><ion-icon name="chevron-forward-outline"></ion-icon> {{post?.sub_category}}</small></span>
 							<div class="post-content">
 								<p style="padding-left: 10px;">{{post?.description}}</p>
 							</div>
@@ -103,10 +103,10 @@
 
 						{{post?.likes?.length}} </span>
 
-						<span class="likes-number cont-icon"(click)="dislike(post?.likes, post?.dislikes)" *ngIf="post?.dislikes?.length > 0"> <!-- <img src="{{isLikedPost(post?.likes)}}">  -->
+						<!-- <span class="likes-number cont-icon"(click)="dislike(post?.likes, post?.dislikes)" *ngIf="post?.dislikes?.length > 0">
 						<ion-icon name="{{isDisLikedPost(post?.dislikes)}}" [ngClass]="{'liked': isDisLikedPost(post?.dislikes) == 'thumbs-down'}"></ion-icon>
 
-						{{post?.dislikes?.length}} </span>
+						{{post?.dislikes?.length}} </span> -->
 
 
 
@@ -129,7 +129,7 @@
 						<span class="cont-icon" *ngIf="post?.fav == '1' && errors.indexOf(userId) == -1" (click)="addRemoveReccomdation(post, '0')">
 							<ion-icon class="heart-icon" name="bookmark" class="liked"></ion-icon>
 						</span>
-						<span class="mesgs-number cont-icon"> <ion-icon name="chatbubble-outline"></ion-icon> {{post?.comments?.length}}  </span>					
+						<span class="mesgs-number cont-icon"> <ion-icon name="chatbubble-outline"></ion-icon> {{post?.comment_count}}  </span>					
 					</div>			
 			<div class="content-all-pst">
 				

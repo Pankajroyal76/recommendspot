@@ -23,17 +23,22 @@ export class AppComponent {
       url: '/tabs/home',
       icon: 'home-outline'
     },
-	{
+    {
+      title: 'Categories',
+      url: '/category',
+      icon: 'layers-outline'
+    },
+   {
       title: 'Notifications',
       url: '/tabs/notification',
       icon: 'notifications-outline'
     },
-	{
+	 {
       title: 'Profile',
       url: '/tabs/profile',
       icon: 'person-outline'
     },
-	{
+	 {
       title: 'Logout',
       url: '/',
       icon: 'log-out-outline'
@@ -83,7 +88,12 @@ export class AppComponent {
   }
 
   gotoRoute(url){
-    this.apiService.navCtrl.navigateRoot(url);
+    if(url == '/category'){
+      this.router.navigate([url]);
+    }else{
+      this.apiService.navCtrl.navigateRoot(url);
+    }
+    // this.apiService.navCtrl.navigateRoot(url);
   }
 
   initializeApp() {
@@ -96,10 +106,10 @@ export class AppComponent {
       //this.statusBar.styleDefault();
       this.statusBar.backgroundColorByHexString('#f16334');
       this.splashScreen.hide();
-
-     if (!this.apiService.gettoken()) {
+      localStorage.setItem('categoriesCheck', JSON.stringify([]));
+      if (!this.apiService.gettoken()) {
         //this.router.navigate([""]);
-		this.router.navigate(["landing-page"]);
+		    this.router.navigate(["landing-page"]);
       } else {
         this.router.navigate(["/tabs/home"]);
       }
@@ -119,7 +129,7 @@ export class AppComponent {
 
   logout(){
     localStorage.clear();
-    this.router.navigate(['/']);
+    this.router.navigate(['/landing-page']);
   }
 
 

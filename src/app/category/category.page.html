@@ -1,24 +1,36 @@
 <div headerWeb>
 	<a href="javascript:void(0)" routerLink="/tabs/home" logo>Recommendspot</a>
-	<div ritHeader >
+	<div ritHeader>
 		<ul>
-			<li><a routerLink="/category" href="javascript:void(0)">Category</a></li>
+			
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
+			<li><a routerLink="/category" href="javascript:void(0)">Categories</a></li>
 			<li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
 			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
 			 
 		</ul>
+		<!--ion-label style="display: none;"><span>Select Category</span></ion-label-->
+		<!--ion-select  style="color: #fff;font-size: 15px;font-weight: 500;    margin-top: 3px;" interface="alert" [(ngModel)]="cat" (ionChange)="catChange(type, 'web')">
+			<ion-select-option value="All"> All Categories </ion-select-option>
+			<ion-select-option value="{{cat._id}}" *ngFor="let cat of categories"> {{cat.name}} </ion-select-option>
+			
+		</ion-select-->
 		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon></a>
 		<span proImg>
-	       <img routerLink="/tabs/profile" src="assets/img/default.png">
+			<!-- <img src="assets/img/user4.jpg" alt=""> -->
 
-			<p routerLink="/tabs/profile"><span class="username">user_name </span><small>user_email</small></p>
+			<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
+	       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
+	      <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) >= 0" src="assets/img/default.png">
+
+			 <p routerLink="/tabs/profile"><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
 			<div profileDropdown>
 				<ul>
-					<li><a href="javascript:void(0)" routerLink="/profile-setting/">Profile Settings</a></li>
-					<li (click)="logout()"><a href="javascript:void(0)">Logout</a></li>
+					<li><a href="javascript:void(0)" routerLink="/profile-setting/{{user_id}}">Profile Settings</a></li>
+					<li (click)="logout()"> <a href="javascript:void(0)">Logout</a></li>
 				</ul>
 			</div>
+			
 		</span>
 	</div>
 </div>
@@ -46,371 +58,71 @@
 <div [ngSwitch]="categorytab">
     	<ion-list *ngSwitchCase="'category'">
            <ion-row>
-			<ion-col size-lg="4" size-md="6"  size-sm="6" *ngFor="let cat of categories;">
-			    <div category-sec>
-					<ion-list>   
-					    <h3 category-head>
-						   {{cat.name}}
-						</h3>
-						<ion-item lines="none">
-							<ion-label>Entrepreneurship/business</ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-							 <ion-buttons slot="end">
-							    <img width="20px" src="assets/img/category-follow2.png"/>
-							</ion-buttons>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Fiction </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-							 <ion-buttons slot="end">
-							   <img width="20px" src="assets/img/category-follow.png"/>
-							</ion-buttons>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Humor </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-							 <ion-buttons slot="end">
-							    <img width="20px" src="assets/img/category-follow.png"/>
-							</ion-buttons>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Romance </ion-label>
-							<ion-checkbox  color="secondary" slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Nonfiction </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Mystery & thriller </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Food & Cookbooks </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Children’s </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Horror</ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-						</ion-item>	
-					</ion-list> 					
-				</div>
-			</ion-col>
-			<!-- <ion-col size-lg="3" size-md="4"  size-sm="6" >
-			    <div category-sec>
-					<ion-list>
-					    <h3 category-head>
-						   PODCASTS
-						</h3>
-						<ion-item lines="none">
-							<ion-label>Comedy </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-							 <ion-buttons slot="end">
-							   <img width="20px" src="assets/img/category-follow.png"/>
-							</ion-buttons>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>News  </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-							 <ion-buttons slot="end">
-							    <img width="20px" src="assets/img/category-follow.png"/>
-							</ion-buttons>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Society & Culture  </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-							 <ion-buttons slot="end">
-							  <img width="20px" src="assets/img/category-follow.png"/>
-							</ion-buttons>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Sports </ion-label>
-							<ion-checkbox slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>True Crime </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Arts </ion-label>
-							<ion-checkbox slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Business </ion-label>
-							<ion-checkbox slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Religion & Spirituality </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Music</ion-label>
-							<ion-checkbox slot="start"></ion-checkbox>
-						</ion-item>	
-					</ion-list> 					
-				</div>
-			</ion-col>
-			<ion-col size-lg="3" size-md="4"  size-sm="6" >
-			    <div category-sec>
-					<ion-list>
-					    <h3 category-head>
-						  NETFLIX Series & Movies
-						</h3>
-						<ion-item lines="none">
-							<ion-label>Documentaries </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-							 <ion-buttons slot="end">
-							    <img width="20px" src="assets/img/category-follow.png"/>
-							</ion-buttons>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Dramas  </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-							 <ion-buttons slot="end">
-							    <img width="20px" src="assets/img/category-follow.png"/>
-							</ion-buttons>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Anime  </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-							 <ion-buttons slot="end">
-							   <img width="20px" src="assets/img/category-follow.png"/>
-							</ion-buttons>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Comedies </ion-label>
-							<ion-checkbox slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Sports </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Action and Adventure </ion-label>
-							<ion-checkbox slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Music </ion-label>
-							<ion-checkbox slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Romance </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Sci-fi & Fantasy</ion-label>
-							<ion-checkbox slot="start"></ion-checkbox>
-						</ion-item>	
-					</ion-list> 					
-				</div>
-			</ion-col>
-			<ion-col size-lg="3" size-md="4"  size-sm="6" >
-			    <div category-sec>
-					<ion-list>
-					    <h3 category-head>MUSIC
-						</h3>
-						<ion-item lines="none">
-							<ion-label>Pop </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-							 <ion-buttons slot="end">
-							   <img width="20px" src="assets/img/category-follow.png"/>
-							</ion-buttons>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Classical  </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-							 <ion-buttons slot="end">
-							   <img width="20px" src="assets/img/category-follow.png"/>
-							</ion-buttons>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Metal  </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-							 <ion-buttons slot="end">
-							   <img width="20px" src="assets/img/category-follow.png"/>
-							</ion-buttons>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Hip Hop/ Rap </ion-label>
-							<ion-checkbox slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Techno </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>R&B </ion-label>
-							<ion-checkbox slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Country </ion-label>
-							<ion-checkbox slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Rock </ion-label>
-							<ion-checkbox color="secondary" slot="start"></ion-checkbox>
-						</ion-item>	
-						<ion-item lines="none">
-							<ion-label>Latin</ion-label>
-							<ion-checkbox slot="start"></ion-checkbox>
-						</ion-item>	
-					</ion-list> 					
-				</div>
-			</ion-col>
-			<ion-col size-lg="3" size-md="4"  size-sm="6" >
-			    <div category-sec>
-					<ion-list>
-					    <h3 category-head>
-						    <label class="category">HOW TO MAKE MONEY
-								<input type="checkbox" id="checkbox"> 
-								<span> <ion-icon name="checkmark-done"></ion-icon></span>
-						    </label>
-						     <ion-buttons slot="end">
-							    <img width="20px" src="assets/img/category-follow.png"/>
-							</ion-buttons>
-						</h3>
-					</ion-list>					
-				</div>
-			</ion-col>
-			<ion-col size-lg="3" size-md="4"  size-sm="6" >
-			    <div category-sec>
-					<ion-list>
-					    <h3 category-head>
-						    <label class="category">FOOD & DRINK 
-								<input type="checkbox" id="checkbox"> 
-								<span> <ion-icon name="checkmark-done"></ion-icon></span>
-						    </label>
-						     <ion-buttons slot="end">
-							    <img width="20px" src="assets/img/category-follow.png"/>
-							</ion-buttons>
-						</h3>
-					</ion-list>					
-				</div>
-			</ion-col>
-			<ion-col size-lg="3" size-md="4"  size-sm="6" >
-			    <div category-sec>
-					<ion-list>
-					    <h3 category-head>
-						    <label class="category">LIFE LESSONS
-								<input type="checkbox" id="checkbox"> 
-								<span> <ion-icon name="checkmark-done"></ion-icon></span>
-						    </label>
-						     <ion-buttons slot="end">
-							    <img width="20px" src="assets/img/category-follow.png"/>
-							</ion-buttons>
-						</h3>
-					</ion-list>					
-				</div>
-			</ion-col>
-			<ion-col size-lg="3" size-md="4"  size-sm="6" >
-			    <div category-sec>
-					<ion-list>
-					    <h3 category-head>
-						    <label class="category">MOTIVATIONAL/INSPIRATIONAL
-								<input type="checkbox" id="checkbox"> 
-								<span> <ion-icon name="checkmark-done"></ion-icon></span>
-						    </label>
-						     <ion-buttons slot="end">
-							    <img width="20px" src="assets/img/category-follow.png"/>
-							</ion-buttons>
-						</h3>
-					</ion-list>					
-				</div>
-			</ion-col> -->
+           	<ng-container *ngFor="let cat of categories;let i = index;">
+	           	<ion-col size-lg="4" size-md="4"  size-sm="6" *ngIf="cat.sub_cat?.length == 0">
+				    <div category-sec>
+						<ion-list>
+						    <h3 category-head style="word-break: break-all;
+    							overflow: unset;">
+							    <label class="category">{{cat.name}}
+									<!-- <input type="checkbox" id="checkbox"> 
+									<span> <ion-icon name="checkmark-done" ></ion-icon></span> -->
+							    </label>
+							     <ion-buttons slot="end" (click)="follow_unfollow_cat(cat, '1', i)" *ngIf="cat.cat_follow == 0 && cat.follow_status == true" >
+								    <!-- <img width="20px" src="../assets/img/category-follow.png"/> -->Follow
+								</ion-buttons>
+								<ion-buttons slot="end" (click)="follow_unfollow_cat(cat, '0', i)" *ngIf="cat.cat_follow == 1 && cat.follow_status == true">
+								    <!-- <img width="20px" src="../assets/img/category-follow2.png"/> -->Unfollow
+								</ion-buttons>
+							</h3>
+						</ion-list>					
+					</div>
+				</ion-col>
+
+				<ion-col size-lg="4" size-md="6"  size-sm="6" *ngIf="cat.sub_cat?.length > 0">
+				    <div category-sec>
+						<ion-list>   
+						    <h3 category-head style="word-break: break-all;
+    							overflow: unset;">
+							   <label class="category">{{cat.name}}</label>
+							</h3>
+							<ng-container *ngIf="cat.sub_cat?.length > 0">
+								<ion-item lines="none" *ngFor="let sub_cat of cat.sub_cat;let sub_index = index;">
+									<ion-label>{{sub_cat.name}}</ion-label>
+									<!-- <ion-checkbox color="secondary" slot="start"></ion-checkbox> -->
+								  	<ion-buttons slot="end" (click)="follow_unfollow_sub_cat(sub_cat, '1', i, sub_index)" *ngIf="sub_cat.sub_cat_follow == 0 && sub_cat.follow_status == true">
+									    <!-- <img width="20px" src="assets/img/category-follow.png"/> -->Follow
+									</ion-buttons>
+									<ion-buttons slot="end" (click)="follow_unfollow_sub_cat(sub_cat, '0', i, sub_index)" *ngIf="sub_cat.sub_cat_follow == 1 && sub_cat.follow_status == true">
+									    <!-- <img width="20px" src="assets/img/category-follow2.png"/> -->Unfollow
+									</ion-buttons>
+								</ion-item>	
+							</ng-container>
+						</ion-list>
+					</div>
+				</ion-col>
+			</ng-container>
 	</ion-row>		
         </ion-list>
         <ion-list people *ngSwitchCase="'people'"> 
 		    <ion-row>	
-				<ion-col size-lg="6" size-md="6"  size-sm="12">
+				<ion-col size-lg="6" size-md="6"  size-sm="12" *ngFor="let user of users; let i = index;">
 				   <ion-item lines="none">
 				   <ion-avatar>
-					<img src="assets/img/100_2.jpg"/>
+
+					<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user.image) == -1 && getimage(user.image) == true" src="{{user.image}}">
+			        <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user.image) == -1 && getimage(user.image) == false" src="{{IMAGES_URL + '/images/' + user.image}}">
+			       	<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user.image) >= 0" src="assets/img/default.png">
+
 				   </ion-avatar>
-								<ion-label>John Smith </ion-label>
-								 <ion-buttons>
-								   <ion-icon name="person-add-outline"></ion-icon>
-								 </ion-buttons>
-					</ion-item>	
-				</ion-col>
-				<ion-col size-lg="6" size-md="6"  size-sm="12">
-				   <ion-item lines="none">
-				   <ion-avatar>
-					<img src="assets/img/100_3.jpg"/>
-				   </ion-avatar>
-								<ion-label>David Jones </ion-label>
-								 <ion-buttons>
-								   <ion-icon name="person-add-outline"></ion-icon>
-								 </ion-buttons>
-					</ion-item>	
-				</ion-col>
-				<ion-col size-lg="6" size-md="6"  size-sm="12">
-				   <ion-item lines="none">
-				   <ion-avatar>
-					<img src="assets/img/100_1.jpg"/>
-				   </ion-avatar>
-								<ion-label>Johnson Charles </ion-label>
-								 <ion-buttons>
-								   <ion-icon name="person-add-outline"></ion-icon>
-								 </ion-buttons>
-					</ion-item>	
-				</ion-col>
-				<ion-col size-lg="6" size-md="6"  size-sm="12">
-				   <ion-item lines="none">
-				   <ion-avatar>
-					<img src="assets/img/100_4.jpg"/>
-				   </ion-avatar>
-								<ion-label>Andrew Philip </ion-label>
-								 <ion-buttons>
-								   <ion-icon name="person-add-outline"></ion-icon>
-								 </ion-buttons>
-					</ion-item>	
-				</ion-col>
-				<ion-col size-lg="6" size-md="6"  size-sm="12">
-				   <ion-item lines="none">
-				   <ion-avatar>
-					<img src="assets/img/100_2.jpg"/>
-				   </ion-avatar>
-								<ion-label>John Smith </ion-label>
-								 <ion-buttons>
-								   <ion-icon name="person-add-outline"></ion-icon>
-								 </ion-buttons>
-					</ion-item>	
-				</ion-col>
-				<ion-col size-lg="6" size-md="6"  size-sm="12">
-				   <ion-item lines="none">
-				   <ion-avatar>
-					<img src="assets/img/100_3.jpg"/>
-				   </ion-avatar>
-								<ion-label>David Jones </ion-label>
-								 <ion-buttons>
-								   <ion-icon name="person-add-outline"></ion-icon>
-								 </ion-buttons>
-					</ion-item>	
-				</ion-col>
-				<ion-col size-lg="6" size-md="6"  size-sm="12">
-				   <ion-item lines="none">
-				   <ion-avatar>
-					<img src="assets/img/100_1.jpg"/>
-				   </ion-avatar>
-								<ion-label>Johnson Charles </ion-label>
-								 <ion-buttons>
-								   <ion-icon name="person-add-outline"></ion-icon>
-								 </ion-buttons>
-					</ion-item>	
-				</ion-col>
-				<ion-col size-lg="6" size-md="6"  size-sm="12">
-				   <ion-item lines="none">
-				   <ion-avatar>
-					<img src="assets/img/100_4.jpg"/>
-				   </ion-avatar>
-								<ion-label>Andrew Philip </ion-label>
-								 <ion-buttons>
-								   <ion-icon name="person-add-outline"></ion-icon>
-								 </ion-buttons>
+						<ion-label>{{user.name}} </ion-label>
+					 	<ion-buttons (click)="follow_unfollow_user(user, '1', i)" *ngIf="user.isFriend == 0">
+					   		<ion-icon name="person-add-outline"></ion-icon>
+					 	</ion-buttons>
+
+					 	<ion-buttons (click)="follow_unfollow_user(user, '0', i)" *ngIf="user.isFriend == 1">
+					   		<ion-icon name="person-add"></ion-icon>
+					 	</ion-buttons>
 					</ion-item>	
 				</ion-col>
 			</ion-row>	

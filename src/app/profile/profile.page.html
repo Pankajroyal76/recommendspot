@@ -3,6 +3,7 @@
 	<div ritHeader>
 		<ul>
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
+			<li><a routerLink="/category" href="javascript:void(0)">Categories</a></li>
 			<li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
 			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
 			 
@@ -38,9 +39,8 @@
 
 	<div container>
 <div profileinfo>
-<div profileimg [style.backgroundImage]="'url(' + bgImage + ')'">
-  <!-- <img src="assets/img/bg-profile.jpg"/> -->
-</div>
+<!-- <div profileimg [style.backgroundImage]="'url(' + bgImage + ')'">
+</div> -->
 <!--div userimg>
 <img src="assets/img/profile_user.jpg">
 <h2>John Smith</h2>
@@ -159,22 +159,37 @@
 					</ion-col>
 					<ion-col size="6" class="ion-text-right">
 					<div post-fav-icon>
-						<div dots-edit>
+							<div dots-edit>
 							<ul class="list-post-edit displaynonediv" id="doc{{i}}" *ngIf="userId == item.user_id" [class.displaydiv]="selectedItemm == i">
-								
-							<li> <a href="javascript:void(0)" (click)="editPost(item, i)">Edit</a> </li>
-							<li> <a  (click)="presentAlertConfirm(item, i)" href="javascript:void(0)">Delete</a> </li>
-							</ul>	
-							<ion-icon class="icon-dots" name="ellipsis-horizontal" *ngIf="userId == item.user_id" (click)="openUpdate(i)"></ion-icon>
-						</div>						
-						<ng-container>
-							<ion-icon class="heart-fav" name="bookmark-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
-							<ion-icon class="heart-fav fav-save" name="bookmark" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon>
-						</ng-container>					
-						<ion-button class="socl-btn" (click)="viewPost(item)"><ion-icon name="chatbubble-outline"></ion-icon> <span class="padding-8">{{item.comments.length}}</span> </ion-button>					
-						<!--ion-button class="socl-btn" (click)="viewPost(item)"><ion-icon name="chatbubble-outline"></ion-icon> <span class="padding-8">{{item.comments.length}}</span> </ion-button-->
-					</div>
-					<div *ngIf="platform1 == false">
+
+								<li> <a  (click)="editPost(item, i)">Edit</a> </li>
+								<li> <a  (click)="presentAlertConfirm(item, i)" >Delete</a> </li>
+							</ul>
+							<ion-icon class="icon-dots" name="ellipsis-horizontal" *ngIf="userId == item.user_id" (click)="openUpdate(i)"></ion-icon>	
+                            </div>
+						<ion-button (click)="viewComments(item)" class="socl-btn"><ion-icon name="chatbubble-outline"></ion-icon> <!--span class="padding-8">{{item.comments.length}}</span--> </ion-button>					
+							
+							<ng-container>
+								<ion-icon  style="cursor:pointer;" class="heart-fav" name="bookmark-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
+								<ion-icon  style="cursor:pointer;" class="heart-fav fav-save" name="bookmark" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon>
+							</ng-container>	
+						<ion-buttons sharebtn>		
+						 <ion-fab>
+							<ion-fab-button fab-btn size="small">
+							  <ion-icon name="share-social"></ion-icon>
+							</ion-fab-button>
+							<ion-fab-list side="top">
+							  <ion-fab-button size="small" (click)="viewPostSocial(item, 'http://www.facebook.com/share.php?u=https://recommendspot.com/#/post-details/')" target="_blank"><ion-icon name="logo-facebook"></ion-icon></ion-fab-button>
+							  <ion-fab-button size="small"  (click)="viewPostSocial(item, 'https://twitter.com/share?url=https://recommendspot.com/#/post-details/&amp;text=aa&amp;hashtags=YOUR_HASHTAGS')"><ion-icon name="logo-twitter"></ion-icon></ion-fab-button>
+							  <ion-fab-button size="small"  (click)="viewPostSocial(item, 'https://web.whatsapp.com/send?text=https://recommendspot.com/#/post-details/')"><ion-icon name="logo-whatsapp"></ion-icon></ion-fab-button>
+							  <ion-fab-button size="small" (click)="viewPostSocial(item, 'https://plus.google.com/share?url=https://recommendspot.com/#/post-details/')"><ion-icon name="logo-google"></ion-icon></ion-fab-button>
+							  <ion-fab-button size="small" (click)="viewPostSocial(item, 'http://www.linkedin.com/shareArticle?mini=true&amp;url=https://recommendspot.com/#/post-details/')"><ion-icon name="logo-linkedin"></ion-icon></ion-fab-button>
+							</ion-fab-list>
+						  </ion-fab>					
+						</ion-buttons>							
+						<!--ion-button (click)="viewPost(item)" class="socl-btn"><ion-icon name="chatbubble-outline"></ion-icon> <span class="padding-8">{{item.comments.length}}</span> </ion-button-->
+						</div>
+					<!--< div *ngIf="platform1 == false">
 								<span style="padding: 5px;" (click)="viewPostSocial(item, 'http://www.facebook.com/share.php?u=http://18.219.109.190/weblive/')" ><ion-icon name="logo-facebook"></ion-icon></span>
 
 								<span style="padding: 5px;"  (click)="viewPostSocial(item, 'https://twitter.com/share?url=http://18.219.109.190/weblive/&amp;text=aa&amp;hashtags=YOUR_HASHTAGS')"  ><ion-icon name="logo-twitter"></ion-icon></span>
@@ -183,23 +198,23 @@
 								<span style="padding: 5px;"  (click)="viewPostSocial(item, 'http://www.linkedin.com/shareArticle?mini=true&amp;url=http://18.219.109.190/weblive/')"><ion-icon name="logo-linkedin"></ion-icon></span>
 							</div>
 
-							<ion-button class="socl-btn"  (click)="socialsharebranch(item)" *ngIf="platform1 == true"><ion-icon name="share-social-outline"></ion-icon></ion-button>		
+							<ion-button class="socl-btn"  (click)="socialsharebranch(item)" *ngIf="platform1 == true"><ion-icon name="share-social-outline"></ion-icon></ion-button>	 -->	
 					</ion-col>
 				</ion-row>
 			</div>	
-			<div class="post-coment" *ngIf="item.comments.length > 0" (click)="viewPost(item)" >	
+			<!-- <div class="post-coment" *ngIf="item.comments != null" (click)="viewPost(item)" >	
 				<ion-item lines="none">
 					 <ion-avatar>
-					     <img *ngIf="errors.indexOf(item.comments[item.comments.length - 1].image) == -1 && getimage(item.comments[item.comments.length - 1].image) == true" src="{{item.comments[item.comments.length - 1].image}}">
-					    <img *ngIf="errors.indexOf(item.comments[item.comments.length - 1].image) == -1 && getimage(item.comments[item.comments.length - 1].image) == false" src="{{IMAGES_URL + '/images/' + item.comments[item.comments.length - 1].image}}">
-					 	<img *ngIf="errors.indexOf(item.comments[item.comments.length - 1].image) >= 0" src="assets/img/default.png">
+					     <img *ngIf="errors.indexOf(item.comments.image) == -1 && getimage(item.comments.image) == true" src="{{item.comments.image}}">
+					    <img *ngIf="errors.indexOf(item.comments.image) == -1 && getimage(item.comments.image) == false" src="{{IMAGES_URL + '/images/' + item.comments.image}}">
+					 	<img *ngIf="errors.indexOf(item.comments.image) >= 0" src="assets/img/default.png">
 					 </ion-avatar>
 					<ion-label>
-					<h2><b>{{item.comments[item.comments.length - 1].user}}</b> </h2>
-					<p>{{item.comments[item.comments.length - 1].comment}}</p>
+					<h2><b>{{item.comments.user}}</b> </h2>
+					<p>{{item.comments.comment}}</p>
 					</ion-label>
 				</ion-item>
-			</div>
+			</div> -->
 		</ion-card>
 
 		 <div class="no-record" *ngIf="data?.post?.length == 0 && is_response == true">

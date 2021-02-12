@@ -2,7 +2,9 @@
 	<a href="javascript:void(0)" routerLink="/tabs/home" logo>Recommendspot</a>
 	<div ritHeader>
 		<ul>
+			
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
+			<li><a routerLink="/category" href="javascript:void(0)">Categories</a></li>
 			<li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
 			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
 			 
@@ -37,17 +39,22 @@
 
 
 <ion-content class="ion-padding">
+	<ion-segment [(ngModel)]="typeTab">
+		<ion-segment-button value="Photo">
+			Photo/Image
+		</ion-segment-button>
+		<ion-segment-button value="Website">
+			Website Link
+		</ion-segment-button>
+		<ion-segment-button value="Words">
+			Text Only
+		</ion-segment-button>
+	</ion-segment>
 
 	<div container>
 		<form [formGroup]="authForm" (keyup.enter)="add_recc()">
-			<div form-group>
-		    	<label>Title</label>
-				<ion-item lines="none">
-					<ion-input rows="3" placeholder="Enter Title" formControlName="title"></ion-input>
-				</ion-item>
-				<span error *ngIf="errors.indexOf(authForm.value.title) >= 0 && is_submit == true">Please enter title</span>
-			</div>
-			<div form-group>
+			
+			<!-- <div form-group>
 		    	<label>Type</label>
 				<ion-item lines="none">
 					<ion-label>
@@ -60,7 +67,7 @@
 						<ion-select-option value="Words"> Text Only   </ion-select-option>
 					</ion-select>
 				</ion-item>
-			</div>
+			</div> -->
 			<div form-group>
 		 		<label>Category</label>
 				<ion-item lines="none">
@@ -68,20 +75,40 @@
 						<ion-icon name="layers-outline"></ion-icon>
 						<span style="display: none;">Category</span>
 					</ion-label>
-					<ion-select interface="alert"  placeholder="Select"  formControlName="category">
+					<ion-select interface="alert"  placeholder="Select"  formControlName="category" (ionChange)="yourFunction($event)">
 						<ion-select-option value="{{doc._id}}" *ngFor="let doc of categories; let i = index;"> {{doc.name}} </ion-select-option>
 					</ion-select>
 				</ion-item>
 				<span error *ngIf="errors.indexOf(authForm.value.category) >= 0 && is_submit == true">Please choose category</span>
 			</div>
 			<div form-group>
+		 		<label>Sub Category</label>
+				<ion-item lines="none">
+					<ion-label>
+						<ion-icon name="layers-outline"></ion-icon>
+						<span style="display: none;">Sub Category</span>
+					</ion-label>
+					<ion-select interface="alert"  placeholder="Select"  formControlName="subcategory">
+						<ion-select-option value="{{doc._id}}" *ngFor="let doc of subcategories; let i = index;"> {{doc.name}} </ion-select-option>
+					</ion-select>
+				</ion-item>
+				<span error *ngIf="errors.indexOf(authForm.value.subcategory) >= 0 && is_submit == true">Please choose sub category</span>
+			</div>
+			<div form-group>
+		    	<label>Title</label>
+				<ion-item lines="none">
+					<ion-input rows="3" placeholder="Enter Title" formControlName="title"></ion-input>
+				</ion-item>
+				<span error *ngIf="errors.indexOf(authForm.value.title) >= 0 && is_submit == true">Please enter title</span>
+			</div>
+			<div form-group>
 		    	<label>Description</label>
 				<ion-item lines="none">
 					<ion-textarea rows="3" placeholder="Enter Any Description Here..." formControlName="description"></ion-textarea>
 				</ion-item>
-				<span error *ngIf="authForm.value.type != 'Website' && errors.indexOf(authForm.value.description) >= 0 && is_submit == true">Please enter description</span>
+				<span error *ngIf="typeTab != 'Website' && errors.indexOf(authForm.value.description) >= 0 && is_submit == true">Please enter description</span>
 			</div>
-			<div form-group  uploadimg *ngIf="authForm.value.type == 'Photo'">
+			<div form-group  uploadimg *ngIf="typeTab == 'Photo'">
 		    	<label>Image</label>
 				<div add-recc>
 					<!-- (click)="selectImage()" -->
@@ -94,14 +121,14 @@
 				</div>
 				<span error *ngIf="errors.indexOf(image_file) >= 0 && is_submit == true">Please select image</span>
 			</div>
-			<div form-group  uploadimg *ngIf="authForm.value.type == 'Website'">
+			<div form-group  uploadimg *ngIf="typeTab == 'Website'">
 		    	<label>Web Link</label>
 
 	<ion-item lines="none">
 			<ion-textarea placeholder="Enter Website Link"  (ionChange)="checklink(authForm.value.web_link)" formControlName="web_link"></ion-textarea>
 	</ion-item>
-	<span error *ngIf=" authForm.value.type == 'Website' && errors.indexOf(authForm.value.web_link) >= 0 && is_submit == true">Please enter web link</span>
-	<span error *ngIf=" authForm.value.type == 'Website' && errors.indexOf(authForm.value.web_link) == -1 && !expression.test(authForm.value.web_link) && is_submit == true">Please enter valid web link (i.e. http://www.example.com, https://www.example.com, www.example.com, example.com)</span>
+	<span error *ngIf=" typeTab == 'Website' && errors.indexOf(authForm.value.web_link) >= 0 && is_submit == true">Please enter web link</span>
+	<span error *ngIf="typeTab == 'Website' && errors.indexOf(authForm.value.web_link) == -1 && !expression.test(authForm.value.web_link) && is_submit == true">Please enter valid web link (i.e. http://www.example.com, https://www.example.com, www.example.com, example.com)</span>
 	<div class="linkcontent" *ngIf="authForm.value.web_link != '' && opencontent == true">
 		<ion-icon name="close-circle-outline" class="linkcontentclose" (click)="closeLinkContent()"></ion-icon> 
 		<ion-row>

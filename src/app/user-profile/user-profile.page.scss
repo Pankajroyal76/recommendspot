@@ -47,7 +47,8 @@ ion-content
 	{
 	    padding: 0px 0px 5px;
 		width: 100%;
-		margin-top: -40px;
+		/*margin-top: -40px;*/
+		margin-top: 25px;
 		z-index: 1;
 		position: relative;		
  [userimg]
@@ -200,18 +201,28 @@ ion-content
 			}
 
 
-			span.servcs-badge 
-			{
-				background: var(--ion-color-secondary);
-				color: #fff;
-				font-size: 12px;
-				padding: 5px 12px;
-				border-radius: 20px 0px 0px 20px;
-				max-width: 105px;
-				white-space: nowrap;
-				text-overflow: ellipsis;
-				overflow: hidden;
+			/*Category & Subcategory Css Start*/
+			span.servcs-badge  
+				{
+					background: var(--ion-color-secondary);
+					color: #fff;
+					font-size: 13px;
+					padding: 5px 12px;
+					border-radius: 20px 0px 0px 20px;
+					max-width: 115px;
+					font-weight: 600;
+					white-space: nowrap;
+					text-overflow: ellipsis;
+					overflow: hidden;
+					small
+					{
+					  display: flex;
+				      align-items: center;
+				      font-size: 10px;
+				      font-weight: 400;
+					}
 			}	
+			/*Category & Subcategory Css Ends*/	
 		}
 	}
 	.post-coment
@@ -250,6 +261,16 @@ ion-content
 	.post-share
 	{
 	    padding:0px 9px;
+	    /*Comment Title Css Start*/
+		.commentstitle {
+			display: block;
+			font-size: 13px;
+			text-align: right;
+			font-weight: 600;
+			margin-right: 12px;
+			margin-top: 10px;
+		}
+		/*Comment Title Css Ends*/
 	}	
 .post-content
 {
@@ -271,7 +292,8 @@ ion-content
     align-items: flex-start;
     display: flex;
     margin-bottom: 10px;
-    width: 100%;	
+	padding:0px 15px;
+    width: 100%;
 	ion-icon
 	{
 	    min-width:20px;
@@ -290,16 +312,51 @@ ion-content
 {
 	display: inline-flex;
 	align-items: center;
+	[sharebtn]
+		{    margin-right: 40px;
+             margin-left: -18px;
+		  [fab-btn]
+		  {
+		    --background: transparent;
+			--box-shadow: none;
+			--color: #989898;
+			ion-icon
+			{
+			 font-size: 20px;
+			}
+		  }
+		  ion-fab-list
+		  {margin-bottom: 45px;
+		    ion-fab-button
+			{    width: 35px;
+			    margin: 2px 0;
+                  height: 35px;
+			 --box-shadow: none;
+			 ion-icon
+			{
+			 font-size: 15px;
+			}
+			}
+		  }
+		}
 	.heart-fav
 	{
 	    font-size: 20px;
 	    color: #989898;
+	    z-index: 9999;
 		margin-right:5px;
 	    &.fav-save
 		{
 			color: #ee6234;
 		}		
     }		
+}
+
+.linkcontent
+{
+    background: #fbfbfb;
+    padding: 10px;
+	margin:0px 15px;
 }
 .padding-8 {
     padding: 2px;

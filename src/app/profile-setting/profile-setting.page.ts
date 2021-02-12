@@ -91,6 +91,8 @@ export class ProfileSettingPage implements OnInit {
 	      name: ['', Validators.compose([Validators.required])],
 	      email: ['', Validators.compose([Validators.required])],
 	      contact: ['', Validators.compose([Validators.required])],
+	      bio: ['', Validators.compose([Validators.required])],
+	      location: ['', Validators.compose([Validators.required])],
 	    });
 
 	    this.authForm1 = this.formBuilder.group({
@@ -105,7 +107,7 @@ export class ProfileSettingPage implements OnInit {
 
   	logout(){
 	    localStorage.clear();
-	    this.router.navigate(['/']);
+	    this.router.navigate(['/landing-page']);
   	}
   	
   	ionViewDidEnter(){
@@ -141,14 +143,14 @@ export class ProfileSettingPage implements OnInit {
 	      	this.authForm.patchValue({
 	          	name: result.data.name,
 	          	email: result.data.email,
-	          	contact: result.data.contact
+	          	contact: result.data.contact,
+	          	bio: result.data.bio,
+	          	location: result.data.location,
 	          	
 	        });
 
 	      	this.profile = result.data;
-	      	this.email = result.data.email;
-	      	this.name = result.data.name;
-	      	this.contact = result.data.contact;
+	      	
 	      	this.bgImage = this.errors.indexOf(result.data.cover_image) >= 0 ? '../../assets/img/no-image.png' :  this.IMAGES_URL + '/images/' +  result.data.cover_image;
 	      	console.log(this.profile);
 	      	
@@ -163,7 +165,7 @@ export class ProfileSettingPage implements OnInit {
   	update_profile(){
 
   		this.is_submit = true;
-  		if(this.errors.indexOf(this.authForm.value.name) >= 0 || this.errors.indexOf(this.authForm.value.contact) >= 0 || this.errors.indexOf(this.authForm.value.email) >= 0 || !this.reg_exp.test(String(this.authForm.value.email).toLowerCase())  || !this.reg_exp_digits.test(String(this.authForm.value.contact))|| !this.reg_exp_letters.test(String(this.authForm.value.name))){
+  		if(this.errors.indexOf(this.authForm.value.name) >= 0 || this.errors.indexOf(this.authForm.value.contact) >= 0 || this.errors.indexOf(this.authForm.value.email) >= 0 || !this.reg_exp.test(String(this.authForm.value.email).toLowerCase())  || !this.reg_exp_digits.test(String(this.authForm.value.contact))|| !this.reg_exp_letters.test(String(this.authForm.value.name)) || this.errors.indexOf(this.authForm.value.bio) >= 0 || this.errors.indexOf(this.authForm.value.location) >= 0){
 	      return false;
 	    };
 
@@ -185,6 +187,8 @@ export class ProfileSettingPage implements OnInit {
 	      _id: localStorage.getItem('userId'),
 	      name: this.authForm.value.name,
 	      contact: this.authForm.value.contact,
+	      bio: this.authForm.value.bio,
+	      location: this.authForm.value.location,
 	      email: this.authForm.value.email,
 	      image: this.profile.image,
 	      cover_image: this.profile.cover_image,

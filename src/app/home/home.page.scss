@@ -37,6 +37,14 @@ display:none!important;
 
 ion-content
 {
+
+.categories{
+	max-width: 150px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
 /*Follow Category/People Css Start*/
 .follow-category
 {    text-align: center;
@@ -454,10 +462,20 @@ padding: 30px 15px 20px;
 		    font-size: 20px;
 		    color: #989898;
 			margin-right:5px;
+			z-index: 9999;
+			position: relative;
 		    &.fav-save
 			{
 				color: #ee6234;
 			}		
         }		
 	}
+
+
+.sorticon{
+	text-align: center;
+    font-size: 25px;
+    color: #fff;
+    padding: 15px;
+}
 

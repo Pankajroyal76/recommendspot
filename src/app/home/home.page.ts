@@ -37,6 +37,7 @@ export class HomePage implements OnInit {
 	counter = 0;
 	hideMe = false;
 	selectedItemm = -1;
+  selectedItemmShare = -1;
 	open = false;
 	type = 'Random';
   user_name: any;
@@ -46,6 +47,9 @@ export class HomePage implements OnInit {
 	platform1: any;
   categories: any;
   cat: any = "All";
+  filter_cat_array = JSON.parse(localStorage.getItem('categoriesCheck'));
+  categoriesChecked = JSON.parse(localStorage.getItem('categoriesCheck'));
+  categoriesCheck = [];
 
   	constructor(public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private menuCtrl: MenuController, private globalFooService: GlobalFooService, public alertController: AlertController,private formBuilder: FormBuilder,private renderer: Renderer2, private iab: InAppBrowser, private platform: Platform) { 
 
@@ -90,29 +94,7 @@ export class HomePage implements OnInit {
       this.getAllReccomdations(false, '');
     }
 
-    getCategories(){
 
-      //this.apiService.presentLoading();
-      var dict = {
-        user_id: localStorage.getItem('userId')
-      }
-    
-      this.apiService.postData(dict,'categories').subscribe((result) => { 
-        //this.apiService.stopLoading();
-        console.log('this.categories', result.data)  
-        if(result.status == 1){
-          this.categories = result.data;
-          //this.cat = this.categories[0]._id;
-          this.getAllReccomdations(false, '');
-        }
-        else{
-          this.apiService.presentToast('Error while sending request,Please try after some time','success');
-        }
-      },
-      err => {
-          this.apiService.presentToast('Technical error,Please try after some time','success');
-      });
-    }
 
   	//define the validators for form fields
   	createForm(){
@@ -129,7 +111,7 @@ export class HomePage implements OnInit {
 
     logout(){
       localStorage.clear();
-      this.router.navigate(['/']);
+      this.router.navigate(['/landing-page']);
     }
 
   	closeUpdate(){
@@ -145,6 +127,15 @@ export class HomePage implements OnInit {
   		
 
   	}
+    openUpdateShare(i){
+      if(this.selectedItemmShare == i){
+        this.selectedItemmShare = -1;
+      }else{
+      this.selectedItemmShare = i;
+      }
+      
+
+    }
 
   	typeChange(type){
       if(type == 'Saved'){
@@ -225,6 +216,8 @@ export class HomePage implements OnInit {
 	  
   	};
 
+
+
   	onSegmentChange(){
   		this.counter = 0;
   		this.is_response = false;
@@ -258,11 +251,12 @@ export class HomePage implements OnInit {
 	      limit: this.page_limit,
 	      type: this.profiletab,
         cat: this.cat,
-	      keyword: this.authForm.value.keyword
+	      keyword: this.authForm.value.keyword,
+        filter_cat_array: this.filter_cat_array
 	    };
 	    console.log(dict)
 	    if(this.counter == 0){
-	    	 //this.apiService.presentLoading();
+	    	 this.apiService.presentLoading();
 	    }
       if(this.counter == 4){
         // this.apiService.presentLoading();
@@ -275,6 +269,7 @@ export class HomePage implements OnInit {
           if(this.counter == 4){
              //this.apiService.stopLoading();
           }
+          this.apiService.stopLoading();
           
 	      	console.log(result);
 	      	
@@ -420,7 +415,57 @@ export class HomePage implements OnInit {
 		this.win.plugins.socialsharing.shareWithOptions(options, onSuccess, onError);
   	}
 
-  	like(likesArray,dislikesArray, index){
+  	// like(likesArray,dislikesArray, index){
+   //    let IsLiked = false;
+   //    let likeId = null;
+   //    for(var i=0; i < likesArray.length; i++)
+   //    {
+   //      if(likesArray[i].userId == localStorage.getItem('userId')){
+   //        IsLiked = true;
+   //        likeId = likesArray[i]._id;
+   //      }
+   //    }
+
+   //    let dict = {
+   //      userId: this.userId,
+   //      _id: likeId,
+   //      postId: this.posts[index]._id
+   //    };
+
+   //    let ApiEndPoint = IsLiked == true ? 'deleteLike' : 'addLike';
+
+   //    this.apiService.presentLoading();
+   //    this.apiService.postData(dict,ApiEndPoint).subscribe((result) => {
+   //      this.apiService.stopLoading();
+   //      if(result.status == 1){
+   //        if(!IsLiked){
+   //          this.posts[index].likes.push(result.data);
+   //       	for(var i=0; i < dislikesArray.length; i++)
+   //          {
+   //            if(dislikesArray[i].userId == this.userId){
+   //              this.posts[index].dislikes.splice(i, 1);
+   //            }
+   //          }
+   //        }else{
+   //          for(var i=0; i < likesArray.length; i++)
+   //          {
+   //            if(likesArray[i].userId == this.userId){
+   //              this.posts[index].likes.splice(i, 1);
+   //            }
+   //          }
+   //        }
+   //      }
+   //      else{
+   //        this.apiService.presentToast('Technical error,Please try after some time.','danger');
+   //      }
+   //    },
+   //    err => {
+   //      this.apiService.stopLoading();
+   //        this.apiService.presentToast('Technical error,Please try after some time.','danger');
+   //    });
+   //  };
+
+    like(likesArray,dislikesArray, index){
       let IsLiked = false;
       let likeId = null;
       for(var i=0; i < likesArray.length; i++)
@@ -445,7 +490,7 @@ export class HomePage implements OnInit {
         if(result.status == 1){
           if(!IsLiked){
             this.posts[index].likes.push(result.data);
-         	for(var i=0; i < dislikesArray.length; i++)
+          for(var i=0; i < dislikesArray.length; i++)
             {
               if(dislikesArray[i].userId == this.userId){
                 this.posts[index].dislikes.splice(i, 1);
@@ -569,6 +614,13 @@ export class HomePage implements OnInit {
       localStorage.setItem('item', JSON.stringify(post));
       localStorage.setItem('postId', post._id);
       this.router.navigate(['/post-details']);
+    }
+
+    viewComments(post){
+      this.selectedItemm = -1;
+      localStorage.setItem('item', JSON.stringify(post));
+      localStorage.setItem('postId', post._id);
+      this.router.navigate(['/comments']);
     }
 
 
@@ -765,4 +817,162 @@ export class HomePage implements OnInit {
       		alert('Error: ' + JSON.stringify(err))
     	});
 	}
+
+
+  ///category area
+  getCategories(){
+
+      //this.apiService.presentLoading();
+      var dict = {
+        user_id: localStorage.getItem('userId')
+      }
+    
+      this.apiService.postData(dict,'categories').subscribe((result) => { 
+        //this.apiService.stopLoading();
+       
+        
+        for(var i = 0; i < result.data.length; i++){
+          if(this.filter_cat_array.indexOf(result.data[i]._id) >= 0){
+            result.data[i].checked = true;
+          }else{
+            result.data[i].checked = false;
+          }
+          
+        }
+        this.categories = result.data;
+
+        for(var i = 0; i < result.data.length; i++){
+
+          var dict = {
+            name: result.data[i].name,
+            type: 'checkbox',
+            label: result.data[i].name,
+            value: result.data[i]._id,
+            checked: false
+          };
+          this.categoriesCheck.push(dict);
+        }
+         console.log('this.categories',this.categories);
+        this.getAllReccomdations(false, '');  
+        if(result.status == 1){
+          
+        }
+        else{
+          this.apiService.presentToast('Error while sending request,Please try after some time','success');
+        }
+      },
+      err => {
+          this.apiService.presentToast('Technical error,Please try after some time','success');
+      });
+    }
+
+
+  async presentAlertRadio() {
+    const alert = await this.apiService.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Radio',
+      inputs: [
+        {
+          name: 'Saved',
+          type: 'radio',
+          label: 'Saved',
+          value: 'Saved',
+          checked: this.type == 'Saved' ? true : false
+        },
+        {
+          name: 'Likes',
+          type: 'radio',
+          label: 'Likes',
+          value: 'Likes',
+          checked: this.type == 'Likes' ? true : false
+        },
+        {
+          name: 'Comments',
+          type: 'radio',
+          label: 'Comments',
+          value: 'Comments',
+          checked: this.type == 'Comments' ? true : false
+        },
+        {
+          name: 'Random',
+          type: 'radio',
+          label: 'Random',
+          value: 'Random',
+          checked: this.type == 'Random' ? true : false
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Ok',
+          handler: (data) => {
+            console.log('Confirm Ok', data);
+            this.typeChange(data);
+            this.type = data;
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+
+  async presentAlert() {
+    const alert = await this.apiService.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Categories',
+      inputs: this.categoriesCheck,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Ok',
+          handler: (data) => {
+            console.log('Confirm Ok', data);
+            this.categoriesChecked = data;
+            for(var i = 0; i < this.categoriesCheck.length; i++){
+              if(data.indexOf(this.categoriesCheck[i].value) >= 0){
+                this.categoriesCheck[i].checked = true;
+              }else{
+                this.categoriesCheck[i].checked = false;
+              }
+            }
+            localStorage.setItem('categoriesCheck', JSON.stringify(this.categoriesChecked))
+            this.filter_cat_array = JSON.parse(localStorage.getItem('categoriesCheck'));
+            this.getAllReccomdations(false, '');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+    selectCat(cat){
+      console.log(cat);
+      if(this.filter_cat_array.indexOf(cat._id) == -1){
+        this.filter_cat_array.push(cat._id);
+      }else{
+        this.filter_cat_array.splice(this.filter_cat_array.indexOf(cat._id),1);
+      }
+
+      localStorage.setItem('categoriesCheck', JSON.stringify(this.filter_cat_array));
+
+      this.getAllReccomdations(false, '');
+
+      console.log(this.filter_cat_array);
+      
+    }
 }

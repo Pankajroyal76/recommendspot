@@ -52,12 +52,16 @@ export class ProfilePage implements OnInit {
 
     logout(){
       localStorage.clear();
-      this.router.navigate(['/']);
+      this.router.navigate(['/landing-page']);
     }
 
     openUpdate(i){
-
+      if(this.selectedItemm == i){
+        this.selectedItemm = -1;
+      }else{
       this.selectedItemm = i;
+      }
+      
 
     }
 
@@ -75,6 +79,8 @@ export class ProfilePage implements OnInit {
       localStorage.setItem('postId', post._id);
       this.iab.create(link, '_system', {location: 'yes', closebuttoncaption: 'done'});
     }
+
+   
 
   	ionViewDidEnter(){
       this.counter = 0;
@@ -211,22 +217,27 @@ export class ProfilePage implements OnInit {
 
 
     isLikedPost(likesArray){
-      //assets/imgs/like.png
-      let IsLiked = false;
-      if(likesArray.length == 0){
+        //assets/imgs/like.png
+        if(this.errors.indexOf(this.loggedUserId) == -1){
 
-      }else{
-      	for(var i=0; i < likesArray.length; i++){
-	       
-	        if(likesArray[i].userId == this.userId){
-	          IsLiked = true;
-	        }
-	     }
-      }
-      
-      console.log(likesArray)
-      if(IsLiked){
-        return 'thumbs-up';
+        let IsLiked = false;
+        if(likesArray.length == 0){
+
+        }else{
+          for(var i=0; i < likesArray.length; i++){
+           
+            if(likesArray[i].userId == this.loggedUserId){
+              IsLiked = true;
+            }
+         }
+        }
+        
+        console.log(likesArray)
+        if(IsLiked){
+          return 'thumbs-up';
+        }else{
+          return 'thumbs-up-outline';
+        }
       }else{
         return 'thumbs-up-outline';
       }
@@ -234,11 +245,18 @@ export class ProfilePage implements OnInit {
 
 
  	viewPost(post){
-  this.selectedItemm = -1;
+    this.selectedItemm = -1;
       localStorage.setItem('item', JSON.stringify(post));
       localStorage.setItem('postId', post._id);
       this.router.navigate(['/post-details']);
-    }
+  }
+
+  viewComments(post){
+    this.selectedItemm = -1;
+    localStorage.setItem('item', JSON.stringify(post));
+    localStorage.setItem('postId', post._id);
+    this.router.navigate(['/comments']);
+  }
 
 
        //scoial share 
