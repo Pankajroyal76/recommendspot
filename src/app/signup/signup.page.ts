@@ -57,10 +57,10 @@ export class SignupPage implements OnInit {
 	      name: ['', Validators.compose([Validators.required])],
 	      email: ['', Validators.compose([Validators.required])],
 	     // contact: ['', Validators.compose([Validators.required])],
-	      location: ['', Validators.compose([Validators.required])],
-	      bio: ['', Validators.compose([Validators.required])],
+	      // location: ['', Validators.compose([Validators.required])],
+	      // bio: ['', Validators.compose([Validators.required])],
 	      password: ['', Validators.compose([Validators.required])],
-	      confirm_password: ['', Validators.compose([Validators.required])],
+	      // confirm_password: ['', Validators.compose([Validators.required])],
 	    });
   	};
 
@@ -73,7 +73,7 @@ export class SignupPage implements OnInit {
   	register(){
 	    this.is_submit = true;
 	    console.log('signup')
-	    if(this.errors.indexOf(this.authForm.value.name) >= 0 || !this.reg_exp_letters.test(String(this.authForm.value.name)) /*|| this.errors.indexOf(this.authForm.value.contact) >= 0*/ || this.errors.indexOf(this.authForm.value.email) >= 0 || !this.reg_exp.test(String(this.authForm.value.email).toLowerCase()) || this.errors.indexOf(this.authForm.value.password) >= 0 || this.authForm.value.password.length < 6 || this.errors.indexOf(this.authForm.value.confirm_password) >= 0 || this.authForm.value.confirm_password.length < 6 /*|| !this.reg_exp_digits.test(String(this.authForm.value.contact))*/ || this.errors.indexOf(this.authForm.value.location) >= 0 || this.errors.indexOf(this.authForm.value.bio) >= 0){
+	    if(this.errors.indexOf(this.authForm.value.name) >= 0 || !this.reg_exp_letters.test(String(this.authForm.value.name)) /*|| this.errors.indexOf(this.authForm.value.contact) >= 0*/ || this.errors.indexOf(this.authForm.value.email) >= 0 || !this.reg_exp.test(String(this.authForm.value.email).toLowerCase()) || this.errors.indexOf(this.authForm.value.password) >= 0 || this.authForm.value.password.length < 6 /*|| this.errors.indexOf(this.authForm.value.confirm_password) >= 0 || this.authForm.value.confirm_password.length < 6*/ /*|| !this.reg_exp_digits.test(String(this.authForm.value.contact))*/ /*|| this.errors.indexOf(this.authForm.value.location) >= 0 || this.errors.indexOf(this.authForm.value.bio) >= 0*/){
 	      return false;
 	    };
 
@@ -83,8 +83,8 @@ export class SignupPage implements OnInit {
 	    let dict ={
 	      name: this.authForm.value.name,
 	      // contact: this.authForm.value.contact,
-	      location: this.authForm.value.location,
-	      bio: this.authForm.value.bio,
+	      location: '',
+	      bio: '',
 	      email: this.authForm.value.email,
 	      password: this.authForm.value.password,
 	      fcm_token: this.fcm_token,

@@ -48,10 +48,35 @@
 <ion-content>
 	<div banner>
 		<ion-slides pager="true" [options]="slideOpts">
-			<ion-slide bg>
+			<!-- <ion-slide bg>
 			    <div containers>
 				    <div slider-content>
 					    <h3>A Community Where People Recommend Things To Others In Life Such As Movies To Watch , Books To Read , Places To Vist And Much More.</h3>
+					</div>
+				</div>
+			</ion-slide> -->
+			<ion-slide bg>
+			    <div containers>
+				    <div slider-content>
+					    <h3>Welcome to RecommendSpot</h3>
+					    <h4>Have you tried something really good/exciting that you had to share/recommend what you just tried with others?</h4>
+					    <h5>You’re at the right SPOT</h5>
+					</div>
+				</div>
+			</ion-slide>
+			<ion-slide bg>
+			    <div containers>
+				    <div slider-content>
+					    <h4>Do you ever ask for netflix, hulu, books,services,fun events, games, great food and other recommendations from people?</h4>
+					    <h5>You’re at the right SPOT</h5>
+					</div>
+				</div>
+			</ion-slide>
+			<ion-slide bg>
+			    <div containers>
+				    <div slider-content>
+					    <h4>Do you get bored and want to experience great new things you might possibly love?</h4>
+					    <h5>You’re at the right SPOT</h5>
 					</div>
 				</div>
 			</ion-slide>
@@ -136,7 +161,8 @@
 						        <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user.image) == -1 && getimage(user.image) == false" src="{{IMAGES_URL + '/images/' + user.image}}">
 						       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user.image) >= 0" src="assets/img/default.png">
 								<h4>{{user.name}}</h4>
-								<p>{{user.email}}</p>
+								<p>{{user.bio}}</p>
+								<p>{{user.location}}</p>
 							</div>
 						</ion-slide>
 						

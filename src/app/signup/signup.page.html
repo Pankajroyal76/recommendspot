@@ -49,7 +49,7 @@
 <span error *ngIf="!reg_exp_digits.test(authForm.value.contact) && errors.indexOf(authForm.value.contact) == -1 && is_submit == true">Phone number should consist min. 6 digits and max. 10 digits</span>
 </div> -->
 
-<div form-group>
+<!-- <div form-group>
 <label>Location</label>
 <ion-item lines="none">
 <ion-label>
@@ -59,9 +59,9 @@
 </ion-item>
 <span error *ngIf="errors.indexOf(authForm.value.location) >= 0 && is_submit == true">Please enter your location</span>
 
-</div>
+</div> -->
 
-<div form-group>
+<!-- <div form-group>
 <label>Bio</label>
 <ion-item lines="none">
 <ion-label>
@@ -70,7 +70,7 @@
 <ion-input clearOnEdit="false" type="text"  placeholder="Enter Your Bio" formControlName="bio"></ion-input>
 </ion-item>
 <span error *ngIf="errors.indexOf(authForm.value.bio) >= 0 && is_submit == true">Please enter your bio</span>
-</div>
+</div> -->
 <div form-group>
 <label>Password</label>
 <ion-item lines="none">
@@ -85,7 +85,7 @@
 <span error *ngIf="errors.indexOf(authForm.value.password) == -1 && is_submit == true && authForm.value.password.length < 6 && withoutspace.test(authForm.value.password)">Please enter atleast 6 digits password</span>
 <span error *ngIf="!withoutspace.test(authForm.value.password) && errors.indexOf(authForm.value.password) == -1 && is_submit == true">Please enter valid password containing no space</span>
 </div>
-<div form-group>
+<!-- <div form-group>
 <label>Confirm Password</label>
 <ion-item lines="none">
 <ion-label>
@@ -96,10 +96,10 @@
 </ion-item>
 
 <span error *ngIf="errors.indexOf(authForm.value.confirm_password) >= 0 && is_submit == true">Please enter your confirm password</span>  
-<!-- <span error *ngIf="errors.indexOf(confirm_password) == -1 && is_submit == true && confirm_password.length < 6">Please enter atleast 6 digits password</span> -->
+
 <span error *ngIf="errors.indexOf(authForm.value.confirm_password) == -1 && is_submit == true && authForm.value.password!=authForm.value.confirm_password && withoutspace.test(authForm.value.confirm_password)">Please enter correct password</span>
 <span error *ngIf="!withoutspace.test(authForm.value.confirm_password) && errors.indexOf(authForm.value.confirm_password) == -1 && is_submit == true">Please enter valid confirm password containing no space</span>
-</div>
+</div> -->
 <div login-btn>
 <ion-button type="submit" expand="full" color="secondary"  shape="round" (click)="register()">
 Sign Up
