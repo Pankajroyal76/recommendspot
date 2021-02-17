@@ -154,6 +154,25 @@ ion-select {
     		color: #000 !important;
     	}
     }
+	@media only screen and (max-width:767px)
+	{
+		[sortbymobcat]
+		{
+		       --min-height: 40px;
+			    margin-top:15px;
+			    color: #d1cfcf;
+                font-size: 14px;
+				.categories
+				{    max-width: 100%;
+				width:100%;
+				ion-icon
+				{
+				float:right;
+				}
+				
+				}
+		}
+	}
 }
 .home-sec 
 {
@@ -208,6 +227,11 @@ ion-select {
 			--inner-padding-end:0px;
 			--background:transparent;
 			/*overflow:visible;*/
+			@media only screen and (max-width:767px)
+			{
+			overflow:visible;
+			min-width:100%;
+			}
 			ion-avatar		
 			{
 				width: 50px;
@@ -247,12 +271,24 @@ ion-select {
 					white-space: nowrap;
 					text-overflow: ellipsis;
 					overflow: hidden;
+					 @media only screen and (max-width:767px)
+						{max-width:80px;
+						font-size: 11px;
+						}
 					small
 					{
 					  display: flex;
 				      align-items: center;
 				      font-size: 10px;
 				      font-weight: 400;
+					  @media only screen and (max-width:767px)
+						{
+						white-space: nowrap;
+						text-overflow: ellipsis;
+						overflow: hidden;
+						display: inherit;
+						max-width: 55px;
+						}
 					}
 				}	
 				/*Category & Subcategory Css Ends*/			
@@ -364,9 +400,10 @@ ion-select {
 }
 [weblink-sec]
 {
-    align-items: flex-start;
+align-items: flex-start;
     display: flex;
     margin-bottom: 10px;
+	padding:0px 15px;
     width: 100%;	
 	ion-icon
 	{
@@ -390,6 +427,31 @@ ion-select {
 	{
 	    margin: 0px 0px 10px;
 	}
+		&.ion-no-padding
+	{
+	padding:0px;
+	}
+	&.contfull
+	{
+	   img
+	   {
+	     border-radius:12px 12px 0px 0px;
+	   }
+	   .link-cnt {
+        padding: 7px 15px 7px;
+        font-size: 13px;
+     }
+		[weblink-sec] {
+			font-size: 11px;
+			ion-icon
+			{
+				font-size: 17px!important;
+			}
+			a{
+			color: initial;
+			}
+		}
+	}
 }
 .padding-8 {
     padding: 2px;
@@ -410,6 +472,10 @@ ion-select {
 			ion-icon
 			{
 			 font-size: 20px;
+			 @media only screen and (max-width:767px)
+			 {
+			  font-size: 15px!important;
+			 }
 			}
 		  }
 		  ion-fab-list
@@ -421,7 +487,11 @@ ion-select {
 			 --box-shadow: none;
 			 ion-icon
 			{
-			 font-size: 15px;
+			 font-size:20px;
+			 @media only screen and (max-width:767px)
+			 {
+			   font-size: 15px;
+			 }
 			}
 			}
 		  }
@@ -480,5 +550,9 @@ ion-select {
     font-size: 25px;
     color: #fff;
     padding: 15px;
+	@media only screen and (max-width:767px)
+	{
+	  padding: 7px;
+	}
 }
 

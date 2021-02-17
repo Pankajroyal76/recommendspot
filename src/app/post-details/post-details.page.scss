@@ -92,12 +92,19 @@ ion-content[bg-grey] {
 			.post-content
 			{
 			    padding: 15px 0px;
+				h2
+				{
+				    font-size:16px;
+					padding:0px 10px;
+					margin: 0 0 3px;
+				}
 			    p
 				{
-				    font-size:14px;
+				    font-size:13px;
 					color:#555;
 					margin:0px;
 					line-height:22px;
+					padding:0px 10px;
 				}
 			}
 		}
@@ -155,7 +162,7 @@ ion-content[bg-grey] {
 	}
 	.content-all-pst {
 		padding: 8px 20px 8px;
-		margin: 20px 15px 70px;
+		margin: 20px 15px 20px;
 		background: #fff;
 		z-index: 111;
 		position: relative;
@@ -295,41 +302,153 @@ span.servcs-badge
 	border-radius: 20px 0px 0px 20px;
 	float: right;
 	margin-top: 10px;
+		 @media only screen and (max-width:767px)
+		{max-width:80px;text-overflow: ellipsis;
+						overflow: hidden;
+		    white-space: nowrap;
+		font-size: 11px;
+		}
 	small
 	{
 	  display: flex;
       align-items: center;
       font-size: 10px;
       font-weight: 400;
+	    @media only screen and (max-width:767px)
+						{
+						white-space: nowrap;
+						text-overflow: ellipsis;
+						overflow: hidden;
+						display: inherit;
+						max-width: 55px;
+						}
 	}
-}	
-
-.weblink {
-    position: relative;
-    padding: 9px;
-    min-height: 46px;
-    [weblink-sec]
+}.post-share
 	{
-		align-items: flex-start;
-		display: flex;
-		margin-bottom: 10px;
-		width: 100%;	
-		ion-icon
+	    padding:0px 12px;
+		.sharedrop
+{
+
+	&.list-post-edit 
+	{
+		position: absolute;
+		bottom: 100%;
+		right: 0px;
+		z-index: 1;
+		list-style: none;
+		background: #fff;
+		border-radius: 5px;
+		padding: 7px 9px;
+		margin: 0px;
+		min-width: 110px;
+		box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.1);
+		li 
 		{
-			min-width:20px;
-		}	
-		span 
-		{
-			font-style: oblique;
-			margin-left: 5px;
-			text-decoration: underline;
-			color: #ed6234;
-			word-break: break-all;
+			padding: 3px 0px;
+			a 
+			{
+				text-decoration: none;
+				color: #333;
+				font-size: 12px;
+				display: block;
+				text-align: left;
+			}	
+		}		
+	}	
+
+}
+		.postlikecomt {
+	    	display: flex;
+			align-items: center;
+			justify-content: space-between;
+			border-bottom: 1px solid #eee;
+			padding-bottom: 7px;
+			margin-bottom: 7px;
 		}
-    }
+		/*Comment Title Css Start*/
+		.commentstitle {
+			display: block;
+			font-size: 13px;
+			text-align: right;
+			font-weight: 600;
+			margin-right: 0;
+			margin-top: 10px;
+		}
+		/*Comment Title Css Ends*/
+		
+		[post-fav-icon]
+	{
+		display: inline-flex;
+		align-items: center;
+		.socl-btn	
+{
+    --box-shadow: none;
+    --border-radius: 0px;
+    --padding-start: 0px;
+    --padding-end: 0px;
+    --background: transparent;
+    --color: #989898;
+	    height: auto;
+    font-size: 13px;margin: 0;
+	    text-transform: capitalize;
+		/*Comment text css start */
+			@media only screen and (max-width:767px)
+			{
+			    font-size: 12px;
+				ion-icon
+				{
+				    font-size: 15px;
+                    margin-right: 4px;
+				}
+
+			}
+			/**Comment text css ends */
+}
+		/*Post Icons Css Start*/
+		 @media only screen and (max-width:767px)
+		  {
+		    font-size: 12px;
+		  }
+		/*Post Icons Css Ends*/
+
+		.heart-fav
+		{
+		    font-size: 20px;
+		    color: #989898;
+			margin-right:5px;
+			z-index: 9999;
+			position: relative;
+			/*Share Icon Css Start*/
+		 @media only screen and (max-width:767px)
+		  {
+		    font-size: 15px;
+		  }
+		/*Share Icon Css Ends*/
+		    &.fav-save
+			{
+				color: #ee6234;
+			}		
+        }		
+	}
+	}	
+.weblink {
+padding:0px 10px 10px;
+[weblink-sec]
+{
+align-items: flex-start;
+    display: flex;
+    margin-bottom: 10px;
+	padding:0px 15px;
+    width: 100%;	
+	ion-icon
+	{
+	    min-width:20px;
+	}
+	
+}
 }
 .linkcontent
-{
+{  background: #fbfbfb;
     [title-cont]
 	{
 	    margin:0px 0px 8px;
@@ -340,6 +459,35 @@ span.servcs-badge
 		color: #555;
 		margin: 0px;
 		line-height: 22px;
+	}
+	[title-my2]
+	{
+	    margin: 0px 0px 10px;
+	}
+		&.ion-no-padding
+	{
+	padding:0px;
+	}
+	&.contfull
+	{
+	   img
+	   {
+	     border-radius:12px 12px 0px 0px;
+	   }
+	   .link-cnt {
+        padding: 7px 15px 7px;
+        font-size: 13px;
+     }
+		[weblink-sec] {
+			font-size: 11px;
+			ion-icon
+			{
+				font-size: 17px!important;
+			}
+			a{
+			color: initial;
+			}
+		}
 	}
 }
 ion-fab

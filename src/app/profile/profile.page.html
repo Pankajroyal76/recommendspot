@@ -108,25 +108,32 @@
 			</div>
 
 			<div *ngIf="errors.indexOf(item.web_link) == -1">
-                <div weblink-sec>
+                <!--div weblink-sec>
 					<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
 					<span class="weblink"><a  (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
-				</div>
-				<div class="linkcontent" *ngIf="item.web_link_content != null" (click)="openLinkPreview(item.web_link_content.data.link)">
-				
-					<ion-row>
-						<ion-col size="3" size-md="1" *ngIf="item.web_link_content?.data.image != ''">
-							<img src="{{item.web_link_content?.data.image}}" />
+				</div-->
+				<div class="linkcontent contfull ion-no-padding" *ngIf="item.web_link_content != null" (click)="openLinkPreview(item.web_link_content.data.link)">
+				    <ion-grid class="ion-no-padding">
+						<ion-row>
+							<ion-col size="12" size-md="12" *ngIf="item.web_link_content?.data.image != ''">
+								<img src="{{item.web_link_content?.data.image}}" />
+							</ion-col>
+							<ion-col size="{{item.web_link_content?.data.title != '' ? 12 : 12}}">
+							 <div class="link-cnt">
+								<p style="margin:4px 0 ;" *ngIf="item.web_link_content?.data.title != ''"><b>{{item.web_link_content?.data.title}}</b></p>
+								<p style="margin:4px 0;" *ngIf="item.web_link_content?.data.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
+								<p style="margin:4px 0;" *ngIf="item.web_link_content?.data.title != ''">{{item.web_link_content?.data.description}}</p>
+								<p style="margin:4px 0;" *ngIf="item.web_link_content?.data.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
+								</div>
+							</ion-col>
+							<ion-col size="12" size-md="12">
+								<div weblink-sec>
+									<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>			
+									<span class="weblink"> <a (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
+								</div>
 						</ion-col>
-
-						<ion-col size="{{item.web_link_content?.data.title != '' ? 9 : 12}}">
-							<p style="margin:0 0 5px;" *ngIf="item.web_link_content?.data.title != ''"><b>{{item.web_link_content?.data.title}}</b></p>
-							<p style="margin:0;" *ngIf="item.web_link_content?.data.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
-							<p style="margin:0;" *ngIf="item.web_link_content?.data.title != ''">{{item.web_link_content?.data.description}}</p>
-							<p style="margin:0;" *ngIf="item.web_link_content?.data.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
-						</ion-col>
-					</ion-row>
-					
+						</ion-row>
+					 </ion-grid>
 				</div>
 
 				<!--ng-container *ngIf="errors.indexOf(item.web_link) == -1">

@@ -53,31 +53,39 @@
 
 								<span class="servcs-badge">{{post?.category}}<small *ngIf="post?.sub_category != ''"><ion-icon name="chevron-forward-outline"></ion-icon> {{post?.sub_category}}</small></span>
 							<div class="post-content">
-								<p style="padding-left: 10px;">{{post?.description}}</p>
+							   <h2>Post Heading Title Here</h2>
+								<p>{{post?.description}}</p>
 							</div>
 
 							
 
 							<div *ngIf="errors.indexOf(post?.web_link) == -1" class="weblink">
-								<div weblink-sec>
+								<!--div weblink-sec>
 									<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
 									<span (click)="openLink(post?.web_link)">{{post?.web_link}}</span>
-								</div>	
-								<div class="linkcontent" *ngIf=" post?.web_link_content != null" (click)="openLinkPreview(post?.web_link_content.data?.url)">
-				
-								<ion-row>
-									<ion-col size="3" *ngIf="post?.web_link_content?.data?.image != ''">
-										<img src="{{post?.web_link_content?.data?.image}}" />
-									</ion-col>
-
-									<ion-col size="{{post?.web_link_content?.data?.title != '' ? 9 : 12}}">
-										<p title-cont *ngIf="post?.web_link_content?.data?.title != ''"><b>{{post?.web_link_content?.data?.title}}</b></p>
-										<p desc-cont *ngIf="post?.web_link_content?.data?.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
-										<p desc-cont *ngIf="post?.web_link_content?.data?.title != ''">{{post?.web_link_content?.data?.description}}</p>
-										<p desc-cont *ngIf="post?.web_link_content?.data?.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
-									</ion-col>
-								</ion-row>
-								
+								</div-->	
+								<div class="linkcontent contfull ion-no-padding" *ngIf=" post?.web_link_content != null" (click)="openLinkPreview(post?.web_link_content.data?.url)">
+				                   <ion-grid class="ion-no-padding">
+										<ion-row>
+											<ion-col size="12" *ngIf="post?.web_link_content?.data?.image != ''">
+												<img src="{{post?.web_link_content?.data?.image}}" />
+											</ion-col>
+											<ion-col size="{{post?.web_link_content?.data?.title != '' ? 12 : 12}}">
+											  <div class="link-cnt">
+													<p style="margin: 4px 0px;" title-cont *ngIf="post?.web_link_content?.data?.title != ''"><b>{{post?.web_link_content?.data?.title}}</b></p>
+													<p style="margin: 4px 0px;" desc-cont *ngIf="post?.web_link_content?.data?.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
+													<p style="margin: 4px 0px;" desc-cont *ngIf="post?.web_link_content?.data?.title != ''">{{post?.web_link_content?.data?.description}}</p>
+													<p style="margin: 4px 0px;" desc-cont *ngIf="post?.web_link_content?.data?.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
+												</div>
+											</ion-col>
+											<ion-col size="12" size-md="12">
+												<div weblink-sec>
+														<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
+														<span (click)="openLink(post?.web_link)">{{post?.web_link}}</span>
+													</div>	
+											</ion-col>
+										</ion-row>
+								</ion-grid>
 							</div>
 							</div>
 
@@ -96,9 +104,65 @@
 						</div>
 					</ion-col>
 				</ion-row>
-			</div>
-					<div class="icon-rut">
-						<span class="likes-number cont-icon"(click)="like(post?.likes, post?.dislikes)" *ngIf="post?.likes?.length > 0"> <!-- <img src="{{isLikedPost(post?.likes)}}">  -->
+			</div><div class="post-share">
+
+							<div class="postlikecomt">
+								<span style="cursor:pointer;" class="padding-8 commentstitle" *ngIf="post?.likes.length > 0"><ion-icon name="thumbs-up"></ion-icon> {{post?.likes.length}} </span> 
+
+								<span style="cursor:pointer;" class="padding-8 commentstitle" *ngIf="post?.comment_count > 0" (click)="viewComments(post)">{{post?.comment_count}} <span *ngIf="post?.comment_count == 1">Comment</span><span *ngIf="post?.comment_count > 1">Comments</span> </span> 
+							</div>
+								<ion-row>
+									<ion-col size="3" class="ion-text-left">
+											<div post-fav-icon>
+											<ion-button class="socl-btn" (click)="like(post?.likes, post?.dislikes)">
+
+												<!--<ion-icon name="{{isLikedPost(post?.likes)}}"  [ngClass]="{'liked': isLikedPost(post?.likes) == 'thumbs-up'}"></ion-icon>-->
+												<ion-icon name="thumbs-up"></ion-icon>
+												Like
+											</ion-button>
+									    	</div>
+					               </ion-col>
+									<ion-col size="3" class="ion-text-left">
+										<div post-fav-icon>
+											<ion-button (click)="viewComments(post)" class="socl-btn"><ion-icon name="chatbubble-outline"></ion-icon>Comment </ion-button>	
+										</div>
+									</ion-col>
+								<ion-col size="2" class="ion-text-right" >
+									<div post-fav-icon>
+										<ng-container>
+											<ion-icon  style="cursor:pointer;" class="heart-fav" name="bookmark-outline" *ngIf="post?.fav == '0'" (click)="addRemoveReccomdation(post, '1')"></ion-icon>
+											<ion-icon  style="cursor:pointer;" class="heart-fav fav-save" name="bookmark" *ngIf="post?.fav == '1'" (click)="addRemoveReccomdation(post, '0')"></ion-icon> Save 
+										</ng-container>
+									</div>
+								</ion-col>
+								<ion-col size="3" class="ion-text-right">
+									<div post-fav-icon (click)="openUpdateShare()">
+										<ion-icon  style="cursor:pointer;" class="heart-fav" name="arrow-redo-outline" ></ion-icon> Share
+									</div> 
+									<ul class="list-post-edit sharedrop displaynonediv" id="doc" [class.displaydiv]="selectedItemmShare == 0">
+
+										<li> <a  (click)="editPost(post)"><ion-icon name="logo-facebook"></ion-icon> Facebook</a> </li>
+										<li> <a  (click)="presentAlertConfirm(post)" ><ion-icon name="logo-twitter"></ion-icon> Twitter</a> </li>
+										<li> <a  (click)="presentAlertConfirm(post)" ><ion-icon name="logo-whatsapp"></ion-icon> Whatsapp</a> </li>
+										<li> <a  (click)="presentAlertConfirm(post)" ><ion-icon name="logo-google"></ion-icon> Google</a> </li>
+										<li> <a  (click)="presentAlertConfirm(post)" ><ion-icon name="logo-linkedin"></ion-icon> Linkdin</a> </li>
+									</ul>
+								</ion-col>
+								<ion-col size="1" class="ion-text-right" >
+									<div dots-edit>
+										<ul class="list-post-edit displaynonediv" id="doc" *ngIf="userId == post?.user_id" [class.displaydiv]="selectedItemm">
+
+											<li> <a  (click)="editPost(post)">Edit</a> </li>
+											<li> <a  (click)="presentAlertConfirm(post)" >Delete</a> </li>
+										</ul>
+										<ion-icon class="icon-dots" name="ellipsis-horizontal" *ngIf="userId == post?.user_id" (click)="openUpdate()"></ion-icon>	
+										</div>
+								</ion-col>
+				        </ion-row>
+			</div>	
+		
+					<div class="icon-rut" style="display:none">
+						<span class="likes-number cont-icon" (click)="like(post?.likes, post?.dislikes)" *ngIf="post?.likes?.length > 0"> <!-- <img src="{{isLikedPost(post?.likes)}}">  -->
 						<ion-icon name="{{isLikedPost(post?.likes)}}" [ngClass]="{'liked': isLikedPost(post?.likes) == 'thumbs-up'}"></ion-icon>
 
 						{{post?.likes?.length}} </span>

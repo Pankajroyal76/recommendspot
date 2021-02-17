@@ -29,7 +29,7 @@ export class PostDetailsPage implements OnInit {
     user_email: any;
     user_id: any;
     hideMe=false;	
-
+selectedItemmShare = -1;
   	constructor(public location: Location, public toastController: ToastController, public apiService: ApiserviceService, public loadingController: LoadingController, public router: Router, private globalFooService: GlobalFooService, private iab: InAppBrowser, public modalController: ModalController, private photoViewer: PhotoViewer) { 
       
       this.user_name = localStorage.getItem('user_name');
@@ -42,7 +42,15 @@ export class PostDetailsPage implements OnInit {
           this.user_email = localStorage.getItem('user_email');
           this.user_id = localStorage.getItem('userId');
       });
-    }
+    }openUpdateShare(){
+     if(this.selectedItemmShare == 0){
+       this.selectedItemmShare = -1;
+     }else{
+     this.selectedItemmShare = 0;
+     }
+     
+
+   }
 	hide() {
 	this.hideMe = !this.hideMe;
 	}

@@ -96,7 +96,7 @@
 				</ion-select>
 			</ion-item>
  -->	
- 		<ion-item lines="none" sortbyPhn (click)="presentAlert()">
+ 		<ion-item lines="none" sortbyPhn sortbymobcat (click)="presentAlert()">
 
 
 	 		<div class="categories">
@@ -195,29 +195,27 @@
 									<span class="weblink"> <a (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
 								</div-->
 								<div class="linkcontent contfull ion-no-padding" *ngIf="item.web_link_content?.data != null" (click)="openLinkPreview(item.web_link_content?.data.link)">
-				                   <ion-grid class="ion-no-padding">
-									<ion-row>
-										<ion-col size="12" size-md="12" *ngIf="item.web_link_content?.data.image != ''">
-											<img src="{{item.web_link_content?.data.image}}" />
-										</ion-col>
-
-										<ion-col size="{{item.web_link_content?.data.title != '' ? 12 : 12}}" size-md="12">
-										   <div class="link-cnt">
-											<p style="margin:0;" *ngIf="item.web_link_content?.data.title != ''"><b>{{item.web_link_content?.data.title}}</b></p>
-											<p style="margin:0;" *ngIf="item.web_link_content?.data.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
-											<p style="margin:0;" *ngIf="item.web_link_content?.data.title != ''">{{item.web_link_content?.data.description}}</p>
-											<p style="margin:0;" *ngIf="item.web_link_content?.data.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
+									   <ion-grid class="ion-no-padding">
+										<ion-row>
+											<ion-col size="12" size-md="12" *ngIf="item.web_link_content?.data.image != ''">
+												<img src="{{item.web_link_content?.data.image}}" />
+											</ion-col>
+											<ion-col size="{{item.web_link_content?.data.title != '' ? 12 : 12}}" size-md="12">
+											   <div class="link-cnt">
+												<p style="margin: 4px 0px;" *ngIf="item.web_link_content?.data.title != ''"><b>{{item.web_link_content?.data.title}}</b></p>
+												<p style="margin: 4px 0px;" *ngIf="item.web_link_content?.data.title == ''"> Lorem Ipsum is simply dummy text of the industry. </p>
+												<p style="margin: 4px 0px;" *ngIf="item.web_link_content?.data.title != ''">{{item.web_link_content?.data.description}}</p>
+												<p style="margin: 4px 0px;" *ngIf="item.web_link_content?.data.title == ''">Lorem Ipsum is simply dummy text of the industry.</p>
+												</div>
+											</ion-col>
+											<ion-col size="12" size-md="12">
+											<div weblink-sec>
+												<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>			
+												<span class="weblink"> <a (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
 											</div>
-										</ion-col>
-										<ion-col size="12" size-md="12">
-										<div weblink-sec>
-									<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>			
-									<span class="weblink"> <a (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
-								</div>
-								</ion-col>
-									</ion-row>
-									</ion-grid>
-									
+											</ion-col>
+										</ion-row>
+									 </ion-grid>
 								</div>
 								<!--ng-container *ngIf="errors.indexOf(item.web_link) == -1">
 									<ion-icon style="z-index: 999;bottom: 135px;right: 25px;" class="heart-icon weblink-icon" name="bookmark-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
@@ -311,13 +309,13 @@
 						<div post-fav-icon (click)="openUpdateShare(i)">
 							<ion-icon  style="cursor:pointer;" class="heart-fav" name="arrow-redo-outline" ></ion-icon> Share
 						</div> 
-						<ul class="list-post-edit displaynonediv" id="doc{{i}}" [class.displaydiv]="selectedItemmShare == i">
+						<ul class="list-post-edit sharedrop displaynonediv" id="doc{{i}}" [class.displaydiv]="selectedItemmShare == i">
 
-							<li> <a  (click)="editPost(item, i)">Facebook</a> </li>
-							<li> <a  (click)="presentAlertConfirm(item, i)" >Twitter</a> </li>
-							<li> <a  (click)="presentAlertConfirm(item, i)" >Whatsapp</a> </li>
-							<li> <a  (click)="presentAlertConfirm(item, i)" >Google</a> </li>
-							<li> <a  (click)="presentAlertConfirm(item, i)" >Linkdin</a> </li>
+							<li> <a  (click)="editPost(item, i)"><ion-icon name="logo-facebook"></ion-icon> Facebook</a> </li>
+							<li> <a  (click)="presentAlertConfirm(item, i)" ><ion-icon name="logo-twitter"></ion-icon> Twitter</a> </li>
+							<li> <a  (click)="presentAlertConfirm(item, i)" ><ion-icon name="logo-whatsapp"></ion-icon> Whatsapp</a> </li>
+							<li> <a  (click)="presentAlertConfirm(item, i)" ><ion-icon name="logo-google"></ion-icon> Google</a> </li>
+							<li> <a  (click)="presentAlertConfirm(item, i)" ><ion-icon name="logo-linkedin"></ion-icon> Linkdin</a> </li>
 						</ul>
 
 						<!-- <ion-buttons sharebtn>		

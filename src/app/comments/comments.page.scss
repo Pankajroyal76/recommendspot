@@ -57,9 +57,11 @@
 	    position: fixed;
 	    margin-top: 25px;
 	    padding-right: 60px;
-	    bottom: 14px;
+	    bottom: 0;
 	    width: calc(100% - 45px);
-	    background: #fff;
+		    background: #fff;
+    padding-bottom: 20px;
+    z-index: 11;
 		ion-input {
 			background: #f9f9f9;
 			--padding: 14px;

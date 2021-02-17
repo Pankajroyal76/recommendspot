@@ -163,7 +163,21 @@ ion-content
     --padding-end: 0px;
     --background: transparent;
     --color: #989898;
-    font-size: 13px;
+	    height: auto;
+    font-size: 13px;margin: 0;
+	    text-transform: capitalize;
+		/*Comment text css start */
+			@media only screen and (max-width:767px)
+			{
+			    font-size: 12px;
+				ion-icon
+				{
+				    font-size: 15px;
+                    margin-right: 4px;
+				}
+
+			}
+			/**Comment text css ends */
 }
 	.post-name
 	{
@@ -173,6 +187,13 @@ ion-content
 			--padding-start:0px;
 			--inner-padding-end:0px;
 			--background:transparent;
+			/* ion-item css start */
+			@media only screen and (max-width:767px)
+			{
+			overflow:visible;
+			min-width:100%;
+			}
+			/* ion-item css ends */
 			ion-avatar		
 			{
 				width: 50px;
@@ -199,30 +220,44 @@ ion-content
 				font-size:22px;
 				color:#d5d5d5;
 			}
-
-
-			/*Category & Subcategory Css Start*/
-			span.servcs-badge  
+/*Category & Subcategory Css Start*/
+		span.servcs-badge  
+			{
+				background: var(--ion-color-secondary);
+				color: #fff;
+				font-size: 13px;
+				padding: 5px 12px;
+				border-radius: 20px 0px 0px 20px;
+				max-width: 115px;
+				font-weight: 600;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				/*Category Css Start*/
+				 @media only screen and (max-width:767px)
+						{max-width:80px;
+						font-size: 11px;
+						}
+				/*Category Css Start*/
+				small
 				{
-					background: var(--ion-color-secondary);
-					color: #fff;
-					font-size: 13px;
-					padding: 5px 12px;
-					border-radius: 20px 0px 0px 20px;
-					max-width: 115px;
-					font-weight: 600;
-					white-space: nowrap;
-					text-overflow: ellipsis;
-					overflow: hidden;
-					small
-					{
-					  display: flex;
-				      align-items: center;
-				      font-size: 10px;
-				      font-weight: 400;
-					}
+				  display: flex;
+			      align-items: center;
+			      font-size: 10px;
+			      font-weight: 400;
+				  /*Sub Category Css Start*/
+				   @media only screen and (max-width:767px)
+						{
+						white-space: nowrap;
+						text-overflow: ellipsis;
+						overflow: hidden;
+						display: inherit;
+						max-width: 55px;
+						}
+						  /*Sub Category Css Ends*/
+				}
 			}	
-			/*Category & Subcategory Css Ends*/	
+			/*Category & Subcategory Css Ends*/
 		}
 	}
 	.post-coment
@@ -323,6 +358,10 @@ ion-content
 			ion-icon
 			{
 			 font-size: 20px;
+			  @media only screen and (max-width:767px)
+			 {
+			   font-size: 15px!important;
+			 }
 			}
 		  }
 		  ion-fab-list
@@ -345,6 +384,12 @@ ion-content
 	    color: #989898;
 	    z-index: 9999;
 		margin-right:5px;
+					/*Share Icon Css Start*/
+		 @media only screen and (max-width:767px)
+		  {
+		    font-size: 15px;
+		  }
+		/*Share Icon Css Ends*/
 	    &.fav-save
 		{
 			color: #ee6234;
@@ -357,6 +402,31 @@ ion-content
     background: #fbfbfb;
     padding: 10px;
 	margin:0px 15px;
+	&.ion-no-padding
+	{
+	padding:0px;
+	}
+	&.contfull
+	{
+	   img
+	   {
+	     border-radius:12px 12px 0px 0px;
+	   }
+	   .link-cnt {
+        padding: 7px 15px 7px;
+        font-size: 13px;
+     }
+		[weblink-sec] {
+			font-size: 11px;
+			ion-icon
+			{
+				font-size: 17px!important;
+			}
+			a{
+			color: initial;
+			}
+		}
+	}
 }
 .padding-8 {
     padding: 2px;
