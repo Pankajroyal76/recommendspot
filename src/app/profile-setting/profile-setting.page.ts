@@ -66,6 +66,7 @@ export class ProfileSettingPage implements OnInit {
 	image_cover_file: any;
 	image_cover_url: any;
 
+	//test profile
   	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath, private transfer: FileTransfer,private globalFooService: GlobalFooService,private formBuilder: FormBuilder, public sanitizer:DomSanitizer) { 
 
   		this.createForm();
