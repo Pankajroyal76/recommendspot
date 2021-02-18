@@ -1,10 +1,13 @@
+ion-menu
+{
 ion-list
 {padding:0px;
 &[menutop]
 {
 padding:0px;
 ion-item
-{
+{border-radius:0px;
+min-width:100%;
  ion-avatar
  {
  height: 70px;
@@ -22,11 +25,14 @@ ion-menu-toggle{
  {  border-bottom: 1px solid var(--ion-color-ltgrey);
     padding: 5px 0px;
     font-size: 15px;  
+	min-width:100%;
+	border-radius:0px;
     ion-icon
 	{
 	color:  var(--ion-color-secondary);
     margin-right: 10px;
 	}
  }
+}
 }
 }

@@ -13,6 +13,7 @@ display:none!important;
 	{
 		width: 30px;
 		height: 30px;
+		min-height: 30px;
 		border-radius: 50%;
 		padding: 0px;
 		margin: 0px 10px 0px 0px;
@@ -139,6 +140,7 @@ ion-list {
 			    margin-top:15px;
 			    color: #d1cfcf;
                 font-size: 14px;
+				min-width:100%;
 				.categories
 				{    max-width: 100%;
 				width:100%;
@@ -152,6 +154,10 @@ ion-list {
 	}
 	/*Search Css Ends*/
     ion-searchbar{
+	&.ios
+	{
+	  height:40px;
+	}
     	input{
     		color: #000 !important;
     	}
@@ -236,11 +242,12 @@ padding: 30px 15px 20px;
 		/*Comment text css start */
 			@media only screen and (max-width:767px)
 			{
-			    font-size: 12px;
+			    font-size: 11px;
 				ion-icon
 				{
-				    font-size: 15px;
-                    margin-right: 4px;
+				    font-size: 14px;
+                    margin-right: 2px;
+					margin-top: -1px;
 				}
 
 			}
@@ -556,7 +563,7 @@ padding: 30px 15px 20px;
 		/*Post Icons Css Start*/
 		 @media only screen and (max-width:767px)
 		  {
-		    font-size: 12px;
+		    font-size: 11px;
 		  }
 		/*Post Icons Css Ends*/
 		/*Share Css Start*/
@@ -602,7 +609,8 @@ padding: 30px 15px 20px;
 			/*Share Icon Css Start*/
 		 @media only screen and (max-width:767px)
 		  {
-		    font-size: 15px;
+		    font-size: 14px;
+			    margin-right: 2px;
 		  }
 		/*Share Icon Css Ends*/
 		    &.fav-save

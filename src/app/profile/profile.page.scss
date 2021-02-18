@@ -345,11 +345,11 @@ ion-content
 		/*Comment text css start */
 			@media only screen and (max-width:767px)
 			{
-			    font-size: 12px;
+			    font-size: 11px;
 				ion-icon
 				{
-				    font-size: 15px;
-                    margin-right: 4px;
+				    font-size: 14px;
+                    margin-right: 2px;
 				}
 
 			}
@@ -358,7 +358,7 @@ ion-content
 		/*Post Icons Css Start*/
 		 @media only screen and (max-width:767px)
 		  {
-		    font-size: 12px;
+		    font-size: 11px;
 		  }
 		/*Post Icons Css Ends*/
 
@@ -372,7 +372,8 @@ ion-content
 			/*Share Icon Css Start*/
 		 @media only screen and (max-width:767px)
 		  {
-		    font-size: 15px;
+		    font-size: 14px;
+			margin-right:2px;
 		  }
 		/*Share Icon Css Ends*/
 		    &.fav-save

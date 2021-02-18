@@ -158,7 +158,7 @@
 								<span style="cursor:pointer;" class="padding-8 commentstitle" *ngIf="item.comment_count > 0" (click)="viewComments(item)">{{item.comment_count}} <span *ngIf="item.comment_count == 1">Comment</span><span *ngIf="item.comment_count > 1">Comments</span> </span> 
 							</div>
 								<ion-row>
-									<ion-col size="3" class="ion-text-left">
+									<ion-col size="2" class="ion-text-left">
 											<div post-fav-icon>
 										
 											<ion-button class="socl-btn" (click)="like(item.likes, i)">
@@ -167,12 +167,12 @@
 										</ion-button>
 									    	</div>
 					               </ion-col>
-									<ion-col size="3" class="ion-text-left">
+									<ion-col size="4" class="ion-text-center">
 										<div post-fav-icon>
 											<ion-button (click)="viewComments(item)" class="socl-btn"><ion-icon name="chatbubble-outline"></ion-icon>Comment </ion-button>	
 										</div>
 									</ion-col>
-								<ion-col size="2" class="ion-text-right" >
+								<ion-col size="2" class="ion-text-center" >
 									<div post-fav-icon>
 										<!-- <ng-container>
 											<ion-icon  style="cursor:pointer;" class="heart-fav" name="bookmark-outline"></ion-icon> Save
