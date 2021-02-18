@@ -311,10 +311,14 @@ padding: 30px 15px 20px;
 				/*Category Css Start*/
 				small
 				{
-				  display: flex;
-			      align-items: center;
-			      font-size: 10px;
-			      font-weight: 400;
+				  /*display: flex;*/
+					display: inherit;
+					align-items: center;
+					font-size: 10px;
+					font-weight: 400;
+					text-overflow: ellipsis;
+					overflow: hidden;
+				
 				  /*Sub Category Css Start*/
 				   @media only screen and (max-width:767px)
 						{

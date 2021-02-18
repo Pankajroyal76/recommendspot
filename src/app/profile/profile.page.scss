@@ -154,30 +154,7 @@ ion-content
 			font-size: 24px;
 		}		
 	}
-.socl-btn	
-{
-    --box-shadow: none;
-    --border-radius: 0px;
-    --padding-start: 0px;
-    --padding-end: 0px;
-    --background: transparent;
-    --color: #989898;
-	    height: auto;
-    font-size: 13px;margin: 0;
-	    text-transform: capitalize;
-		/*Comment text css start */
-			@media only screen and (max-width:767px)
-			{
-			    font-size: 12px;
-				ion-icon
-				{
-				    font-size: 15px;
-                    margin-right: 4px;
-				}
 
-			}
-			/**Comment text css ends */
-}
 	.post-name
 	{
 	    padding: 0px 0px 0px 15px;
@@ -241,10 +218,13 @@ ion-content
 				/*Category Css Start*/
 				small
 				{
-				  display: flex;
-			      align-items: center;
-			      font-size: 10px;
-			      font-weight: 400;
+				  /*display: flex;*/
+					display: inherit;
+					align-items: center;
+					font-size: 10px;
+					font-weight: 400;
+					text-overflow: ellipsis;
+					overflow: hidden;
 				  /*Sub Category Css Start*/
 				   @media only screen and (max-width:767px)
 						{
@@ -293,20 +273,115 @@ ion-content
 			}
 		}
 	}
-	.post-share
+.post-share
 	{
-	    padding:0px 9px;
-	    /*Comment Title Css Start*/
+	    padding:0px 15px;
+		/*Share Dropdown Css STart*/
+		.sharedrop
+{
+
+	&.list-post-edit 
+	{
+		position: absolute;
+		bottom: 100%;
+		right: 0px;
+		z-index: 1;
+		list-style: none;
+		background: #fff;
+		border-radius: 5px;
+		padding: 7px 9px;
+		margin: 0px;
+		min-width: 110px;
+		box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.1);
+		li 
+		{
+			padding: 3px 0px;
+			a 
+			{
+				text-decoration: none;
+				color: #333;
+				font-size: 12px;
+				display: block;
+				text-align: left;
+			}	
+		}		
+	}	
+
+}/*Share Dropdown Css Ends*/
+		.postlikecomt {
+	    	display: flex;
+			align-items: center;
+			justify-content: space-between;
+			border-bottom: 1px solid #eee;
+			padding-bottom: 7px;
+			margin-bottom: 7px;
+		}
+		/*Comment Title Css Start*/
 		.commentstitle {
 			display: block;
 			font-size: 13px;
 			text-align: right;
 			font-weight: 600;
-			margin-right: 12px;
+			margin-right: 0;
 			margin-top: 10px;
 		}
 		/*Comment Title Css Ends*/
-	}	
+		
+		[post-fav-icon]
+	{
+		display: inline-flex;
+		align-items: center;
+		.socl-btn	
+{
+    --box-shadow: none;
+    --border-radius: 0px;
+    --padding-start: 0px;
+    --padding-end: 0px;
+    --background: transparent;
+    --color: #989898;
+	    height: auto;
+    font-size: 13px;margin: 0;
+	    text-transform: capitalize;
+		/*Comment text css start */
+			@media only screen and (max-width:767px)
+			{
+			    font-size: 12px;
+				ion-icon
+				{
+				    font-size: 15px;
+                    margin-right: 4px;
+				}
+
+			}
+			/**Comment text css ends */
+}
+		/*Post Icons Css Start*/
+		 @media only screen and (max-width:767px)
+		  {
+		    font-size: 12px;
+		  }
+		/*Post Icons Css Ends*/
+
+		.heart-fav
+		{
+		    font-size: 20px;
+		    color: #989898;
+			margin-right:5px;
+			z-index: 9999;
+			position: relative;
+			/*Share Icon Css Start*/
+		 @media only screen and (max-width:767px)
+		  {
+		    font-size: 15px;
+		  }
+		/*Share Icon Css Ends*/
+		    &.fav-save
+			{
+				color: #ee6234;
+			}		
+        }		
+	}
+	}		
 .post-content
 {
     padding: 0px 15px 0px;
@@ -343,68 +418,7 @@ ion-content
 		text-decoration: underline;
 	}
 }
-[post-fav-icon]
-	{
-		display: inline-flex;
-		align-items: center;
-		/*Post Icons Css Start*/
-		 @media only screen and (max-width:767px)
-		  {
-		    font-size: 12px;
-		  }
-		/*Post Icons Css Ends*/
-		/*Share Css Start*/
-		[sharebtn]
-		{    margin-right: 40px;
-             margin-left: -18px;
-		  [fab-btn]
-		  {
-		    --background: transparent;
-			--box-shadow: none;
-			--color: #989898;
-			ion-icon
-			{
-			 font-size: 20px;			
-			 @media only screen and (max-width:767px)
-			 {
-			  font-size: 15px!important;
-			 }
-			}
-		  }
-		  ion-fab-list
-		  {margin-bottom: 45px;
-		    ion-fab-button
-			{     width: 35px;
-			      margin: 2px 0;
-                  height: 35px;
-			    --box-shadow: none;
-				ion-icon
-				{
-				 font-size: 15px;
-				}
-			}
-		  }
-		}
-		/*Share Css Ends*/
-		.heart-fav
-		{
-		    font-size: 20px;
-		    color: #989898;
-			margin-right:5px;
-			z-index: 9999;
-			position: relative;
-			/*Share Icon Css Start*/
-		 @media only screen and (max-width:767px)
-		  {
-		    font-size: 15px;
-		  }
-		/*Share Icon Css Ends*/
-		    &.fav-save
-			{
-				color: #ee6234;
-			}		
-        }		
-	}
+
 	
 	.linkcontent
 {
@@ -450,9 +464,7 @@ ion-content
 	display:inline-block;
 	ion-icon 
 	{
-		font-size: 18px;
-		padding: 4px 0px 0px;
-		margin-right: 6px;
+		font-size: 16px;
 	}	
 	.list-post-edit 
 	{

@@ -185,9 +185,12 @@
 					<!-- <ion-icon class="heart-icon" name="bookmark-outline"></ion-icon> -->
 				</div>	
 				<div class="post-share">
-					<span style="cursor:pointer;" class="padding-8 commentstitle" *ngIf="item.comment_count > 0" (click)="viewComments(item)">{{item.comment_count}} <span *ngIf="item.comment_count == 1">Comment</span><span *ngIf="item.comment_count > 1">Comments</span> </span>
+				<div class="postlikecomt">
+				   <span style="cursor:pointer;" class=" commentstitle"><ion-icon name="thumbs-up"></ion-icon> 1 </span> 
+					<span style="cursor:pointer;" class="commentstitle" *ngIf="item.comment_count > 0" (click)="viewComments(item)">{{item.comment_count}} <span *ngIf="item.comment_count == 1">Comment</span><span *ngIf="item.comment_count > 1">Comments</span> </span>
+					</div>
 					<ion-row>
-						<ion-col size="3">
+						<ion-col size="3" style="display:none">
 							<ion-button class="socl-btn" (click)="viewPost(item)"><ion-icon name="thumbs-up-outline"></ion-icon> <span class="padding-8"> {{item.likes.length}} </span></ion-button>
 
 							<!-- <ion-button class="socl-btn"  (click)="viewPost(item)">
@@ -195,9 +198,20 @@
 								<ion-icon name="thumbs-down-outline"></ion-icon>{{item.dislikes.length}}
 							</ion-button> -->
 						</ion-col>
-						<ion-col size="9" class="ion-text-right">
-							<div post-fav-icon>
-							<ion-button class="socl-btn" (click)="viewComments(item)"><ion-icon name="chatbubble-outline"></ion-icon> <!-- <span class="padding-8"> {{item.comment_count}} </span> --></ion-button>
+						<ion-col size="12" class="ion-text-right">
+						<div post-fav-icon (click)="openUpdateShare()">
+										<ion-icon  style="cursor:pointer;" class="heart-fav" name="arrow-redo-outline" ></ion-icon> Share
+									</div> 
+									<ul class="list-post-edit sharedrop displaynonediv" id="doc">
+
+										<li> <a><ion-icon name="logo-facebook"></ion-icon> Facebook</a> </li>
+										<li> <a><ion-icon name="logo-twitter"></ion-icon> Twitter</a> </li>
+										<li> <a><ion-icon name="logo-whatsapp"></ion-icon> Whatsapp</a> </li>
+										<li> <a><ion-icon name="logo-google"></ion-icon> Google</a> </li>
+										<li> <a><ion-icon name="logo-linkedin"></ion-icon> Linkdin</a> </li>
+									</ul>
+							<div post-fav-icon style="display:none">
+							<ion-button  class="socl-btn" (click)="viewComments(item)"><ion-icon name="chatbubble-outline"></ion-icon> <!-- <span class="padding-8"> {{item.comment_count}} </span> --></ion-button>
 							<ion-buttons sharebtn>		
 							 <ion-fab>
 								<ion-fab-button fab-btn size="small">
