@@ -29,7 +29,9 @@ export class PostDetailsPage implements OnInit {
     user_email: any;
     user_id: any;
     hideMe=false;	
-selectedItemmShare = -1;
+    selectedItemmShare = -1;
+    selectedItemm = -1;
+    likedpost = false;
   	constructor(public location: Location, public toastController: ToastController, public apiService: ApiserviceService, public loadingController: LoadingController, public router: Router, private globalFooService: GlobalFooService, private iab: InAppBrowser, public modalController: ModalController, private photoViewer: PhotoViewer) { 
       
       this.user_name = localStorage.getItem('user_name');
@@ -82,6 +84,28 @@ selectedItemmShare = -1;
       }
     }
 
+    viewPostSocial(post, link){
+      localStorage.setItem('item', JSON.stringify(post));
+      localStorage.setItem('postId', post._id);
+      this.iab.create(link, '_system', {location: 'yes', closebuttoncaption: 'done'});
+    }
+
+    viewComments(post){
+      localStorage.setItem('item', JSON.stringify(post));
+      localStorage.setItem('postId', post._id);
+      this.router.navigate(['/comments']);
+    }
+
+     //edit post
+  editPost(item){
+    console.log(item);
+    this.selectedItemm = -1;
+    localStorage.setItem('postId', item._id);
+    localStorage.setItem('category_id', item.category_id);
+    localStorage.setItem('route', '/tabs/profile');
+    this.router.navigate(['/edit-reccomendation'])
+  }
+
     getData(){
       let dict = {
         'postId': localStorage.getItem('postId'),
@@ -92,8 +116,33 @@ selectedItemmShare = -1;
       this.presentLoading();
         this.apiService.postData(dict,'postDetail').subscribe((result) => {
           this.stopLoading();
+          console.log(result)
           if(result.status == 1){
               this.post = result.data[0];
+              if(this.errors.indexOf(this.userId) == -1){
+                let IsLiked = false;
+                if(this.post.likes.length == 0){
+
+                }else{
+                  for(var i=0; i < this.post.likes.length; i++){
+                   
+                    if(this.post.likes[i].userId == this.userId){
+                      IsLiked = true;
+                    }
+                 }
+                }
+                
+                if(IsLiked){
+                  //return 'thumbs-up';
+                  this.likedpost = true;
+                }else{
+                 // return 'thumbs-up-outline';
+                  this.likedpost = false;
+                }
+            }else{
+               // return 'thumbs-up-outline';
+                this.likedpost = false;
+            }
           }
           else{
               this.presentToast('Technical error,Please try after some time.','danger');
@@ -143,12 +192,12 @@ selectedItemmShare = -1;
       //assets/imgs/like.png
       if(this.errors.indexOf(this.userId) == -1){
 	      let IsLiked = false;
-	      if(likesArray.length == 0){
+	      if(this.post.likes.length == 0){
 
 	      }else{
-	      	for(var i=0; i < likesArray.length; i++){
+	      	for(var i=0; i < this.post.likes.length; i++){
 		       
-		        if(likesArray[i].userId == this.userId){
+		        if(this.post.likes[i].userId == this.userId){
 		          IsLiked = true;
 		        }
 		     }

@@ -178,8 +178,13 @@ export class EditReccomendationPage implements OnInit {
 	    this.apiService.postData(dict,'categories').subscribe((result) => { 
 	     //this.apiService.stopLoading();  
 	      if(result.status == 1){
-	        this.categories = result.data;	        
-	        this.getData();
+	        this.categories = result.data;	
+	        this.authForm.patchValue({
+	        	sub_category: ''
+	        });
+	        this.getSubCategories(localStorage.getItem('category_id'), '');
+	        //this.getData();        
+	        
 	      }
 	      else{
 	        this.apiService.presentToast('Error while sending request,Please try after some time','success');
@@ -190,7 +195,9 @@ export class EditReccomendationPage implements OnInit {
 	    });
   	}
 
-  	getSubCategories(cat_id){
+  	getSubCategories(cat_id, str){
+
+  		console.log('cat_id = ', cat_id, str)
 
   		//this.apiService.presentLoading();
   		var dict = {
@@ -198,13 +205,21 @@ export class EditReccomendationPage implements OnInit {
 	    }
 	  
 	    this.apiService.postData(dict,'subCategoryListingAdmin').subscribe((result) => { 
-	      //this.apiService.stopLoading();  
+	      this.apiService.stopLoading();  
+	      console.log('sub categories = ', result )
 	      if(result.status == 1){
 	        this.subcategories = result.data;
+	        
 	      }
 	      else{
 	        //this.apiService.presentToast('Error while sending request,Please try after some time','success');
 	      }
+	      if(str == 'change_subcat'){
+
+	      }else{
+	      	this.getData();
+	      }
+	      
 	    },
 	    err => {
 	        this.apiService.presentToast('Technical error,Please try after some time','success');
@@ -213,7 +228,8 @@ export class EditReccomendationPage implements OnInit {
 
   	yourFunction(event){
   		console.log(event);
-  		this.getSubCategories(this.authForm.value.category);
+  		localStorage.setItem('category_id', event.detail.value);
+  		this.getSubCategories(localStorage.getItem('category_id'), 'change_subcat');
   	}
 
   	getData(){
@@ -256,13 +272,10 @@ export class EditReccomendationPage implements OnInit {
 				
 			};
               this.post = result.data[0];
-            	  this.authForm.value.type = result.data[0].type;
-              this.authForm.value.category = result.data[0].category_id;
-              this.authForm.value.description = result.data[0].description;
-              this.authForm.value.web_link = result.data[0].web_link;
+            	
               this.image = result.data[0].image;
-              this.link_content = result.data[0].web_link_content
-              this.getSubCategories(result.data[0].category_id);
+              this.link_content = result.data[0].web_link_content;
+              // this.getSubCategories(result.data[0].category_id);
           }
           else{
               this.apiService.presentToast('Technical error,Please try after some time.','danger');

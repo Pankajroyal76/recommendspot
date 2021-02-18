@@ -86,7 +86,7 @@ export class LandingPagePage implements OnInit {
 
   getCategories(){
       // var dict = {};
-      this.apiService.presentLoading();
+      // this.apiService.presentLoading();
       var dict = {
         user_id: localStorage.getItem('userId')
       }

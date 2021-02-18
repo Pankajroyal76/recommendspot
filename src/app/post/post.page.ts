@@ -53,6 +53,7 @@ export class PostPage implements OnInit {
   filter_cat_array = [];
   categoriesCheck = [];
   categoriesChecked = JSON.parse(localStorage.getItem('categoriesCheck'));
+  selectedItemmShare = -1;
 
 	hide() {
 		this.hideMe = !this.hideMe;
@@ -81,6 +82,17 @@ export class PostPage implements OnInit {
         this.deferredPrompt = null;
       });
   };
+
+
+  openUpdateShare(i){
+      if(this.selectedItemmShare == i){
+        this.selectedItemmShare = -1;
+      }else{
+      this.selectedItemmShare = i;
+      }
+      
+
+    }
 
 	ngOnInit() {
 
@@ -486,7 +498,7 @@ export class PostPage implements OnInit {
   async presentAlertRadio() {
     const alert = await this.apiService.alertController.create({
       cssClass: 'my-custom-class',
-      header: 'Radio',
+      header: 'Sort By',
       inputs: [
         {
           name: 'Saved',

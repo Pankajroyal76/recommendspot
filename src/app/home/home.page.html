@@ -311,11 +311,11 @@
 						</div> 
 						<ul class="list-post-edit sharedrop displaynonediv" id="doc{{i}}" [class.displaydiv]="selectedItemmShare == i">
 
-							<li> <a  (click)="editPost(item, i)"><ion-icon name="logo-facebook"></ion-icon> Facebook</a> </li>
-							<li> <a  (click)="presentAlertConfirm(item, i)" ><ion-icon name="logo-twitter"></ion-icon> Twitter</a> </li>
-							<li> <a  (click)="presentAlertConfirm(item, i)" ><ion-icon name="logo-whatsapp"></ion-icon> Whatsapp</a> </li>
-							<li> <a  (click)="presentAlertConfirm(item, i)" ><ion-icon name="logo-google"></ion-icon> Google</a> </li>
-							<li> <a  (click)="presentAlertConfirm(item, i)" ><ion-icon name="logo-linkedin"></ion-icon> Linkdin</a> </li>
+							<li> <a  (click)="viewPostSocial(item, 'http://www.facebook.com/share.php?u=https://recommendspot.com/#/post-details/')"><ion-icon name="logo-facebook"></ion-icon> Facebook</a> </li>
+							<li> <a  (click)="viewPostSocial(item, 'https://twitter.com/share?url=https://recommendspot.com/#/post-details/&amp;text=aa&amp;hashtags=YOUR_HASHTAGS')" ><ion-icon name="logo-twitter"></ion-icon> Twitter</a> </li>
+							<li> <a  (click)="viewPostSocial(item, 'https://web.whatsapp.com/send?text=https://recommendspot.com/#/post-details/')" ><ion-icon name="logo-whatsapp"></ion-icon> Whatsapp</a> </li>
+							<li> <a  (click)="viewPostSocial(item, 'https://plus.google.com/share?url=https://recommendspot.com/#/post-details/')" ><ion-icon name="logo-google"></ion-icon> Google</a> </li>
+							<li> <a  (click)="viewPostSocial(item, 'http://www.linkedin.com/shareArticle?mini=true&amp;url=https://recommendspot.com/#/post-details/')" ><ion-icon name="logo-linkedin"></ion-icon> Linkdin</a> </li>
 						</ul>
 
 						<!-- <ion-buttons sharebtn>		

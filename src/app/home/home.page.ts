@@ -707,6 +707,7 @@ export class HomePage implements OnInit {
 		console.log(item, i);
 		this.selectedItemm = -1;
 		localStorage.setItem('postId', item._id);
+    localStorage.setItem('category_id', item.category_id);
 		localStorage.setItem('route', '/tabs/home');
 		this.router.navigate(['/edit-reccomendation'])
 	}
@@ -870,7 +871,7 @@ export class HomePage implements OnInit {
   async presentAlertRadio() {
     const alert = await this.apiService.alertController.create({
       cssClass: 'my-custom-class',
-      header: 'Radio',
+      header: 'Sort By',
       inputs: [
         {
           name: 'Saved',

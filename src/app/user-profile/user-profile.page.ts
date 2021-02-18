@@ -33,6 +33,7 @@ export class UserProfilePage implements OnInit {
   platform1: any;
   selectedItemm = -1;
   posts: any;
+  selectedItemmShare = -1;
   	
   	constructor(public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService, private iab: InAppBrowser, private socialSharing: SocialSharing,public location: Location, private platform: Platform) { 
 
@@ -62,6 +63,15 @@ export class UserProfilePage implements OnInit {
       }
     }
 
+    openUpdateShare(i){
+      if(this.selectedItemmShare == i){
+        this.selectedItemmShare = -1;
+      }else{
+      this.selectedItemmShare = i;
+      }
+      
+
+    }
     viewComments(post){
       this.selectedItemm = -1;
       localStorage.setItem('item', JSON.stringify(post));
@@ -73,6 +83,7 @@ export class UserProfilePage implements OnInit {
       console.log(item, i);
       this.selectedItemm = -1;
       localStorage.setItem('postId', item._id);
+      localStorage.setItem('category_id', item.category_id);
       localStorage.setItem('route', '/tabs/home');
       this.router.navigate(['/edit-reccomendation'])
     }
