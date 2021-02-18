@@ -186,7 +186,8 @@
 				</div>	
 				<div class="post-share">
 				<div class="postlikecomt">
-				   <span style="cursor:pointer;" class=" commentstitle"><ion-icon name="thumbs-up"></ion-icon> 1 </span> 
+				   <span style="cursor:pointer;" class=" commentstitle" *ngIf="item.like_count != 0"><ion-icon name="thumbs-up"></ion-icon> {{item.like_count}} </span>
+
 					<span style="cursor:pointer;" class="commentstitle" *ngIf="item.comment_count > 0" (click)="viewComments(item)">{{item.comment_count}} <span *ngIf="item.comment_count == 1">Comment</span><span *ngIf="item.comment_count > 1">Comments</span> </span>
 					</div>
 					<ion-row>
@@ -198,17 +199,17 @@
 								<ion-icon name="thumbs-down-outline"></ion-icon>{{item.dislikes.length}}
 							</ion-button> -->
 						</ion-col>
-						<ion-col size="12" class="ion-text-right">
-						<div post-fav-icon (click)="openUpdateShare()">
+						<ion-col size="12" class="ion-text-right"  style="display: none;">
+						<div post-fav-icon (click)="openUpdateShare(i)">
 										<ion-icon  style="cursor:pointer;" class="heart-fav" name="arrow-redo-outline" ></ion-icon> Share
 									</div> 
-									<ul class="list-post-edit sharedrop displaynonediv" id="doc">
+									<ul class="list-post-edit sharedrop displaynonediv" id="doc" [class.displaydiv]="selectedItemmShare == i">
 
-										<li> <a><ion-icon name="logo-facebook"></ion-icon> Facebook</a> </li>
-										<li> <a><ion-icon name="logo-twitter"></ion-icon> Twitter</a> </li>
-										<li> <a><ion-icon name="logo-whatsapp"></ion-icon> Whatsapp</a> </li>
-										<li> <a><ion-icon name="logo-google"></ion-icon> Google</a> </li>
-										<li> <a><ion-icon name="logo-linkedin"></ion-icon> Linkdin</a> </li>
+										<li> <a  (click)="viewPostSocial(item, 'http://www.facebook.com/share.php?u=https://recommendspot.com/#/post-details/')"><ion-icon name="logo-facebook"></ion-icon> Facebook</a> </li>
+										<li> <a  (click)="viewPostSocial(item, 'https://twitter.com/share?url=https://recommendspot.com/#/post-details/&amp;text=aa&amp;hashtags=YOUR_HASHTAGS')" ><ion-icon name="logo-twitter"></ion-icon> Twitter</a> </li>
+										<li> <a  (click)="viewPostSocial(item, 'https://web.whatsapp.com/send?text=https://recommendspot.com/#/post-details/')" ><ion-icon name="logo-whatsapp"></ion-icon> Whatsapp</a> </li>
+										<li> <a  (click)="viewPostSocial(item, 'https://plus.google.com/share?url=https://recommendspot.com/#/post-details/')" ><ion-icon name="logo-google"></ion-icon> Google</a> </li>
+										<li> <a  (click)="viewPostSocial(item, 'http://www.linkedin.com/shareArticle?mini=true&amp;url=https://recommendspot.com/#/post-details/')" ><ion-icon name="logo-linkedin"></ion-icon> Linkdin</a> </li>
 									</ul>
 							<div post-fav-icon style="display:none">
 							<ion-button  class="socl-btn" (click)="viewComments(item)"><ion-icon name="chatbubble-outline"></ion-icon> <!-- <span class="padding-8"> {{item.comment_count}} </span> --></ion-button>

@@ -53,7 +53,7 @@
 
 								<span class="servcs-badge">{{post?.category}}<small *ngIf="post?.sub_category != ''"><ion-icon name="chevron-forward-outline"></ion-icon> {{post?.sub_category}}</small></span>
 							<div class="post-content">
-							   <h2>Post Heading Title Here</h2>
+							   <h2>{{post?.title}}</h2>
 								<p>{{post?.description}}</p>
 							</div>
 
@@ -116,8 +116,9 @@
 											<div post-fav-icon>
 											<ion-button class="socl-btn" (click)="like(post?.likes, post?.dislikes)">
 
-												<!--<ion-icon name="{{isLikedPost(post?.likes)}}"  [ngClass]="{'liked': isLikedPost(post?.likes) == 'thumbs-up'}"></ion-icon>-->
-												<ion-icon name="thumbs-up"></ion-icon>
+												<ion-icon name="thumbs-up-outline"  *ngIf="likedpost == false"></ion-icon>
+												<ion-icon name="thumbs-up"  [ngClass]="liked" *ngIf="likedpost == true"></ion-icon>
+												<!-- <ion-icon name="thumbs-up"></ion-icon> -->
 												Like
 											</ion-button>
 									    	</div>
@@ -141,14 +142,14 @@
 									</div> 
 									<ul class="list-post-edit sharedrop displaynonediv" id="doc" [class.displaydiv]="selectedItemmShare == 0">
 
-										<li> <a  (click)="editPost(post)"><ion-icon name="logo-facebook"></ion-icon> Facebook</a> </li>
-										<li> <a  (click)="presentAlertConfirm(post)" ><ion-icon name="logo-twitter"></ion-icon> Twitter</a> </li>
-										<li> <a  (click)="presentAlertConfirm(post)" ><ion-icon name="logo-whatsapp"></ion-icon> Whatsapp</a> </li>
-										<li> <a  (click)="presentAlertConfirm(post)" ><ion-icon name="logo-google"></ion-icon> Google</a> </li>
-										<li> <a  (click)="presentAlertConfirm(post)" ><ion-icon name="logo-linkedin"></ion-icon> Linkdin</a> </li>
+										<li> <a  (click)="viewPostSocial(post, 'http://www.facebook.com/share.php?u=https://recommendspot.com/#/post-details/')"><ion-icon name="logo-facebook"></ion-icon> Facebook</a> </li>
+										<li> <a  (click)="viewPostSocial(post, 'https://twitter.com/share?url=https://recommendspot.com/#/post-details/&amp;text=aa&amp;hashtags=YOUR_HASHTAGS')" ><ion-icon name="logo-twitter"></ion-icon> Twitter</a> </li>
+										<li> <a  (click)="viewPostSocial(post, 'https://web.whatsapp.com/send?text=https://recommendspot.com/#/post-details/')" ><ion-icon name="logo-whatsapp"></ion-icon> Whatsapp</a> </li>
+										<li> <a  (click)="viewPostSocial(post, 'https://plus.google.com/share?url=https://recommendspot.com/#/post-details/')" ><ion-icon name="logo-google"></ion-icon> Google</a> </li>
+										<li> <a  (click)="viewPostSocial(post, 'http://www.linkedin.com/shareArticle?mini=true&amp;url=https://recommendspot.com/#/post-details/')" ><ion-icon name="logo-linkedin"></ion-icon> Linkdin</a> </li>
 									</ul>
 								</ion-col>
-								<ion-col size="1" class="ion-text-right" >
+							<!-- 	<ion-col size="1" class="ion-text-right" style="display: none;">
 									<div dots-edit>
 										<ul class="list-post-edit displaynonediv" id="doc" *ngIf="userId == post?.user_id" [class.displaydiv]="selectedItemm">
 
@@ -157,7 +158,7 @@
 										</ul>
 										<ion-icon class="icon-dots" name="ellipsis-horizontal" *ngIf="userId == post?.user_id" (click)="openUpdate()"></ion-icon>	
 										</div>
-								</ion-col>
+								</ion-col> -->
 				        </ion-row>
 			</div>	
 		
@@ -251,7 +252,7 @@
 		</div>
 	</div>
 </div>
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button mnfab-btn>
       <ion-icon name="share-social"></ion-icon>
     </ion-fab-button>
@@ -262,7 +263,7 @@
       <ion-fab-button><ion-icon name="logo-google"></ion-icon></ion-fab-button>
       <ion-fab-button><ion-icon name="logo-linkedin"></ion-icon></ion-fab-button>
     </ion-fab-list>
-  </ion-fab>
+  </ion-fab> -->
 </ion-content>
 
 <!-- <div footerWeb>

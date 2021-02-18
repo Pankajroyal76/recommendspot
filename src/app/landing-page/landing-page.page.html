@@ -161,8 +161,8 @@
 						        <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user.image) == -1 && getimage(user.image) == false" src="{{IMAGES_URL + '/images/' + user.image}}">
 						       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user.image) >= 0" src="assets/img/default.png">
 								<h4>{{user.name}}</h4>
-								<p>{{user.bio}}</p>
-								<p userlocation><ion-icon name="location-outline"></ion-icon> {{user.location}}</p>
+								<p *ngIf="errors.indexOf(user.bio) == -1">{{user.bio}}</p>
+								<p userlocation *ngIf="errors.indexOf(user.location) == -1"><ion-icon name="location-outline"></ion-icon> {{user.location}}</p>
 							</div>
 						</ion-slide>
 						

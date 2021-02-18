@@ -29,6 +29,7 @@ export class ProfilePage implements OnInit {
   user_email: any;
   user_id: any;
   platform1: any;
+  selectedItemmShare = -1;
   
   	constructor(private globalFooService: GlobalFooService,public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private iab: InAppBrowser, public alertController: AlertController, private platform: Platform) { 
       this.user_name = localStorage.getItem('user_name');
@@ -60,6 +61,16 @@ export class ProfilePage implements OnInit {
         this.selectedItemm = -1;
       }else{
       this.selectedItemm = i;
+      }
+      
+
+    }
+
+    openUpdateShare(i){
+      if(this.selectedItemmShare == i){
+        this.selectedItemmShare = -1;
+      }else{
+      this.selectedItemmShare = i;
       }
       
 
@@ -338,6 +349,7 @@ export class ProfilePage implements OnInit {
     console.log(item, i);
     this.selectedItemm = -1;
     localStorage.setItem('postId', item._id);
+    localStorage.setItem('category_id', item.category_id);
     localStorage.setItem('route', '/tabs/profile');
     this.router.navigate(['/edit-reccomendation'])
   }
