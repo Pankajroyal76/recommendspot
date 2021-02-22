@@ -96,6 +96,9 @@ export class CategoryPage implements OnInit {
 	      if(result.status == 1){
 	        this.categories[index].cat_follow = parseInt(status);	        
 	       this.apiService.presentToast(result.error,'success');
+         this.globalFooService.publishSomeData({
+              foo: {'data': '', 'page': 'updateprofile'}
+          });
 	      }
 	      else{
 	        this.apiService.presentToast('Error while sending request,Please try after some time','danger');
@@ -119,7 +122,10 @@ export class CategoryPage implements OnInit {
 	     this.apiService.stopLoading();  
 	     console.log(result.data)
 	      if(result.status == 1){
-	        this.categories[index].sub_cat[sub_index].sub_cat_follow = parseInt(status);	        
+	        this.categories[index].sub_cat[sub_index].sub_cat_follow = parseInt(status);	  
+          this.globalFooService.publishSomeData({
+              foo: {'data': '', 'page': 'updateprofile'}
+          });      
 	        this.apiService.presentToast(result.error,'success');
 	      }
 	      else{

@@ -31,7 +31,7 @@ export class PostDetailsPage implements OnInit {
     hideMe=false;	
     selectedItemmShare = -1;
     selectedItemm = -1;
-    likedpost = false;
+    likedpost = true;
   	constructor(public location: Location, public toastController: ToastController, public apiService: ApiserviceService, public loadingController: LoadingController, public router: Router, private globalFooService: GlobalFooService, private iab: InAppBrowser, public modalController: ModalController, private photoViewer: PhotoViewer) { 
       
       this.user_name = localStorage.getItem('user_name');
@@ -127,21 +127,21 @@ export class PostDetailsPage implements OnInit {
                   for(var i=0; i < this.post.likes.length; i++){
                    
                     if(this.post.likes[i].userId == this.userId){
-                      IsLiked = true;
+                      IsLiked = false;
                     }
                  }
                 }
                 
                 if(IsLiked){
                   //return 'thumbs-up';
-                  this.likedpost = true;
+                  this.likedpost = false;
                 }else{
                  // return 'thumbs-up-outline';
-                  this.likedpost = false;
+                  this.likedpost = true;
                 }
             }else{
                // return 'thumbs-up-outline';
-                this.likedpost = false;
+                this.likedpost = true;
             }
           }
           else{
@@ -295,13 +295,18 @@ export class PostDetailsPage implements OnInit {
               {
                 if(likesArray[i].userId == this.userId){
                   this.post.likes.splice(i, 1);
+
                 }
               }
+              
             }
 
               this.globalFooService.publishSomeData({
                 foo: {'data': this.post, 'page': 'post'}
             });
+            this.likedpost = IsLiked;
+            console.log('this.likepost = ', this.likedpost)
+            console.log('IsLiked = ', IsLiked)
           }
           else{
             this.presentToast('Technical error,Please try after some time.','danger');

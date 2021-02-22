@@ -131,25 +131,25 @@
 		<ion-card post-sec-mn *ngFor="let item of posts | appFilter: authForm.value.keyword; let i = index;">
 			<div class="post-name">	
 				<ion-item lines="none">
-					<ion-avatar  (click)="viewUser(item)">
+					<ion-avatar  (click)="viewUser(item)"  style="cursor:pointer;">
 						<img *ngIf="errors.indexOf(item.user_image) == -1 && getimage(item.user_image) == true" src="{{item.user_image}}">
 						<img *ngIf="errors.indexOf(item.user_image) == -1 && getimage(item.user_image) == false" src="{{IMAGES_URL + '/images/' + item.user_image}}">
 						<img *ngIf="errors.indexOf(item.user_image) >= 0" src="assets/img/default.png">
 					</ion-avatar>
-					<ion-label  (click)="viewUser(item)">
+					<ion-label  (click)="viewUser(item)"  style="cursor:pointer;">
 						<h2>{{item.user_name}}</h2>
 						<p>{{item.created_at  | dateAgo}}</p>
 					</ion-label>
-					<span (click)="viewPost(item)" class="servcs-badge" *ngIf="item.category != ''">{{item.category}}<small *ngIf="item.sub_category != ''"><ion-icon name="chevron-forward-outline"></ion-icon> {{item.sub_category}}</small></span>
+					<span  style="cursor:pointer;" (click)="viewPost(item)" class="servcs-badge" *ngIf="item.category != ''">{{item.category}}<small *ngIf="item.sub_category != ''"><ion-icon name="chevron-forward-outline"></ion-icon> {{item.sub_category}}</small></span>
 				</ion-item>
 			</div>
 			<div class="cart-mn-pd">
-				<div class="post-content padding-left-3" (click)="viewPost(item)">
+				<div  style="cursor:pointer;" class="post-content padding-left-3" (click)="viewPost(item)">
 					<h6 style="font-size: 14px;color: #000;">{{item.title}}</h6>
 					<p>{{item.description}}<!-- <a class="readmore" href="javascript:void(0)">Read More</a> --></p>
 				</div>
 
-				<div *ngIf="errors.indexOf(item.web_link) == -1" class="padding-left-3">
+				<div  style="cursor:pointer;" *ngIf="errors.indexOf(item.web_link) == -1" class="padding-left-3">
                     <!--div weblink-sec>
 						<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>
 						<span class="weblink"  (click)="openLink(item.web_link)"><a (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
@@ -179,7 +179,7 @@
 					</ion-grid>
 				</div>
 				</div>
-				<div class="post-img" *ngIf="errors.indexOf(item.image) == -1 || item.image">
+				<div  style="cursor:pointer;" class="post-img" *ngIf="errors.indexOf(item.image) == -1 || item.image">
 					<img (click)="viewPost(item)"  src="{{IMAGES_URL + '/images/' +  item.image}}">
 
 					<!-- <ion-icon class="heart-icon" name="bookmark-outline"></ion-icon> -->
@@ -200,16 +200,16 @@
 							</ion-button> -->
 						</ion-col>
 						<ion-col size="12" class="ion-text-right"  style="display: none;">
-						<div post-fav-icon (click)="openUpdateShare(i)">
+						<div post-fav-icon (click)="openUpdateShare(i)" style="cursor:pointer;">
 										<ion-icon  style="cursor:pointer;" class="heart-fav" name="arrow-redo-outline" ></ion-icon> Share
 									</div> 
 									<ul class="list-post-edit sharedrop displaynonediv" id="doc" [class.displaydiv]="selectedItemmShare == i">
 
-										<li> <a  (click)="viewPostSocial(item, 'http://www.facebook.com/share.php?u=https://recommendspot.com/#/post-details/')"><ion-icon name="logo-facebook"></ion-icon> Facebook</a> </li>
-										<li> <a  (click)="viewPostSocial(item, 'https://twitter.com/share?url=https://recommendspot.com/#/post-details/&amp;text=aa&amp;hashtags=YOUR_HASHTAGS')" ><ion-icon name="logo-twitter"></ion-icon> Twitter</a> </li>
-										<li> <a  (click)="viewPostSocial(item, 'https://web.whatsapp.com/send?text=https://recommendspot.com/#/post-details/')" ><ion-icon name="logo-whatsapp"></ion-icon> Whatsapp</a> </li>
-										<li> <a  (click)="viewPostSocial(item, 'https://plus.google.com/share?url=https://recommendspot.com/#/post-details/')" ><ion-icon name="logo-google"></ion-icon> Google</a> </li>
-										<li> <a  (click)="viewPostSocial(item, 'http://www.linkedin.com/shareArticle?mini=true&amp;url=https://recommendspot.com/#/post-details/')" ><ion-icon name="logo-linkedin"></ion-icon> Linkdin</a> </li>
+										<li style="cursor:pointer;"> <a  (click)="viewPostSocial(item, 'http://www.facebook.com/share.php?u=https://recommendspot.com/#/post-details/')"><ion-icon name="logo-facebook"></ion-icon> Facebook</a> </li>
+										<li style="cursor:pointer;"> <a  (click)="viewPostSocial(item, 'https://twitter.com/share?url=https://recommendspot.com/#/post-details/&amp;text=aa&amp;hashtags=YOUR_HASHTAGS')" ><ion-icon name="logo-twitter"></ion-icon> Twitter</a> </li>
+										<li style="cursor:pointer;"> <a  (click)="viewPostSocial(item, 'https://web.whatsapp.com/send?text=https://recommendspot.com/#/post-details/')" ><ion-icon name="logo-whatsapp"></ion-icon> Whatsapp</a> </li>
+										<li style="cursor:pointer;"> <a  (click)="viewPostSocial(item, 'https://plus.google.com/share?url=https://recommendspot.com/#/post-details/')" ><ion-icon name="logo-google"></ion-icon> Google</a> </li>
+										<li style="cursor:pointer;"> <a  (click)="viewPostSocial(item, 'http://www.linkedin.com/shareArticle?mini=true&amp;url=https://recommendspot.com/#/post-details/')" ><ion-icon name="logo-linkedin"></ion-icon> Linkdin</a> </li>
 									</ul>
 							<div post-fav-icon style="display:none">
 							<ion-button  class="socl-btn" (click)="viewComments(item)"><ion-icon name="chatbubble-outline"></ion-icon> <!-- <span class="padding-8"> {{item.comment_count}} </span> --></ion-button>

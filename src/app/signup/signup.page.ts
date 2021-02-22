@@ -77,12 +77,12 @@ export class SignupPage implements OnInit {
 	      return false;
 	    };
 
-	    if(this.authForm.value.password != this.authForm.value.confirm_password){
-	    	return false;
-	    }
+	    // if(this.authForm.value.password != this.authForm.value.confirm_password){
+	    // 	return false;
+	    // }
 	    let dict ={
 	      name: this.authForm.value.name,
-	      // contact: this.authForm.value.contact,
+	      contact: '',
 	      location: '',
 	      bio: '',
 	      email: this.authForm.value.email,

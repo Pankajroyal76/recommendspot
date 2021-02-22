@@ -289,6 +289,9 @@ ion-content
 				font-weight: 600;
 				padding: 0px 0px 0px 15px;
 				position: relative;
+				text-transform: capitalize;
+				font-style: italic;
+			    font-family: revert;
 				z-index: 1;
 				&:after 
 				{

@@ -81,22 +81,22 @@
 	<ion-card post-sec-mn  *ngFor="let item of data?.post; let i = index;">
 			<div class="post-name">	
 				<ion-item lines="none">
-					 <ion-avatar (click)="viewUser(item)">
+					 <ion-avatar (click)="viewUser(item)" style="cursor:pointer;">
 					 <img *ngIf="errors.indexOf(item.user_image) == -1 && getimage(item.user_image) == true" src="{{item.user_image}}">
 					 <img *ngIf="errors.indexOf(item.user_image) == -1 && getimage(item.user_image) == false" src="{{IMAGES_URL + '/images/' + item.user_image}}">
 					 <img *ngIf="errors.indexOf(item.user_image) >= 0" src="assets/img/default.png">
 					 </ion-avatar>
-					<ion-label>
+					<ion-label style="cursor:pointer;">
 					<h2 (click)="viewUser(item)">{{item.user_name}}</h2>
 					<p (click)="viewUser(item)">{{item.created_at  | dateAgo}}</p>
 					</ion-label>
 					<!-- <ion-icon class="icon-dots" name="ellipsis-vertical"></ion-icon> -->
-					<span (click)="viewPost(item)" class="servcs-badge" *ngIf="item.category != ''">{{item.category}}<small *ngIf="item.sub_category != ''"><ion-icon name="chevron-forward-outline"></ion-icon> {{item.sub_category}}</small></span>
+					<span style="cursor:pointer;" (click)="viewPost(item)" class="servcs-badge" *ngIf="item.category != ''">{{item.category}}<small *ngIf="item.sub_category != ''"><ion-icon name="chevron-forward-outline"></ion-icon> {{item.sub_category}}</small></span>
 				</ion-item>
 			</div>
-			<div class="post-content" style="position: relative;">
+			<div (click)="viewPost(item)" class="post-content" style="position: relative; cursor:pointer;">
 				<h6 style="font-size: 14px;color: #000;">{{item.title}}</h6>
-				<p  (click)="viewPost(item)">{{item.description}}</p>
+				<p>{{item.description}}</p>
 
 				<!--ng-container *ngIf="item?.type == 'Words'">
 					<ion-icon class="heart-icon weblink-icon" name="bookmark-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)" style="    bottom: 0%"></ion-icon>
@@ -104,7 +104,7 @@
 				</ng-container-->
 			</div>
 
-			<div *ngIf="errors.indexOf(item.web_link) == -1">
+			<div *ngIf="errors.indexOf(item.web_link) == -1" style="cursor:pointer;">
 				<!--div weblink-sec>
 					<ion-icon class="heart-icon" name="link-outline" style="font-size:20px;"></ion-icon>			
 					<span class="weblink"> <a (click)="openLink(item.web_link)">{{item.web_link}}</a></span>
@@ -138,7 +138,7 @@
 					<ion-icon style="z-index: 999;bottom: 135px;right: 25px;" class="heart-icon weblink-icon" name="bookmark" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon>
 				</ng-container-->
 			</div>
-			<div class="post-img" *ngIf="errors.indexOf(item.image) == -1 || item.image" (click)="viewPost(item)">
+			<div class="post-img" *ngIf="errors.indexOf(item.image) == -1 || item.image" (click)="viewPost(item)" style="cursor:pointer;">
 				<img   src="{{IMAGES_URL + '/images/' + item.image}}">
 				
 				<!--ng-container>
@@ -155,7 +155,7 @@
 								<span style="cursor:pointer;" class="padding-8 commentstitle" *ngIf="item.comment_count > 0" (click)="viewComments(item)">{{item.comment_count}} <span *ngIf="item.comment_count == 1">Comment</span><span *ngIf="item.comment_count > 1">Comments</span> </span> 
 							</div>
 								<ion-row>
-									<ion-col size="2" class="ion-text-left">
+									<ion-col size="2" class="ion-text-left" style="cursor:pointer;">
 											<div post-fav-icon>
 											<ion-button class="socl-btn" (click)="like(item.likes, item.dislikes, i)">
 
@@ -163,20 +163,20 @@
 										</ion-button>
 									    	</div>
 					               </ion-col>
-									<ion-col size="4" class="ion-text-center">
+									<ion-col size="4" class="ion-text-center" style="cursor:pointer;">
 										<div post-fav-icon>
 											<ion-button (click)="viewComments(item)" class="socl-btn"><ion-icon name="chatbubble-outline"></ion-icon>Comment </ion-button>	
 										</div>
 									</ion-col>
 								<ion-col size="2" class="ion-text-center" >
-									<div post-fav-icon>
+									<div post-fav-icon style="cursor:pointer;">
 										<ng-container>
 											<ion-icon  style="cursor:pointer;" class="heart-fav" name="bookmark-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
 											<ion-icon  style="cursor:pointer;" class="heart-fav fav-save" name="bookmark" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon> Save 
 										</ng-container>
 									</div>
 								</ion-col>
-								<ion-col size="3" class="ion-text-right">
+								<ion-col size="3" class="ion-text-right" style="cursor:pointer;">
 									<div post-fav-icon (click)="openUpdateShare(i)">
 										<ion-icon  style="cursor:pointer;" class="heart-fav" name="arrow-redo-outline" ></ion-icon> Share
 									</div> 
@@ -189,7 +189,7 @@
 										<li> <a  (click)="viewPostSocial(item, 'http://www.linkedin.com/shareArticle?mini=true&amp;url=https://recommendspot.com/#/post-details/')" ><ion-icon name="logo-linkedin"></ion-icon> Linkdin</a> </li>
 									</ul>
 								</ion-col>
-								<ion-col size="1" class="ion-text-right" *ngIf="loggedUserId == item.user_id">
+								<ion-col size="1" class="ion-text-right" *ngIf="loggedUserId == item.user_id" style="cursor:pointer;">
 									<div dots-edit>
 									<ul class="list-post-edit displaynonediv" id="doc{{i}}" *ngIf="loggedUserId == item.user_id" [class.displaydiv]="selectedItemm == i">
 

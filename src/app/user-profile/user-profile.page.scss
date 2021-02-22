@@ -349,7 +349,8 @@ ion-content
 				ion-icon
 				{
 				    font-size: 14px;
-                    margin-right: 2px;
+                    margin-right: 0.5px;
+                    /*margin-right: 2px;*/
 					margin-top:-1px;
 				}
 
@@ -367,14 +368,15 @@ ion-content
 		{
 		    font-size: 20px;
 		    color: #989898;
-			margin-right:5px;
+			/*margin-right:5px;*/
 			z-index: 9999;
 			position: relative;
 			/*Share Icon Css Start*/
 		 @media only screen and (max-width:767px)
 		  {
 		    font-size: 14px;
-			margin-right:2px;
+			margin-right:0;
+			/*margin-right:2px;*/
 		  }
 		/*Share Icon Css Ends*/
 		    &.fav-save
