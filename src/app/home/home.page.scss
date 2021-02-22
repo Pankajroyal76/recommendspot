@@ -131,6 +131,22 @@ ion-list {
     padding: 15px 15px 30px;
     position: relative;
     z-index: 2;
+	&.homesearch
+	{
+	  flex-wrap:wrap;
+	  [btnfollow]
+	  {
+	  width:100%;
+	  text-align:center;
+	  ion-button
+	  {
+	  --border-color:var(--ion-color-white);
+		color:var(--ion-color-white);
+		min-height: 40px;
+		margin-top: 15px;
+	  }
+	  }
+	}
 	/*Search Css Start*/
 	@media only screen and (max-width:767px)
 	{

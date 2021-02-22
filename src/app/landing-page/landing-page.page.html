@@ -1,5 +1,5 @@
 <div headerwebs>
-	<a href="javascript:void(0)" routerLink="/tabs/home" logo>Recommendspot</a>
+	<a href="javascript:void(0)" routerLink="/tabs/home" logo><!--Recommendspot--><img height="22px" src="assets/img/logo-white.png" alt="" ></a>
 	<div ritHeader style="height: 66px;">
 		<ul>
 			<li search-head class="dropdown-dots">
@@ -21,9 +21,12 @@
 
 <ion-header>
 	<ion-toolbar color="secondary">   
-		<ion-title class="ion-text-center"><img src="assets/img/logo-white.png" alt="" ></ion-title>
+		<ion-title class="ion-text-left"><img src="assets/img/logo-white.png" alt="" ></ion-title>
+		<ion-buttons  routerLink="/signup" slot="end">Sign Up
+		</ion-buttons>
 	</ion-toolbar>
-	<div  class="drop-sec">
+	
+	<!--div  class="drop-sec">
 		<div  class="dropdown-dots">
 			<a  href="javascript:void(0)" class="search-btn" (click)="hide1()"> <ion-icon name="search-outline"></ion-icon> </a>
 			<ul class="search-mob" *ngIf="hideMe1">
@@ -42,25 +45,25 @@
 				<li><a routerLink="/posts" href="javascript:void(0)">Recommendations</a></li>
 			</ul>
 		</div>  
-	</div>  
+	</div-->  
 </ion-header>
 
 <ion-content>
 	<div banner>
 		<ion-slides pager="true" [options]="slideOpts">
-			<!-- <ion-slide bg>
+			<ion-slide bg>
 			    <div containers>
 				    <div slider-content>
 					    <h3>A Community Where People Recommend Things To Others In Life Such As Movies To Watch , Books To Read , Places To Vist And Much More.</h3>
 					</div>
 				</div>
-			</ion-slide> -->
-			<ion-slide bg>
+			</ion-slide> 
+			<!--ion-slide bg>
 			    <div containers>
 				    <div slider-content>
 					    <h3>Welcome to RecommendSpot</h3>
 					    <h4>Have you tried something really good/exciting that you had to share/recommend what you just tried with others?</h4>
-					    <!-- <h5>You’re at the right SPOT</h5> -->
+					  
 					</div>
 				</div>
 			</ion-slide>
@@ -68,7 +71,7 @@
 			    <div containers>
 				    <div slider-content>
 					    <h4>Do you ever ask for netflix, hulu, books,services,fun events, games, great food and other recommendations from people?</h4>
-					    <!-- <h5>You’re at the right SPOT</h5> -->
+					 
 					</div>
 				</div>
 			</ion-slide>
@@ -76,10 +79,10 @@
 			    <div containers>
 				    <div slider-content>
 					    <h4>Do you get bored and want to experience great new things you might possibly love?</h4>
-					    <!-- <h5>You’re at the right SPOT</h5> -->
+					    
 					</div>
 				</div>
-			</ion-slide>
+			</ion-slide-->
 		</ion-slides>
 	</div>
 	<div categories-sec>
@@ -109,12 +112,64 @@
 			</ion-col>
 		</ion-row>
 	</div>
+	<div rightspot>
+	    <div containers>
+		    <ion-row>
+				<ion-col size="12">
+			    <div spot-head>
+				    <h2>Welcome to RecommendSpot</h2>
+				</div>
+			</ion-col>
+			    <ion-col size="12" size-sm="6" size-lg="4" class="mb-15">
+				    <div spot-content>
+					   
+					    <p>Have you tried something really good/exciting that you had to share/recommend what you just tried with others?</p>
+						   <h4>You're at the right SPOT</h4>
+					</div>
+				</ion-col>
+			  <ion-col size="12" size-sm="6" size-lg="4" class="mb-15">
+				    <div spot-content>
+					    <p>Do you ever ask for netflix, hulu, books,services,fun events, games, great food and other recommendations from people?</p>
+					    <h4>You're at the right SPOT</h4>
+					</div>
+				</ion-col>
+				 <ion-col size="12" size-sm="6" size-lg="4" class="mb-15">
+				    <div spot-content>
+					    <p>Do you get bored and want to experience great new things you might possibly love?</p>
+					    <h4>You're at the right SPOT</h4>
+					</div>
+				</ion-col>
+				
+			</ion-row>
+		</div>
+	</div>
+	<div loginsignup class="ion-hide-md-up">
+	    <div containers>
+		   
+						<div btn-facebook class="ion-text-center">
+						<ion-button expand="full" color="primary"  shape="round" (click)="facebookLogin()">
+						<span fb-icon><img src="assets/img/fb.png"/></span> Login With Facebook
+						</ion-button>
+						</div>
+						<div btn-google class="ion-text-center">
+						<ion-button expand="full" shape="round" (click)="googleLogin()">
+						<span fb-icon><ion-icon name="logo-google"></ion-icon></span> Login With Google
+						</ion-button>
+						</div>
+						<div login-btn>
+							<ion-button type="submit" expand="full" color="secondary"  shape="round" routerLink="/signup" >
+							Sign Up
+							</ion-button>
+							</div>
+			
+		</div>
+	</div>
 	<div how-works-sec>
 	    <div containers>
 		    <ion-row>
 			<ion-col size="12">
 			    <div how-work-head>
-				    <h2>You’re at the right SPOT</h2>
+				    <h2>How It Works</h2>
 				</div>
 			</ion-col>
 			    <ion-col size="12" size-sm="6" size-lg="3" class="mb-15">

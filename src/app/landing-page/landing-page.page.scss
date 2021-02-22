@@ -8,8 +8,27 @@ ion-header{
 	   --min-height: 56px; 
 	   ion-buttons
 		{
-			font-size:20px;
+			font-size:16px;
 			outline: 0px;	
+			font-weight:500;
+			position:relative;
+			padding:0px 12px 0px 15px;
+		
+			&:after{
+			    content: '';
+				position: absolute;
+				top: -19px;
+				background: #fff;
+				width: 1px;
+				height: 56px;
+				left: 0;
+				opacity: .5;
+			}	&.ios
+			{
+			 &:after{
+				top: -10px;
+			}
+			}
 		    &[mar-10]
 		    {
 		        margin-right:10px;
@@ -242,8 +261,8 @@ ion-content
 						margin: 0px;
                      @media only screen and (max-width:767px)
 						{
-						font-size: 18px;
-						font-weight:700;
+						font-size: 16px;
+						font-weight:500;
 						}						
 					}
 					h4,h5{
@@ -276,6 +295,157 @@ ion-content
 			}
 		}
 	}
+	[loginsignup]
+	{padding: 15px 15px 25px;
+	[login-btn]
+{
+ ion-button
+ {    margin-top: 20px;
+    min-height: 48px;--box-shadow: none;
+    font-weight: 500;
+    font-size: 15px;
+ }
+}
+	[btn-facebook]
+{
+  
+	 ion-button
+	 {min-height: 48px;
+	 --box-shadow:none;
+    /*--border-radius: 6px;*/
+    font-weight: 500;
+    font-size: 15px;
+    text-transform: Capitalize;
+    --ion-color-base: var(--ion-color-fb)!important;
+	[fb-icon] {
+    background: #334d82;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    position: absolute;
+    left: -19px;
+	img
+	{
+	height: 20px;
+    margin-top: 7px;
+	}
+}
+	}
+}
+[btn-google]
+{
+    margin-top: 20px;
+	 ion-button
+	 {min-height: 48px;
+	 --box-shadow:none;
+    font-weight: 500;
+    font-size: 15px;
+    text-transform: Capitalize;
+    --background: #d9534f;
+	[fb-icon] {
+    background: #e66458;
+    width: 36px;
+    height: 36px;
+    line-height: 46px;	
+    border-radius: 50%;
+    position: absolute;
+    left: -19px;
+ion-icon 
+{
+    font-size: 20px;
+}
+}
+	}
+}
+	}
+	[rightspot]
+	{
+		padding: 40px 15px 25px;
+		[spot-head]
+		{ 
+			h2 
+			{
+				margin: 0px 0px 25px;
+				text-align: left;
+				font-size: 20px;
+				font-weight: 600;
+				padding: 0px 0px 0px 15px;
+				position: relative;
+				text-transform: capitalize;
+				/*font-style: italic;*/
+			    font-family: revert;
+				z-index: 1;
+				&:after 
+				{
+					position: absolute;
+					content: "";
+					top: 0px;
+					bottom: 0px;
+					left: 0px;
+					right: inherit;
+					margin: auto;
+					width: 35px;
+					height: 35px;
+					border-radius: 50%;
+					opacity: 0.15;
+					background: var(--ion-color-secondary);
+					z-index: -1;
+				}				
+			}		
+		}		
+		
+		.mb-15
+			{
+				margin-bottom:15px;
+			}	
+		[spot-content]
+		{
+				background: var(--ion-color-grey3);
+				min-height: auto;
+				height: 100%;
+				padding: 20px 15px 20px;
+				border-radius: 10px;
+				text-align:center;
+				p
+				{
+					font-size: 14px;
+					margin: 0;
+					line-height: 22px;
+					min-height:90px;
+					@media only screen and (max-width:767px)
+					{min-height:auto;
+					font-size: 13px;
+					}
+				}
+				h4
+				{
+					margin: 15px 0px 0px;
+					display:inline-block;
+					font-size: 14px;
+					font-weight: 600;
+					padding:0px;
+					position: relative;
+					text-transform: capitalize;
+					font-family: revert;
+					z-index: 1;
+				&:after 
+					{
+						    position: absolute;
+						content: "";
+						top: 0px;
+						bottom: -10px;
+						left: 0px;
+						right: inherit;
+						margin: auto;
+						width: 100%;
+						height: 5px;
+						opacity: 0.35;
+						background: var(--ion-color-secondary);
+						z-index: -1;
+					}			
+				}
+			}
+	}
 	[how-works-sec]
 	{
 	    padding: 25px 15px 25px;
@@ -290,7 +460,7 @@ ion-content
 				padding: 0px 0px 0px 15px;
 				position: relative;
 				text-transform: capitalize;
-				font-style: italic;
+				/*font-style: italic;*/
 			    font-family: revert;
 				z-index: 1;
 				&:after 

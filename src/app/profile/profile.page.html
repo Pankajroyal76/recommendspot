@@ -1,5 +1,5 @@
 <div headerWeb>
-	<a href="javascript:void(0)" routerLink="/tabs/home" logo>Recommendspot</a>
+	<a href="javascript:void(0)" routerLink="/tabs/home" logo><!--Recommendspot--><img height="22px" src="assets/img/logo-white.png" alt="" ></a>
 	<div ritHeader>
 		<ul>
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
@@ -17,7 +17,7 @@
 			<p routerLink="/tabs/profile"><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
 			<div profileDropdown>
 				<ul>
-					<li><a href="javascript:void(0)" routerLink="/profile-setting/{{user_id}}">Profile Settings</a></li>
+					<li><a href="javascript:void(0)" routerLink="/profile-setting/{{user_id}}">Edit Profile </a></li>
 					<li (click)="logout()"><a href="javascript:void(0)">Logout</a></li>
 				</ul>
 			</div>
@@ -30,9 +30,9 @@
 <img height="15px" src="assets/img/menu.png"/>
   </ion-menu-button>
     <ion-title class="ion-text-center">Profile</ion-title>
-	<ion-buttons (click)="goto_profile_setting()" mar-10 slot="end">
+	<!--ion-buttons (click)="goto_profile_setting()" mar-10 slot="end">
 	  <ion-icon name="settings-outline"></ion-icon>
-	</ion-buttons>
+	</ion-buttons-->
   </ion-toolbar>
 </ion-header>
 <ion-content>
@@ -47,13 +47,7 @@
 </div-->
 <div class="folow-sec">
 	<ion-row class="ion-align-items-center">
-		<ion-col size="4">
-			<div class="folow-mn" (click)="gotoFollowersFollowings('follower')">
-			    <ion-icon name="people-outline"></ion-icon>
-			    <h3><span>{{profile?.follower}}</span><br/>Followers</h3>
-			</div>
-		</ion-col>
-		<ion-col size="4">
+		<ion-col size="3">
 			<div userimg>
 			<img *ngIf="errors.indexOf(profile?.image) == -1 && getimage(profile?.image) == true" src="{{profile?.image}}">
 			 <img *ngIf="errors.indexOf(profile?.image) == -1 && getimage(profile?.image) == false" src="{{IMAGES_URL + '/images/' + profile?.image}}">
@@ -65,11 +59,28 @@
 			
 			</div>
 		</ion-col>
-		<ion-col size="4">
+		<ion-col size="3">
+			<div class="folow-mn">
+			    <ion-icon class="ion-hide-sm-down" name="document-text-outline"></ion-icon>
+			    <h3><span>10k</span><br/>Posts</h3>
+			</div>
+		</ion-col>
+		<ion-col size="3">
+			<div class="folow-mn" (click)="gotoFollowersFollowings('follower')">
+			    <ion-icon class="ion-hide-sm-down" name="people-outline"></ion-icon>
+			    <h3><span>{{profile?.follower}}</span><br/>Followers</h3>
+			</div>
+		</ion-col>
+		<ion-col size="3">
 			<div class="folow-mn" (click)="gotoFollowersFollowings('following')">
-			    <ion-icon name="person-add-outline"></ion-icon>
+			    <ion-icon class="ion-hide-sm-down" name="person-add-outline"></ion-icon>
 			    <h3><span>{{profile?.following}}</span><br/>Following</h3>			
 			</div>
+		</ion-col>
+		<ion-col size="12" class="ion-hide-md-up">
+		  <ion-button shape="round" size="full" fill="outline" color="secondary">
+		     Edit Profile
+		  </ion-button>
 		</ion-col>
 	</ion-row>
 </div>

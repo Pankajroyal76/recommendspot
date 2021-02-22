@@ -1,5 +1,5 @@
 <div headerWeb>
-  <a href="javascript:void(0)" routerLink="/tabs/home" logo>Recommendspot</a>
+  <a href="javascript:void(0)" routerLink="/tabs/home" logo><!--Recommendspot--><img height="22px" src="assets/img/logo-white.png" alt="" ></a>
   <div ritHeader>
     <ul>
       <li><a routerLink="/category" href="javascript:void(0)">Categories</a></li>
@@ -125,6 +125,18 @@
             <ion-input  formControlName="location"  placeholder="Enter Location" ></ion-input>
           </ion-item>
           <span error *ngIf="errors.indexOf(authForm.value.location) >= 0 && is_submit == true">Please enter your location</span>
+
+          
+        </div>
+		  <div form-group>
+          <label>Website</label>
+          <ion-item lines="none">
+            <ion-label>
+            <ion-icon name="link-outline"></ion-icon>
+            </ion-label>
+            <ion-input  formControlName="location"  placeholder="Enter Website" ></ion-input>
+          </ion-item>
+      
 
           
         </div>
