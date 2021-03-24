@@ -40,13 +40,17 @@
     	<ion-back-button slot="start">
         </ion-back-button> 
 		<ion-title class="ion-text-center"> Category </ion-title>
+
+		<ion-buttons slot="end" class="nextbtn">
+			Next <ion-icon name="chevron-forward-circle-outline"></ion-icon> 
+        </ion-buttons> 
 	</ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
 <div container>
 <div categorytab>
-	<span>Follow categories and people you are interested into discover recommendations in your newsfeed.</span>
+	<span class="catdic">Follow categories and people you are interested into discover recommendations in your newsfeed.</span>
   <ion-segment [(ngModel)]="categorytab">
   		<ion-segment-button value="category">
   		  Category

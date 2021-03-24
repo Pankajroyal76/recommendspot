@@ -171,6 +171,7 @@
 									</ion-avatar>
 									<ion-label (click)="viewUser(item)" style="cursor:pointer;">
 										<h2>{{item.user_name}}</h2>
+										<span style="cursor:pointer;" (click)="viewPost(item)" class=" mobshow" *ngIf="item.category != ''"><span class="str">{{item.category}}</span><small *ngIf="item.sub_category != ''"><ion-icon name="chevron-forward-outline"></ion-icon> {{item.sub_category}}</small></span>
 										<p>{{item.created_at  | dateAgo}}</p>
 										
 									</ion-label>
@@ -184,12 +185,17 @@
 									
 									<!-- </div> -->
 
-									<span style="cursor:pointer;" (click)="viewPost(item)" class="servcs-badge" *ngIf="item.category != ''">{{item.category}}<small *ngIf="item.sub_category != ''"><ion-icon name="chevron-forward-outline"></ion-icon> {{item.sub_category}}</small></span>
+									<span style="cursor:pointer;" (click)="viewPost(item)" class="servcs-badge desshow" *ngIf="item.category != ''">{{item.category}}<small *ngIf="item.sub_category != ''"><ion-icon name="chevron-forward-outline"></ion-icon> {{item.sub_category}}</small></span>
+
 								</ion-item>
 								
 							</div>
+
 							<div class="post-content" style="position: relative;cursor:pointer;" (click)="viewPost(item)">
+								
+
 								<h6>{{item.title}}</h6>
+								
 								<p style="margin-right: 35px;" >{{item.description}}</p>
 
 								<!--ng-container *ngIf="item?.type == 'Words'">
@@ -197,6 +203,9 @@
 									<ion-icon class="heart-icon weblink-icon" name="bookmark" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)" style="    bottom: 0%"></ion-icon>
 								</ng-container-->
 							</div>
+
+						
+
 
 							<div *ngIf="errors.indexOf(item.web_link) == -1"  style="cursor:pointer;">
 								<!--div weblink-sec>

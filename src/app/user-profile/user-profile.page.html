@@ -88,10 +88,11 @@
 					 </ion-avatar>
 					<ion-label style="cursor:pointer;">
 					<h2 (click)="viewUser(item)">{{item.user_name}}</h2>
+					<span style="cursor:pointer;" (click)="viewPost(item)" class="mobshow" *ngIf="item.category != ''">{{item.category}}<small *ngIf="item.sub_category != ''"><ion-icon name="chevron-forward-outline"></ion-icon> {{item.sub_category}}</small></span>
 					<p (click)="viewUser(item)">{{item.created_at  | dateAgo}}</p>
 					</ion-label>
 					<!-- <ion-icon class="icon-dots" name="ellipsis-vertical"></ion-icon> -->
-					<span style="cursor:pointer;" (click)="viewPost(item)" class="servcs-badge" *ngIf="item.category != ''">{{item.category}}<small *ngIf="item.sub_category != ''"><ion-icon name="chevron-forward-outline"></ion-icon> {{item.sub_category}}</small></span>
+					<span style="cursor:pointer;" (click)="viewPost(item)" class="servcs-badge desshow" *ngIf="item.category != ''">{{item.category}}<small *ngIf="item.sub_category != ''"><ion-icon name="chevron-forward-outline"></ion-icon> {{item.sub_category}}</small></span>
 				</ion-item>
 			</div>
 			<div (click)="viewPost(item)" class="post-content" style="position: relative; cursor:pointer;">

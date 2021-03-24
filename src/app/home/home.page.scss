@@ -36,6 +36,7 @@ display:none!important;
 }
 
 
+
 ion-content
 {
 
@@ -150,6 +151,7 @@ ion-list {
 	/*Search Css Start*/
 	@media only screen and (max-width:767px)
 	{
+	
 		[sortbymobcat]
 		{
 		       --min-height: 40px;
@@ -329,9 +331,11 @@ padding: 30px 15px 20px;
 				overflow: hidden;
 				/*Category Css Start*/
 				 @media only screen and (max-width:767px)
-						{max-width:80px;
-						font-size: 11px;
+						{
+							// max-width:80px;
+						    font-size: 11px;
 						}
+
 				/*Category Css Start*/
 				small
 				{
@@ -350,7 +354,7 @@ padding: 30px 15px 20px;
 						text-overflow: ellipsis;
 						overflow: hidden;
 						display: inherit;
-						max-width: 55px;
+						// max-width: 55px;
 						}
 						  /*Sub Category Css Ends*/
 				}
@@ -535,7 +539,7 @@ padding: 30px 15px 20px;
 	ion-icon 
 	{
 		font-size: 18px;
-		padding: 4px 0px 0px;
+		// padding: 4px 0px 0px;
 		margin-right: 6px;
 	}	
 	.list-post-edit 
@@ -650,5 +654,4 @@ padding: 30px 15px 20px;
 	}
 	/*Sort Icon Css Ends*/
 }
-
 

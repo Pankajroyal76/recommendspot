@@ -97,6 +97,7 @@
 					 </ion-avatar>
 					<ion-label style="cursor:pointer;">
 					<h2>{{item.user_name}}</h2>
+					<span  style="cursor:pointer;" (click)="viewPost(item)" class="mobshow" *ngIf="item.category != ''">{{item.category}}<small *ngIf="item.sub_category != ''"><ion-icon name="chevron-forward-outline"></ion-icon> {{item.sub_category}}</small></span>  
 					<p>{{item.created_at  | dateAgo}}</p>
 					</ion-label>
 					<!--ion-icon class="icon-dots" name="ellipsis-vertical" *ngIf="userId == item.user_id" (click)="openUpdate(i)"></ion-icon>
@@ -105,7 +106,8 @@
 					<li> <a href="javascript:void(0)" (click)="editPost(item, i)">Edit</a> </li>
 					<li> <a  (click)="presentAlertConfirm(item, i)" href="javascript:void(0)">Delete</a> </li>
 					</ul-->
-					<span  style="cursor:pointer;" (click)="viewPost(item)" class="servcs-badge" *ngIf="item.category != ''">{{item.category}}<small *ngIf="item.sub_category != ''"><ion-icon name="chevron-forward-outline"></ion-icon> {{item.sub_category}}</small></span>  
+					<span  style="cursor:pointer;" (click)="viewPost(item)" class="servcs-badge desshow" *ngIf="item.category != ''">{{item.category}}<small *ngIf="item.sub_category != ''"><ion-icon name="chevron-forward-outline"></ion-icon> {{item.sub_category}}</small></span>  
+
 					<!-- <ion-icon class="icon-dots" name="ellipsis-vertical"></ion-icon> -->
 				</ion-item>
 			</div>

@@ -3,6 +3,17 @@ ion-content{
 [categorytab]
 {    max-width: 600px;
     margin: 0 auto;
+
+	.catdic
+	{
+		background-color: #fff;
+		padding: 8px;
+		line-height: inherit;
+		display: block;
+		font-size: 13px;
+		border-radius: 5px;
+		margin-bottom: 10px;
+	}
  ion-segment {
     background:#ffffff;
     border-radius: 30px;
