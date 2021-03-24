@@ -390,7 +390,7 @@
 		</ion-button>
 	</div>
 </div>
-<div class="follow-category" *ngIf="posts?.length == 0 && is_response == true && profiletab == 'Saved'">
+<div class="follow-category" *ngIf="posts?.length == 0 && is_response == true && (profiletab == 'Saved' || profiletab == 'Today')">
 	<div followimg>
 	<img style="max-width: 100%;" src="assets/img/nodata.png"/>
 		

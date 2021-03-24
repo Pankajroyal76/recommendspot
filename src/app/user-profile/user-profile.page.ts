@@ -171,7 +171,13 @@ export class UserProfilePage implements OnInit {
 
   	get_profile(){
 
-    this.add_user_type = JSON.parse(localStorage.getItem('item')).add_user_type;
+    if(this.errors.indexOf(localStorage.getItem('item')) >= 0){
+        this.add_user_type = "user";
+    }else{
+      this.add_user_type = JSON.parse(localStorage.getItem('item')).add_user_type;
+    }
+
+    
 
 	 	let dict ={
 	      _id: this.userId,

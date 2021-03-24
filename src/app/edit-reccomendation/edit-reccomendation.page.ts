@@ -72,6 +72,18 @@ export class EditReccomendationPage implements OnInit {
   	ngOnInit() {
   	}
 
+  	onSegmentChanged(event){
+
+  		console.log(event.detail.value);
+  		if(event.detail.value == 'Photo'){
+
+  		}else if(event.detail.value == 'Website'){
+  		
+  		}else{
+
+  		}
+  	}
+
   	//define the validators for form fields
   	createForm(){
 	    this.authForm = this.formBuilder.group({
@@ -126,20 +138,26 @@ export class EditReccomendationPage implements OnInit {
 
   	typeChange(type){
   		if(type == 'Photo'){
-  			this.web_link = '';
+  			this.authForm.patchValue({ web_link : ''});
   		}else if(type == 'Website'){
   			this.live_image_url = '';
   			this.is_live_image_updated = false;
   			this.imgBlob = '';
   			this.live_file_name = '';
   			this.image = '';
+  			this.image_file = '';
+			this.image_url = '';
+			this.is_live_image_updated = false;
   		}else{
-  			this.web_link = '';
+  			this.authForm.patchValue({ web_link : ''});
   			this.live_image_url = '';
   			this.is_live_image_updated = false;
   			this.imgBlob = '';
   			this.live_file_name = '';
   			this.image = '';
+  			this.image_file = '';
+			this.image_url = '';
+			this.is_live_image_updated = false;
   		}
   	}
   	getimage(img){

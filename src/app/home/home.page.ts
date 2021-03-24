@@ -234,6 +234,7 @@ export class HomePage implements OnInit {
   		this.is_response = false;
 	    this.posts = [];
 	    this.page_number = 1;
+      this.apiService.presentLoading();
   		this.getAllReccomdations(false, '');
   	}
 
@@ -267,7 +268,7 @@ export class HomePage implements OnInit {
 	    };
 	    console.log(dict)
 	    if(this.counter == 0){
-	    	 this.apiService.presentLoading();
+	    	// this.apiService.presentLoading();
 	    }
       if(this.counter == 4){
         // this.apiService.presentLoading();
