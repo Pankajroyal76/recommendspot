@@ -46,6 +46,7 @@
 <ion-content class="ion-padding">
 <div container>
 <div categorytab>
+	<span>Follow categories and people you are interested into discover recommendations in your newsfeed.</span>
   <ion-segment [(ngModel)]="categorytab">
   		<ion-segment-button value="category">
   		  Category
@@ -106,14 +107,14 @@
 		    <ion-row>	
 				<ion-col size-lg="6" size-md="6"  size-sm="12" size="12" *ngFor="let user of users; let i = index;">
 				   <ion-item lines="none">
-				   <ion-avatar>
+				   <ion-avatar style="cursor: pointer;" (click)="viewUser(user)">
 
-					<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user.image) == -1 && getimage(user.image) == true" src="{{user.image}}">
-			        <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user.image) == -1 && getimage(user.image) == false" src="{{IMAGES_URL + '/images/' + user.image}}">
+					<img *ngIf="errors.indexOf(user.image) == -1 && getimage(user.image) == true" src="{{user.image}}">
+			        <img *ngIf="errors.indexOf(user.image) == -1 && getimage(user.image) == false" src="{{IMAGES_URL + '/images/' + user.image}}">
 			       	<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user.image) >= 0" src="assets/img/default.png">
 
 				   </ion-avatar>
-						<ion-label>{{user.name}} </ion-label>
+						<ion-label (click)="viewUser(user)"  style="cursor: pointer;"  >{{user.name}} </ion-label>
 					 	<ion-buttons (click)="follow_unfollow_user(user, '1', i)" *ngIf="user.isFriend == 0">
 					   		<ion-icon name="person-add-outline"></ion-icon>
 					 	</ion-buttons>

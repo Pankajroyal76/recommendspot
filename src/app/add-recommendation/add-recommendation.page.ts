@@ -208,6 +208,8 @@ export class AddRecommendationPage implements OnInit {
   	}
 
   	yourFunction(event){
+
+  		this.subcategories = [];
   		console.log(event);
   		this.getSubCategories(this.authForm.value.category);
   	}

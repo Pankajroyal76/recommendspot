@@ -61,14 +61,18 @@
 			</ion-item> -->
 			<form [formGroup]="authForm"  >
 				<ion-row>
-					<ion-col  size="10" size-lg="12"  style="margin: 0;padding: 0;">
-						<ion-searchbar placeholder="Search here..." formControlName="keyword">
+					<ion-col  size="12" size-lg="12"  style="margin: 0;padding: 0;">
+						<ion-searchbar class="ellipsis" placeholder="Search category,genres,title..." formControlName="keyword" sortbyPhn>
+
+						</ion-searchbar>
+
+						<ion-searchbar class="ellipsis" placeholder="Search category,genres,title,description,name..." formControlName="keyword" sortbyWeb>
 
 						</ion-searchbar>
 					</ion-col>
-					<ion-col  size="2" style="margin: 0;padding: 0;" sortbyPhn>
+					<!-- <ion-col  size="2" style="margin: 0;padding: 0;" sortbyPhn>
 						<ion-icon class="icon-dots sorticon" name="funnel-outline" style="float: right;" (click)="presentAlertRadio()"></ion-icon>
-					</ion-col>
+					</ion-col> -->
 				</ion-row>
 				
 				
@@ -96,7 +100,7 @@
 				</ion-select>
 			</ion-item>
  -->	
- 		<ion-item lines="none" sortbyPhn sortbymobcat (click)="presentAlert()">
+ 		<!-- <ion-item lines="none" sortbyPhn sortbymobcat (click)="presentAlert()">
 
 
 	 		<div class="categories">
@@ -105,7 +109,7 @@
 					<div><span *ngFor="let doc of categoriesCheck"><span *ngIf="doc.checked == true">{{doc.name}}<span *ngIf="categoriesCheck?.length > 1">,</span></span></span></div>
 				</ng-container>
 			</div>
-		</ion-item>
+		</ion-item> -->
           <div btnfollow class="ion-hide-md-up">
 		     <ion-button fill="outline" shape="round" routerLink="/category" expand="full">
 			Follow Category / People
@@ -131,7 +135,7 @@
 					</ion-segment-button>
 				</ion-segment>			
 			</ion-col>
-			<ion-col size="4" mobile-none>
+			<!-- <ion-col size="4" mobile-none>
 			    <div category-sec>
 					<ion-list>
 					    <h3 category-head>All Categories</h3>
@@ -142,8 +146,8 @@
 						
 					</ion-list> 					
 				</div>
-			</ion-col>
-			<ion-col size="8" moble-width100>
+			</ion-col> -->
+			<ion-col size="12" moble-width100>
 				<!--ion-segment [(ngModel)]="profiletab" (ionChange)="onSegmentChange()" >
 					<ion-segment-button value="Basic">
 						For You

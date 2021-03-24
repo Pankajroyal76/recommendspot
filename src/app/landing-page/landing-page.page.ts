@@ -3,6 +3,12 @@ import { ApiserviceService } from '../services/apiservice.service';
 import { GlobalFooService } from '../services/globalFooService.service';
 import { config } from '../services/config';
 import { Router } from '@angular/router';
+import { Platform, MenuController } from '@ionic/angular';
+import { AngularFireAuth } from 'angularfire2/auth';
+import * as firebase from 'firebase/app';
+import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
+
 
 @Component({
   selector: 'app-landing-page',
@@ -46,6 +52,9 @@ export class LandingPagePage implements OnInit {
           }
       }
   }
+
+  fcm_token: any;
+
   hide() {
     this.hideMe = !this.hideMe;
   }
@@ -59,7 +68,7 @@ export class LandingPagePage implements OnInit {
   categoriesCheck = [];
   categoriesChecked = [];
 
-  constructor(public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService) { 
+  constructor(public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService, private platform: Platform, public fireAuth: AngularFireAuth, private fb: Facebook, private googlePlus: GooglePlus) { 
 
   }
 
@@ -188,4 +197,188 @@ export class LandingPagePage implements OnInit {
       this.router.navigate(['/tabs/home']);
     }
   }
+
+  //Facebook login
+  facebookLogin(){
+      if (this.platform.is('cordova')) {  
+        this.fb.login(['public_profile', 'email']).then((res: FacebookLoginResponse) => 
+          this.fb.api('me?fields=id,name,email,first_name,picture.width(720).height(720).as(picture_large)', []).then(profile => {
+            console.log('profile', profile);     
+              if(this.errors.indexOf(profile) == -1){
+                  let dict ={
+                    name: profile['name'],
+                    email: profile['email'],
+                    password: '',
+                    medium: 'facebook',
+                    social_id: profile['id'],
+                    image: profile['picture_large']['data']['url'],
+                    fcm_token: this.fcm_token,
+                    contact: '',
+                    location: '',
+                    bio: ''
+                };
+                  console.log('dict', dict);
+                  this.finalSignup(dict); 
+              
+            }else{
+                this.apiService.presentToast('Error,Please try after some time', 'danger')
+            }
+          })
+          ).catch(e => {
+            this.apiService.presentToast( 'Error,Please try after some time', 'danger');
+            console.log(e)
+          });
+      }else{
+        this.fbLogin();
+      }
+  };
+
+  fbLogin() {
+        //this.loginType = 'Login with Facebook'
+       // return this.fireAuth.auth.signInWithPopup(new firebase.auth.FacebookAuthProvider());
+
+        const provider = new firebase.auth.FacebookAuthProvider();
+      this.fireAuth.auth.signInWithPopup(provider)
+        .then((result) => {
+          console.log('Signin result', result);
+          // if(this.errors.indexOf(result) == -1){
+              let dict ={
+                name: result.additionalUserInfo.profile['name'],
+                email: result.additionalUserInfo.profile['email'],
+                password: '',
+                medium: 'facebook',
+                social_id: result.additionalUserInfo.profile['id'],
+                image: result.additionalUserInfo.profile['picture']['data']['url'],
+                fcm_token: this.fcm_token,
+                contact: '',
+                location: '',
+                bio: '',
+            };
+              console.log('dict', dict);
+              this.finalSignup(dict); 
+
+          // }else{
+         //     this.apiService.presentToast('Error,Please try after some time', 'danger')
+          // }
+
+          })
+        .catch((error) => console.error('Sigin error', error));
+    };
+
+
+   //Google social login 
+  googleLogin(){
+      console.log(this.googlePlus)
+      if (this.platform.is('cordova')) {  
+        this.googlePlus.login({'scopes': 'profile'})
+        .then(profile => {
+            console.log(profile);
+            if(this.errors.indexOf(profile) == -1){
+                let dict ={
+                  name: profile['displayName'],
+                  email: profile['email'],
+                  password: '',
+                  medium: 'google',
+                  social_id: profile['userId'],
+                  image: !profile['imageUrl'] ? '' : profile['imageUrl'],
+                  fcm_token: this.fcm_token,
+                  contact: '',
+                  location: '',
+                  bio: '',
+                };
+                console.log('dict', dict);
+
+                // var check_user = {
+               //   medium: 'google',
+               //   social_id: profile['id']
+                // }
+                // this.apiService.postData(check_user,'check_user_existance').subscribe((result) => {
+               //   console.log(result);
+                //   if(result.status == 0){
+                    
+                //   }else{
+                    
+                //   }
+                // });
+                
+              this.finalSignup(dict);             
+            }
+
+        })
+        .catch(err => {
+          console.error(err)
+          this.apiService.presentToast( 'Error,Please try after some time', 'danger');
+        });
+    }else{
+      this.gglLogin();
+    }
+  };
+
+  gglLogin(){
+        //this.loginType = 'Login with Facebook'
+       // return this.fireAuth.auth.signInWithPopup(new firebase.auth.FacebookAuthProvider());
+
+        const provider = new firebase.auth.GoogleAuthProvider();
+      this.fireAuth.auth.signInWithPopup(provider)
+        .then((result) => {
+          console.log('Signin result', result);
+          // if(this.errors.indexOf(result) == -1){
+              let dict ={
+                  name: result.additionalUserInfo.profile['name'],
+                  email: result.additionalUserInfo.profile['email'],
+                  password: '',
+                  medium: 'google',
+                  social_id: result.additionalUserInfo.profile['id'],
+                  image: !result.additionalUserInfo.profile['picture'] ? '' : result.additionalUserInfo.profile['picture'],
+                  fcm_token: this.fcm_token,
+                  contact: '',
+                  location: '',
+                  bio: '',
+                };
+              console.log('dict', dict);
+              this.finalSignup(dict); 
+
+          // }else{
+         //     this.apiService.presentToast('Error,Please try after some time', 'danger')
+          // }
+
+          })
+        .catch((error) => console.error('Sigin error', error));
+    };
+
+  finalSignup(dict){
+      this.apiService.presentLoading();
+      // this.fcm.getToken().then(token => {
+      this.apiService.postData(dict,'social_login').subscribe((result) => {
+        this.apiService.stopLoading();
+
+        if(result.status == 1){
+          
+
+        
+
+        localStorage.setItem('userId', result.data._id);
+          localStorage.setItem('IsLoggedIn', 'true');
+          localStorage.setItem('profile',JSON.stringify(result.data));
+          localStorage.setItem('user_name', result.data.name);
+        localStorage.setItem('user_image', result.data.image);
+        localStorage.setItem('user_email', result.data.email);
+        localStorage.setItem('user_medium', dict.medium);
+        localStorage.setItem('first_login', result.data.first_login);
+        this.globalFooService.publishSomeData({
+              foo: {'data': result.data, 'page': 'profile'}
+          });
+          this.apiService.presentToast('Login successfully!', 'success');
+          this.apiService.navCtrl.navigateRoot('tabs/home');
+        }
+        else{
+          this.apiService.presentToast('Error while signing up! Please try later', 'danger');
+        }
+      },
+      err => {
+        this.apiService.stopLoading();
+          this.apiService.presentToast('Technical error,Please try after some time', 'danger');
+      });
+      // });
+  };
 }

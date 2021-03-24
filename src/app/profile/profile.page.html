@@ -62,7 +62,7 @@
 		<ion-col size="3">
 			<div class="folow-mn">
 			    <ion-icon class="ion-hide-sm-down" name="document-text-outline"></ion-icon>
-			    <h3><span>10k</span><br/>Posts</h3>
+			    <h3><span>{{data?.post?.length}}</span><br/>Posts</h3>
 			</div>
 		</ion-col>
 		<ion-col size="3">
@@ -77,8 +77,8 @@
 			    <h3><span>{{profile?.following}}</span><br/>Following</h3>			
 			</div>
 		</ion-col>
-		<ion-col size="12" class="ion-hide-md-up">
-		  <ion-button shape="round" size="full" fill="outline" color="secondary">
+		<ion-col size="12" class="ion-hide-md-up" style="cursor: poniter;">
+		  <ion-button shape="round" size="full" fill="outline" color="secondary" routerLink="/profile-setting/{{user_id}}">
 		     Edit Profile
 		  </ion-button>
 		</ion-col>

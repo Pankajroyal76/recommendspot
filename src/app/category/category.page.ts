@@ -96,6 +96,7 @@ export class CategoryPage implements OnInit {
 	      if(result.status == 1){
 	        this.categories[index].cat_follow = parseInt(status);	        
 	       this.apiService.presentToast(result.error,'success');
+         localStorage.setItem('first_login', 'true');
          this.globalFooService.publishSomeData({
               foo: {'data': '', 'page': 'updateprofile'}
           });
@@ -123,6 +124,7 @@ export class CategoryPage implements OnInit {
 	     console.log(result.data)
 	      if(result.status == 1){
 	        this.categories[index].sub_cat[sub_index].sub_cat_follow = parseInt(status);	  
+          localStorage.setItem('first_login', 'true');
           this.globalFooService.publishSomeData({
               foo: {'data': '', 'page': 'updateprofile'}
           });      
@@ -136,6 +138,13 @@ export class CategoryPage implements OnInit {
 	        this.apiService.presentToast('Technical error,Please try after some time','success');
 	    });
   	}
+
+    viewUser(item){
+
+      //localStorage.setItem('item', JSON.stringify(item));
+      localStorage.setItem('clicked_user_id', item._id);
+      this.router.navigate(['/user-profile'])
+    }
 
 
   	

@@ -228,6 +228,7 @@ export class EditReccomendationPage implements OnInit {
 
   	yourFunction(event){
   		console.log(event);
+  		this.subcategories = [];
   		localStorage.setItem('category_id', event.detail.value);
   		this.getSubCategories(localStorage.getItem('category_id'), 'change_subcat');
   	}

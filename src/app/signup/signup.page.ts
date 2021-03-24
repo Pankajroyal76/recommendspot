@@ -100,6 +100,7 @@ export class SignupPage implements OnInit {
   			localStorage.setItem('user_image', result.data.image);
   			localStorage.setItem('user_email', result.data.email);
   			localStorage.setItem('user_medium', result.data.medium);
+  			localStorage.setItem('first_login', result.data.first_login);
 	      	this.globalFooService.publishSomeData({
             	foo: {'data': result.data, 'page': 'profile'}
         	});
@@ -276,6 +277,7 @@ export class SignupPage implements OnInit {
   			localStorage.setItem('user_image', result.data.image);
   			localStorage.setItem('user_email', result.data.email);
   			localStorage.setItem('user_medium', dict.medium);
+  			localStorage.setItem('first_login', result.data.first_login);
   			this.globalFooService.publishSomeData({
             	foo: {'data': result.data, 'page': 'profile'}
         	});

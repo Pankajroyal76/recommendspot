@@ -60,14 +60,19 @@ export class HomePage implements OnInit {
       this.user_id = localStorage.getItem('userId');
       var self = this;
   		this.globalFooService.getObservable().subscribe((data) => {
-            console.log('Data received', data);
+            console.log('Data received', data, localStorage.getItem('first_login'));
             self.menuCtrl.enable(true);
             self.counter = 1;
-            self.page_number = 1;
-            self.is_response = false;
-            self.posts = [];
-            self.getAllReccomdations(false, '');
-            self.updateInfo(data);
+            if(localStorage.getItem('first_login') === 'false'){
+              self.router.navigate(['/category']);
+            }else{
+              self.page_number = 1;
+              self.is_response = false;
+              self.posts = [];
+              self.getAllReccomdations(false, '');
+              self.updateInfo(data);
+            }
+            
         });
        
        
@@ -204,13 +209,19 @@ export class HomePage implements OnInit {
   	}
 
   	ionViewDidEnter(){
-  		this.userId = '';
+
+      if(localStorage.getItem('first_login') === 'false'){
+        this.router.navigate(['/category']);
+      }else{
+        this.userId = '';
+      
+        this.counter = 0;
+        this.is_response = false;
+        this.posts = [];
+        this.page_number = 1;
+        this.getCategories();
+      }
   		
-  		this.counter = 0;
-  		this.is_response = false;
-	    this.posts = [];
-	    this.page_number = 1;
-      this.getCategories();
 	    
 	    this.menuCtrl.enable(true);
 	  
