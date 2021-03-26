@@ -48,9 +48,9 @@
 		 <img *ngIf="errors.indexOf(item.sender_image) >= 0" src="assets/img/default.png">
 	 </ion-avatar>
 	 <ion-label>
-	 <p *ngIf="item.noti_type == 'add post'">{{item.sender_name}} added a new post.</p>
-	 <p *ngIf="item.noti_type == 'add like'">{{item.sender_name}} liked your post.</p>
-	 <p *ngIf="item.noti_type == 'add comment'">{{item.sender_name}} commented on your post.</p>
+	 <p *ngIf="item.noti_type == 'add post'">{{item.sender_name}} added a new post: <b> {{errors.indexOf(item.item.title) == -1 ? item.item.title : item.item.description}}</b></p>
+	 <p *ngIf="item.noti_type == 'add like'">{{item.sender_name}} liked your post: <b> {{errors.indexOf(item.item.title) == -1 ? item.item.title : item.item.description}}</b></p>
+	 <p *ngIf="item.noti_type == 'add comment'">{{item.sender_name}} commented on your post: <b> {{errors.indexOf(item.item.title) == -1 ? item.item.title : item.item.description}}</b></p>
 	 <p *ngIf="item.noti_type == 'follow user'">{{item.sender_name}} started following you.</p>
 	 <ion-note><ion-icon name="time-outline"></ion-icon> {{item.created_on | dateAgo }}</ion-note>
 	 </ion-label>

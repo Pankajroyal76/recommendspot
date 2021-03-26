@@ -181,7 +181,7 @@ export class UserProfilePage implements OnInit {
 
 	 	let dict ={
 	      _id: this.userId,
-        add_user_type: JSON.parse(localStorage.getItem('item')).add_user_type
+        add_user_type: this.add_user_type
 	    };
 	    console.log(dict)
 
@@ -206,7 +206,7 @@ export class UserProfilePage implements OnInit {
          this.apiService.presentLoading();
       }
      
-      this.apiService.postData({'userId': localStorage.getItem('clicked_user_id'), 'loggedUserId': localStorage.getItem('userId') , add_user_type: JSON.parse(localStorage.getItem('item')).add_user_type},'influencerProfile').subscribe((result) => {
+      this.apiService.postData({'userId': localStorage.getItem('clicked_user_id'), 'loggedUserId': localStorage.getItem('userId') , add_user_type: this.add_user_type},'influencerProfile').subscribe((result) => {
         this.apiService.stopLoading();
         console.log(result)
         if(result.status == 1){
