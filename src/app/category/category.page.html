@@ -15,7 +15,7 @@
 			<ion-select-option value="{{cat._id}}" *ngFor="let cat of categories"> {{cat.name}} </ion-select-option>
 			
 		</ion-select-->
-		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge color="secondary">{{noti_count}}</ion-badge></a>
+		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge color="secondary"><span *ngIf="noti_count != 0">{{noti_count}}</span></ion-badge></a>
 		<span proImg>
 			<!-- <img src="assets/img/user4.jpg" alt=""> -->
 

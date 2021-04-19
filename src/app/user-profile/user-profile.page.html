@@ -9,7 +9,7 @@
 			 
 		</ul>
 		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon>
-		<ion-badge color="secondary">{{noti_count}}</ion-badge></a>
+		<ion-badge color="secondary"><span *ngIf="noti_count != 0">{{noti_count}}</span></ion-badge></a>
 		<span proImg *ngIf="errors.indexOf(user_id) == -1">
 			<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
 	       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
@@ -87,10 +87,10 @@
 		</ion-col> -->
 	</ion-row>
 	<div class="profileDetails">
-		<p><ion-icon name="clipboard-outline"></ion-icon> {{profile?.bio}}</p>
-		<p>
-			<ion-icon name="location-outline"></ion-icon>{{profile?.location}} 
-			<ion-icon class="lineeot" name="link-outline"></ion-icon>{{profile?.website}}
+		<p *ngIf="errors.indexOf(profile.bio) == -1"><ion-icon name="clipboard-outline"></ion-icon> {{profile?.bio}}</p>
+		<p *ngIf="errors.indexOf(profile.location) == -1 || errors.indexOf(profile.website) == -1">
+			<ion-icon name="location-outline" *ngIf="errors.indexOf(profile.location) == -1"></ion-icon>{{profile?.location}} 
+			<ion-icon class="lineeot" name="link-outline" *ngIf="errors.indexOf(profile.website) == -1"> </ion-icon>{{profile?.website}}
 		</p>
 
 	</div>
@@ -216,9 +216,17 @@
 							</div>
 
 							<ion-row style="cursor:pointer;">
-								<div class="savelater">
+								<!-- <div class="savelater">
 									<ion-icon   class="heart-fav" name="bookmark-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
 									<ion-icon  style="cursor:pointer;" class="heart-fav fav-save" name="bookmark" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon> Save For Later
+								</div> -->
+								<div class="savelater" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)">
+									<ion-icon   class="heart-fav" name="bookmark-outline" ></ion-icon>
+									 Save For Later
+								</div>
+								<div class="savelater" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)">
+									
+									<ion-icon  style="cursor:pointer;" class="heart-fav fav-save" name="bookmark"></ion-icon> <b>Save For Later</b>
 								</div>
 							</ion-row>
 

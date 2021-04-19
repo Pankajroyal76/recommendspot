@@ -52,6 +52,7 @@ export class AppComponent {
   errors = config.errors;
   selectedIndex: any;
   showBtn: boolean = false;
+  noti_count = '0';
 
   constructor(
     private platform: Platform,
@@ -108,6 +109,7 @@ export class AppComponent {
       this.statusBar.backgroundColorByHexString('#f16334');
       this.splashScreen.hide();
       localStorage.setItem('categoriesCheck', JSON.stringify([]));
+      this.noti_count = localStorage.getItem('notiCount');
       if (!this.apiService.gettoken()) {
         //this.router.navigate([""]);
 		    this.router.navigate(["landing-page"]);

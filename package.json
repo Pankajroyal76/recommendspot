@@ -22,6 +22,7 @@
     "@angular/pwa": "^0.1002.0",
     "@angular/router": "~9.1.6",
     "@angular/service-worker": "~9.1.6",
+    "@angular/youtube-player": "^11.2.9",
     "@capacitor/core": "2.1.2",
     "@ionic-native/branch-io": "^5.28.0",
     "@ionic-native/camera": "^5.28.0",

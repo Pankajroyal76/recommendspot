@@ -11,6 +11,8 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <access origin="*" subdomains="true" /> 
+    <allow-navigation href="*://*.youtube.com/*" /> 
     <preference name="ScrollEnabled" value="false" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashMaintainAspectRatio" value="true" />
@@ -19,6 +21,7 @@
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
     <preference name="AllowInlineMediaPlayback" value="true" />
+    
     <branch-config>
         <branch-key value="key_test_jcR8RwwmzyfU5xROVJP6yhedBznHRjqY" />
         <uri-scheme value="Favreet" />

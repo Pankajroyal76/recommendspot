@@ -5,14 +5,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { HomePageRoutingModule } from './home-routing.module';
-
+import { YouTubePlayerModule } from "@angular/youtube-player";
 import { HomePage } from './home.page';
 import { CommonPipeModule } from '../commonPipe.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
+    FormsModule,YouTubePlayerModule,
     IonicModule,
     CommonPipeModule,
     HomePageRoutingModule, 

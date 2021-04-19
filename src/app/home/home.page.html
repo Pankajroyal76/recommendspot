@@ -19,7 +19,7 @@
 
 		<a href="javascript:void(0)" routerLink="/tabs/notification" noti>
 				<ion-icon name="notifications-sharp"></ion-icon>
-				<ion-badge color="secondary">{{noti_count}}</ion-badge>
+				<ion-badge color="secondary"><span *ngIf="noti_count != 0">{{noti_count}}</span></ion-badge>
 		</a>
 
 		<span proImg>
@@ -160,6 +160,8 @@
 							Saved
 						</ion-segment-button>
 					</ion-segment-->
+
+
 					<div>
 
 						<ion-list *ngIf="posts?.length > 0 && is_response == true">
@@ -235,7 +237,14 @@
 													<img *ngIf="youtube_parser(item.web_link) == false" src="{{item.web_link_content?.data.image}}" />
 													<!-- {{getId(item.web_link)}} -->
 													<!-- getId(item.web_link) -->
-
+													<!-- <youtube-player *ngIf="youtube_parser(item.web_link) != false && i == index" 
+													  videoId="GYAB4Td62zI" 
+													  suggestedQuality="highres" 
+													  [height]="250" 
+													  [width]="500" 
+													  [startSeconds]="4"
+													  [endSeconds]="8">
+													</youtube-player> -->
 													<iframe *ngIf="youtube_parser(item.web_link) != false && i == index" style="width: 100%" height="315" [src]="sanitizer.bypassSecurityTrustResourceUrl(item.web_link)" frameborder="0" allowfullscreen></iframe>
 
 												</ion-col>
@@ -294,9 +303,13 @@
 									</div>
 
 									<ion-row style="cursor:pointer;">
-										<div class="savelater">
-											<ion-icon   class="heart-fav" name="bookmark-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
-											<ion-icon  style="cursor:pointer;" class="heart-fav fav-save" name="bookmark" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)"></ion-icon> Save For Later
+										<div class="savelater" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)">
+											<ion-icon   class="heart-fav" name="bookmark-outline" ></ion-icon>
+											 Save For Later
+										</div>
+										<div class="savelater" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)">
+											
+											<ion-icon  style="cursor:pointer;" class="heart-fav fav-save" name="bookmark"></ion-icon> <b>Save For Later</b>
 										</div>
 									</ion-row>
 

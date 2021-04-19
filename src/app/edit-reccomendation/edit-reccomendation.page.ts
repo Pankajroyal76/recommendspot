@@ -59,6 +59,7 @@ export class EditReccomendationPage implements OnInit {
 	plat_value = 'Others';
 	plat_selected_value = '';
 	noti_count = localStorage.getItem('notiCount');
+	selected_cat: any;
 
  	constructor(private ref: ChangeDetectorRef,public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, public location: Location, private globalFooService: GlobalFooService,private formBuilder: FormBuilder, public sanitizer:DomSanitizer, public loadingController: LoadingController) { 
   		
@@ -339,11 +340,14 @@ export class EditReccomendationPage implements OnInit {
   		this.counter = 0;
   		this.subcategories = [];
   		this.authForm.patchValue({
-  			sub_category: ''
+  			sub_category: '',
+  			platform: ''
   		})
   		localStorage.setItem('category_id', event.detail.value);
 
   		console.log(this.categories[this.categories.findIndex(x => x._id == event.detail.value)].name)
+  		this.selected_cat = this.categories[this.categories.findIndex(x => x._id == event.detail.value)].name;
+
 
   		if(this.categories[this.categories.findIndex(x => x._id == event.detail.value)].name === 'Movies' || this.categories[this.categories.findIndex(x => x._id == event.detail.value)].name === 'Shows/Series'){
 		    this.authForm.controls['platform'].setValidators([Validators.required]);              
@@ -460,7 +464,7 @@ export class EditReccomendationPage implements OnInit {
 		    }
   		}
 
-  		if(this.errors.indexOf(this.authForm.value.subcategory) >= 0 && this.subcategories.length > 0){
+  		if(this.errors.indexOf(this.authForm.value.sub_category) >= 0 && this.subcategories.length > 0){
 	    	return false;
 	    }
   		

@@ -59,6 +59,7 @@ export class AddRecommendationPage implements OnInit {
 	plat_value = 'Others';
 	plat_selected_value = '';
 	noti_count = localStorage.getItem('notiCount');
+	selected_cat: '';
 
   	constructor(private spinner: NgxSpinnerService,private ref: ChangeDetectorRef,public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, private globalFooService: GlobalFooService,private formBuilder: FormBuilder, public sanitizer:DomSanitizer, public loadingController: LoadingController) { 
 
@@ -344,6 +345,7 @@ export class AddRecommendationPage implements OnInit {
   			subcategory: ''
   		})
   		this.counter = 2;
+  		this.selected_cat = this.categories[this.categories.findIndex(x => x._id == event.detail.value)].name;
 
   		console.log(this.categories[this.categories.findIndex(x => x._id == event.detail.value)].name)
   		

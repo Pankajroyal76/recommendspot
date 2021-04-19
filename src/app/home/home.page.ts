@@ -1,5 +1,5 @@
 import { Component, OnInit , ElementRef, ViewChild, Renderer2,ChangeDetectorRef} from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ApiserviceService } from '../services/apiservice.service';
 import { GlobalFooService } from '../services/globalFooService.service';
 import { config } from '../services/config';
@@ -113,12 +113,67 @@ export class HomePage implements OnInit {
 
       this.index = index;
       this.play_video = true;
+      console.log(web_link.split('embed/')[1])
+      
+        // create youtube player
+        // var player, iframe;
+        //   player = new YT.Player('setContent', {
+        //     height: '390',
+        //     width: '640', 
+        //     videoId: 'Fzbe0bx0CFQ',
+        //     playerVars: {
+        //       controls: 0,
+        //       disablekb: 1
+        //     },
+        //     events: {
+        //       'onStateChange': this.onPlayerStateChange,
+        //       'onReady': this.onPlayerReady
+        //     }
+        //   }); 
+        //   document.getElementById('setContent').style.display = "block";
+        //   document.getElementById('iframe').src =  'https://www.youtube.com/embed/Fzbe0bx0CFQ';
+        //       document.getElementById('iframe').style.display = "block";
+             
+         
     }
 
-    youtube_parser(url){
+    // when video ends
+    onPlayerStateChange(event) { 
+      // let ptr = this;
+      let self = JSON.parse(localStorage.getItem('this'));
+      // // ptr.timestamp = event.target.getDuration();
+      // console.log(event, event.target.getDuration());
+    // if (event.data == YT.PlayerState.PLAYING) {
+   //       self.timestamp_callback(event);
+   //   }
+      event.target.playVideo(); 
+      console.log(event)
+        if(event.data === 0) {            
+           
+        }
+    }
+
+    
+
+  onPlayerReady(event) {
+
+      console.log('play = ', event)
+      event.target.playVideo();
+
+  }
+
+    getIframeYouTubeUrl(weblink: string): SafeResourceUrl {
+
+        var zz1 = weblink.lastIndexOf('/');
+        var zz2 = weblink.substring(zz1+1, weblink.length);
+        return this.sanitizer.bypassSecurityTrustResourceUrl(
+          "https://www.youtube.com/embed/" + zz2 + "?enablejsapi=1");
+    }
+
+     youtube_parser(url){
       var regExp = /^https?\:\/\/(?:www\.youtube(?:\-nocookie)?\.com\/|m\.youtube\.com\/|youtube\.com\/)?(?:ytscreeningroom\?vi?=|youtu\.be\/|vi?\/|user\/.+\/u\/\w{1,2}\/|embed\/|watch\?(?:.*\&)?vi?=|\&vi?=|\?(?:.*\&)?vi?=)([^#\&\?\n\/<>"']*)/i;
       var match = url.match(regExp);
-      return (match && match[1].length==11)? match[1] : false;
+      return  (match && match[1].length==11)? match[1] : false;
     }
 
     getId(url) {
