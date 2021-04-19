@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , ChangeDetectorRef} from '@angular/core';
 import { ApiserviceService } from '../services/apiservice.service';
 import { config } from '../services/config';
 import { Router } from '@angular/router';
@@ -59,7 +59,7 @@ export class PostPage implements OnInit {
 		this.hideMe = !this.hideMe;
 	}
 
-  	constructor(public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private menuCtrl: MenuController,private formBuilder: FormBuilder, private iab: InAppBrowser, private platform: Platform) { 
+  	constructor(private ref: ChangeDetectorRef,public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private menuCtrl: MenuController,private formBuilder: FormBuilder, private iab: InAppBrowser, private platform: Platform) { 
 
       this.createForm();
     }
@@ -229,6 +229,7 @@ export class PostPage implements OnInit {
     
       this.apiService.postData(dict,'categories').subscribe((result) => { 
         //this.apiService.stopLoading();
+        this.ref.detectChanges();
         console.log('this.categories', result.data)  
 
         for(var i = 0; i < result.data.length; i++){
@@ -287,6 +288,7 @@ export class PostPage implements OnInit {
     this.apiService.presentLoading();
     this.apiService.postData(dict,'getAllRecc').subscribe((result) => {
       	this.apiService.stopLoading();
+        this.ref.detectChanges();
       	console.log(result);
       	
       	this.is_response = true;

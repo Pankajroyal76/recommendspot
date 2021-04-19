@@ -4,17 +4,17 @@
 		<ul>
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
 			<li><a routerLink="/category" href="javascript:void(0)">Categories</a></li>
-			<li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
+			<li (click)="gotofollowing()"><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
 			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
 			 
 		</ul>
-		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon></a>
+		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge color="secondary">{{noti_count}}</ion-badge></a>
 		<span proImg>
 			<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
 	        <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
 	       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) >= 0" src="assets/img/default.png">
 
-			<p routerLink="/tabs/profile"> <span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
+			<p headerfixedheight routerLink="/tabs/profile"> <span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
 			<div profileDropdown>
 				<ul>
 					<li><a href="javascript:void(0)" routerLink="/profile-setting/{{user_id}}">Profile Settings</a></li>
@@ -29,7 +29,8 @@
 
 
   <ion-toolbar color="secondary">
-  <ion-back-button slot="start" (click)="dismiss()">
+  	<!-- (click)="dismiss()" -->
+  <ion-back-button slot="start" >
    </ion-back-button>
     <ion-title class="ion-text-center">Edit Recommendation</ion-title>
 	
@@ -51,7 +52,7 @@
 		<form [formGroup]="authForm" (keyup.enter)="add_recc()">
 			
 
-			<div form-group>
+			<!-- <div form-group>
 				<label>Type</label>
 				<ion-item lines="none">
 					<ion-label>
@@ -64,7 +65,7 @@
 						<ion-select-option value="Words"> Text Only   </ion-select-option>
 					</ion-select>
 				</ion-item>
-			</div>
+			</div> -->
 			<div form-group>
 				<label>Category</label>
 				<ion-item lines="none">
@@ -78,6 +79,37 @@
 				</ion-item>
 				<span error *ngIf="errors.indexOf(authForm.value.category) >= 0 && is_submit == true">Please choose category</span>
 			</div>
+
+			<div form-group >
+		 		<label>Platform</label>
+				<ion-item lines="none">
+					<ion-label>
+						<ion-icon name="layers-outline"></ion-icon>
+						<span style="display: none;">Platform</span>
+					</ion-label>
+					<ion-select interface="alert"  placeholder="Select"  formControlName="platform" (ionChange)="platformSelection($event)">
+						<ion-select-option value="{{doc._id}}" *ngFor="let doc of platforms; let i = index;"> {{doc.name}} </ion-select-option>
+					</ion-select>
+				</ion-item>
+				<span error *ngIf="errors.indexOf(authForm.value.platform) >= 0 && is_submit == true">Please choose platform</span>
+			</div>
+
+			<div class="flexdiv" form-group *ngIf="plat_selected_value == plat_value">
+				<!-- <ion-item lines="none">					
+					<ion-input rows="3" placeholder="Enter Other Platform" formControlName="platform_name"></ion-input>
+				</ion-item> -->
+
+			<ion-item class="ionitem" lines="none">					
+					<ion-input rows="3" placeholder="Enter Other Platform" formControlName="platform_name"></ion-input>
+
+				</ion-item>
+				<ion-button color="secondary" shape="round"  (click)="add_platform()">Add</ion-button>
+
+				
+				<span error *ngIf="errors.indexOf(authForm.value.platform_name) >= 0 && (is_submit == true || is_submit_platform == true)">Please enter other platform name</span>
+				
+			</div>
+
 			<div form-group>
 				<label>Sub Category</label>
 				<ion-item lines="none">
@@ -89,7 +121,7 @@
 						<ion-select-option value="{{doc._id}}" *ngFor="let doc of subcategories; let i = index;"> {{doc.name}} </ion-select-option>
 					</ion-select>
 				</ion-item>
-				<span error *ngIf="errors.indexOf(authForm.value.category) >= 0 && is_submit == true">Please choose sub category</span>
+				<span error *ngIf="errors.indexOf(authForm.value.sub_category) >= 0 && is_submit == true && subcategories?.length > 0">Please choose sub category</span>
 			</div>
 			<div form-group>
 		    	<label>Title</label>

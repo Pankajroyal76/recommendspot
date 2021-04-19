@@ -78,7 +78,7 @@ ion-item{
     min-height: 48px;--box-shadow: none;
     font-weight: 500;
     font-size: 15px;
-	margin-top: 25px;
+	margin-top: 0;
  }
  [add-recc] {
     border: 2px solid var(--ion-color-ltgrey);
@@ -111,11 +111,16 @@ ion-item{
 
 .linkcontent{
     border: solid 2px #f1f1f1;
-    padding: 10px;
+    padding: 0;
     margin-top: 10px;
     border-radius: 40px;
     position: relative;
+    overflow: hidden;
     ion-col{
+        img{
+            height: 118px;
+            object-fit: cover;
+        }
         p{
             margin:2px 15px;
         }
@@ -123,9 +128,33 @@ ion-item{
 }
 
 .linkcontentclose{
-    position: absolute;
+   position: absolute;
     float: right;
-    right: 40px;
+    right: 20px;
     font-size: 20px;
     z-index: 999;
+    top: 6px;
+    color: red;
+}
+
+.flexdiv
+{
+    display:flex;
+    align-items:center;
+    .ionitem{
+        min-width:86% !important;
+        ion-button{
+            margin-left:5px;
+        }
+    }
+}
+
+@media (max-width:767px)
+{
+    .flexdiv
+    {
+        .ionitem{
+            min-width:60% !important;
+        }
+    }
 }

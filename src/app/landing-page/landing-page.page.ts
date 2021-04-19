@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ApiserviceService } from '../services/apiservice.service';
 import { GlobalFooService } from '../services/globalFooService.service';
 import { config } from '../services/config';
@@ -24,15 +24,17 @@ export class LandingPagePage implements OnInit {
     slidesPerView: 1,
     spaceBetween: 0,
     speed: 1000,
-    loop:true,
-    autoplay:true,
+    loop:false,
+    autoplay:false,
+    onlyExternal: false,
+    noSwipingClass: 'swiper-no-swiping',
   }
   slideOpts1 = {
       slidesPerView: 3, 
       spaceBetween: 0,
-  	loop:true,
+  	loop:false,
   	speed: 1000,
-      autoplay:true,
+      autoplay:false,
       breakpoints: {
           1024: {
               slidesPerView: 3, // these don't work
@@ -68,7 +70,7 @@ export class LandingPagePage implements OnInit {
   categoriesCheck = [];
   categoriesChecked = [];
 
-  constructor(public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService, private platform: Platform, public fireAuth: AngularFireAuth, private fb: Facebook, private googlePlus: GooglePlus) { 
+  constructor(private ref: ChangeDetectorRef,public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService, private platform: Platform, public fireAuth: AngularFireAuth, private fb: Facebook, private googlePlus: GooglePlus) { 
 
   }
 
@@ -103,6 +105,7 @@ export class LandingPagePage implements OnInit {
       this.apiService.postData(dict,'categories').subscribe((result) => { 
         // this.apiService.stopLoading(); 
         console.log(result.data); 
+        this.ref.detectChanges();        
         this.categories = result.data;
         for(var i = 0; i < result.data.length; i++){
 
@@ -137,6 +140,7 @@ export class LandingPagePage implements OnInit {
       }
     
       this.apiService.postData(dict,'recentUsersListWeb').subscribe((result) => { 
+        this.ref.detectChanges();
         this.apiService.stopLoading(); 
         console.log(result.data); 
         this.users = result.data;
@@ -351,7 +355,7 @@ export class LandingPagePage implements OnInit {
       // this.fcm.getToken().then(token => {
       this.apiService.postData(dict,'social_login').subscribe((result) => {
         this.apiService.stopLoading();
-
+        this.ref.detectChanges();
         if(result.status == 1){
           
 
@@ -362,14 +366,24 @@ export class LandingPagePage implements OnInit {
           localStorage.setItem('profile',JSON.stringify(result.data));
           localStorage.setItem('user_name', result.data.name);
         localStorage.setItem('user_image', result.data.image);
-        localStorage.setItem('user_email', result.data.email);
+        if(this.errors.indexOf(result.data.email) >= 0){
+          localStorage.setItem('user_email', '');
+        }else{
+          localStorage.setItem('user_email', result.data.email);
+        }
         localStorage.setItem('user_medium', dict.medium);
         localStorage.setItem('first_login', result.data.first_login);
         this.globalFooService.publishSomeData({
               foo: {'data': result.data, 'page': 'profile'}
           });
           this.apiService.presentToast('Login successfully!', 'success');
-          this.apiService.navCtrl.navigateRoot('tabs/home');
+          //this.apiService.navCtrl.navigateRoot('tabs/home');
+          
+          if(result.data.first_login == true){
+            this.apiService.navCtrl.navigateRoot('tabs/home');
+          }else{
+            this.apiService.navCtrl.navigateRoot('/category');
+          }
         }
         else{
           this.apiService.presentToast('Error while signing up! Please try later', 'danger');

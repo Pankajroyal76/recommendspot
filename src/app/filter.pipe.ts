@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-
+const errors = [null, undefined, 'undefined', ''];
 @Pipe({ name: 'appFilter' })
 export class FilterPipe implements PipeTransform {
   /**
@@ -21,7 +21,7 @@ export class FilterPipe implements PipeTransform {
     searchText = searchText.toLocaleLowerCase();
 
     return items.filter(it => {
-      return (it.description.toLocaleLowerCase().includes(searchText) || it.user_name.toLocaleLowerCase().includes(searchText)|| it.category.toLocaleLowerCase().includes(searchText)|| it.sub_category.toLocaleLowerCase().includes(searchText)|| it.title.toLocaleLowerCase().includes(searchText));
+      return (it.description.toLocaleLowerCase().includes(searchText)  || it.user_name.toLocaleLowerCase().includes(searchText)|| it.category.toLocaleLowerCase().includes(searchText)|| it.sub_category.toLocaleLowerCase().includes(searchText)|| it.title.toLocaleLowerCase().includes(searchText));
     });
   }
 }

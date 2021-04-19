@@ -303,7 +303,9 @@ span.servcs-badge
 	float: right;
 	margin-top: 10px;
 		 @media only screen and (max-width:767px)
-		{max-width:80px;text-overflow: ellipsis;
+		{
+		/*max-width:80px;*/
+		text-overflow: ellipsis;
 						overflow: hidden;
 		    white-space: nowrap;
 		font-size: 11px;
@@ -320,7 +322,7 @@ span.servcs-badge
 						text-overflow: ellipsis;
 						overflow: hidden;
 						display: inherit;
-						max-width: 55px;
+						/*max-width: 55px;*/
 						}
 	}
 }.post-share

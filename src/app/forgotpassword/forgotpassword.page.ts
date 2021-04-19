@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ApiserviceService } from '../services/apiservice.service';
 import { config } from '../services/config';
 import { Router } from '@angular/router';
@@ -17,7 +17,7 @@ export class ForgotpasswordPage implements OnInit {
 	reg_exp: any;
 	withoutspace: any;
 
-  	constructor(public apiService: ApiserviceService, public router: Router) { 
+  	constructor(private ref: ChangeDetectorRef,public apiService: ApiserviceService, public router: Router) { 
 
   		this.reg_exp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   		
@@ -43,6 +43,7 @@ export class ForgotpasswordPage implements OnInit {
 	    this.apiService.presentLoading();
 	    this.apiService.postData(dict,'forgotPassword').subscribe((result) => {
 	      this.apiService.stopLoading();
+	      this.ref.detectChanges();
 	      if(result.status == 1){
 	      	this.apiService.presentToast(result.msg, 'success');
 	      	this.router.navigate(['/login']);

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , ChangeDetectorRef, ViewChild} from '@angular/core';
 import { ApiserviceService } from '../services/apiservice.service';
 import { GlobalFooService } from '../services/globalFooService.service';
 import { config } from '../services/config';
@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 declare var Branch;
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-import { MenuController, AlertController , Platform} from '@ionic/angular';
+import { MenuController, AlertController , Platform, IonContent} from '@ionic/angular';
+import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
@@ -30,8 +31,12 @@ export class ProfilePage implements OnInit {
   user_id: any;
   platform1: any;
   selectedItemmShare = -1;
+  @ViewChild(IonContent, {static: true}) content: IonContent;
+  noti_count = localStorage.getItem('notiCount');
+  index: any = -1;
+  play_video = false;
   
-  	constructor(private globalFooService: GlobalFooService,public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private iab: InAppBrowser, public alertController: AlertController, private platform: Platform) { 
+  	constructor(public sanitizer:DomSanitizer,private ref: ChangeDetectorRef,private globalFooService: GlobalFooService,public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private iab: InAppBrowser, public alertController: AlertController, private platform: Platform) { 
       this.user_name = localStorage.getItem('user_name');
       this.user_image = localStorage.getItem('user_image');
       this.user_email = localStorage.getItem('user_email');
@@ -51,8 +56,14 @@ export class ProfilePage implements OnInit {
       this.platform1 = this.platform.is('cordova');
   	}
 
+    gotToTop() {
+      this.content.scrollToTop(1000);
+    }
+
     logout(){
+      var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
       localStorage.clear();
+      localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
       this.router.navigate(['/landing-page']);
     }
 
@@ -91,9 +102,32 @@ export class ProfilePage implements OnInit {
       this.iab.create(link, '_system', {location: 'yes', closebuttoncaption: 'done'});
     }
 
-   
+
+    playYoutube(web_link, index){
+
+      this.index = index;
+      this.play_video = true;
+    }
+
+    youtube_parser(url){
+      var regExp = /^https?\:\/\/(?:www\.youtube(?:\-nocookie)?\.com\/|m\.youtube\.com\/|youtube\.com\/)?(?:ytscreeningroom\?vi?=|youtu\.be\/|vi?\/|user\/.+\/u\/\w{1,2}\/|embed\/|watch\?(?:.*\&)?vi?=|\&vi?=|\?(?:.*\&)?vi?=)([^#\&\?\n\/<>"']*)/i;
+      var match = url.match(regExp);
+      return (match && match[1].length==11)? match[1] : false;
+    }
+
+    getId(url) {
+      var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      var match = url.match(regExp);
+
+      if (match && match[2].length == 11) {
+          return 'https://www.youtube.com/embed/' + match[2];
+      } else {
+          return 'error';
+      }
+    } 
 
   	ionViewDidEnter(){
+      this.noti_count = localStorage.getItem('notiCount');
       this.counter = 0;
   		this.userId = localStorage.getItem('userId');
   		
@@ -111,8 +145,14 @@ export class ProfilePage implements OnInit {
       this.iab.create(web_link, '_system', {location: 'yes', closebuttoncaption: 'done'});
     }
 
+    gotofollowing(){
+      var user_id = localStorage.getItem('userId');
+      localStorage.setItem('clickUserId' , user_id)
+    }
+
     gotoFollowersFollowings(str){
       localStorage.setItem('friend', str);
+      localStorage.setItem('clickUserId' , this.userId)
       this.globalFooService.publishSomeData({
           foo: {'data': '', 'page': 'updateprofile'}
       });
@@ -145,7 +185,7 @@ export class ProfilePage implements OnInit {
       }
 	    
 	    this.apiService.postData(dict,'getProfile').subscribe((result) => {
-	     
+	       this.ref.detectChanges();
 	      if(result.status == 1){
 	      	this.profile = result.data;
 	      	this.bgImage = this.errors.indexOf(result.data.cover_image) >= 0 ? '../../assets/img/no-image.png' :  this.IMAGES_URL + '/images/' + result.data.cover_image;
@@ -162,6 +202,7 @@ export class ProfilePage implements OnInit {
      
       this.apiService.postData({'userId': localStorage.getItem('userId'), 'loggedUserId': localStorage.getItem('userId'), add_user_type: 'user'},'influencerProfile').subscribe((result) => {
         this.apiService.stopLoading();
+        this.ref.detectChanges();
         console.log(result)
         if(result.status == 1){
           this.data = result.data;
@@ -204,6 +245,7 @@ export class ProfilePage implements OnInit {
       this.apiService.presentLoading();
       this.apiService.postData(dict,ApiEndPoint).subscribe((result) => {
         this.apiService.stopLoading();
+        this.ref.detectChanges();
         if(result.status == 1){
           if(!IsLiked){
             this.data.post[index].likes.push(result.data);
@@ -243,7 +285,7 @@ export class ProfilePage implements OnInit {
          }
         }
         
-        console.log(likesArray)
+        //console.log(likesArray)
         if(IsLiked){
           return 'thumbs-up';
         }else{
@@ -336,6 +378,7 @@ export class ProfilePage implements OnInit {
       this.apiService.presentLoading();
       this.apiService.postData(dict,'addRemoveRecc').subscribe((result) => {
           this.apiService.stopLoading();
+          this.ref.detectChanges();
           console.log(result);
           this.data.post[index].fav = type;
 
@@ -367,6 +410,7 @@ export class ProfilePage implements OnInit {
         this.apiService.presentLoading();
         this.apiService.postData(dict,'deleteRecc').subscribe((result) => {
           this.apiService.stopLoading();
+          this.ref.detectChanges();
           if(result.status == 1){
             this.data.post.splice(i, 1);
             this.apiService.presentToast(result.msg,'success');

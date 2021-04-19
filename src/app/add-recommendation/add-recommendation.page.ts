@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ChangeDetectorRef , ViewChild} from '@angular/core';
 import { ApiserviceService } from '../services/apiservice.service';
 import { GlobalFooService } from '../services/globalFooService.service';
 import { config } from '../services/config';
@@ -11,6 +11,9 @@ import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-nati
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 declare var window: any; 
 import {getLinkPreview} from 'link-preview-js';
+import { ModalController, ToastController, LoadingController , ActionSheetController, AlertController,NavController} from '@ionic/angular';
+import { NgxSpinnerService } from "ngx-spinner";
+import { Platform, IonContent } from '@ionic/angular'; 
 
 @Component({
   selector: 'app-add-recommendation',
@@ -32,8 +35,9 @@ export class AddRecommendationPage implements OnInit {
 	errors = config.errors;
 	expression: any;
 	is_submit = false;
+	is_submit_platform = false;
 	categories: any;
-	subcategories: any;
+	subcategories: any = [];
 	user_name: any;
     user_image: any;
     user_email: any;
@@ -48,8 +52,15 @@ export class AddRecommendationPage implements OnInit {
 	image_url: any;
 	is_image_uploaded: any;
 	typeTab = 'Photo';
+	loading: any;
+	platforms: any;
+	counter = 1;
+	@ViewChild(IonContent, {static: true}) content: IonContent;
+	plat_value = 'Others';
+	plat_selected_value = '';
+	noti_count = localStorage.getItem('notiCount');
 
-  	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, private globalFooService: GlobalFooService,private formBuilder: FormBuilder, public sanitizer:DomSanitizer) { 
+  	constructor(private spinner: NgxSpinnerService,private ref: ChangeDetectorRef,public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, private globalFooService: GlobalFooService,private formBuilder: FormBuilder, public sanitizer:DomSanitizer, public loadingController: LoadingController) { 
 
   		this.createForm();
   		this.expression = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
@@ -67,7 +78,62 @@ export class AddRecommendationPage implements OnInit {
   	}
 
   	ngOnInit() {
+
+  		
   	}
+
+  	gotofollowing(){
+	    var user_id = localStorage.getItem('userId');
+	    localStorage.setItem('clickUserId' , user_id)
+	}
+
+  	gotToTop() {
+	    this.content.scrollToTop(1000);
+  	}
+
+
+  	async presentLoading() {
+        if (this.errors.indexOf(this.loading) >= 0) {
+            this.loading = await this.loadingController.create({ 
+            	spinner: 'bubbles', cssClass: 'my-loading-class'});
+        }
+        this.ref.detectChanges();
+        await this.loading.present();
+    }
+
+    async stopLoading() {      
+
+        if (this.errors.indexOf(this.loading) == -1) {
+        	this.ref.detectChanges();
+	      	await this.loading.dismiss();
+	      	this.loading  = null;
+	    }
+	    else{
+	      	var self = this;
+	      	setTimeout(function(){
+	        	self.stopLoading();
+	      	},1000);
+	    }
+    }
+
+  	// async presentLoading() {
+	  //  // this.loading = await this.loadingController.create();
+	  //   this.loading = await this.loadingController.create({
+	  //   });
+	  //   await this.loading.present();
+	  // }
+
+	  // async stopLoading() {
+	  //   if(this.loading != undefined){
+	  //     await this.loading.dismiss();
+	  //   }
+	  //   else{
+	  //     var self = this;
+	  //     setTimeout(function(){
+	  //       self.stopLoading();
+	  //     },1000);
+	  //   }
+	  // }
 
   	//define the validators for form fields
   	createForm(){
@@ -77,14 +143,26 @@ export class AddRecommendationPage implements OnInit {
 	      description: ['', Validators.compose([Validators.required])],
 	      category: ['', Validators.compose([Validators.required])],
 	      subcategory: ['', Validators.compose([Validators.required])],
+	      platform: ['', Validators.compose([Validators.required])],
+	      platform_name: [''],
 	      web_link: ['', Validators.compose([Validators.required])],
 	    });
 	    this.opencontent = false;
 	    this.link_content = '';
   	};
 
+
+  	onSegmentChange(e){
+      console.log('event = ', e.detail.value);
+      this.typeTab = e.detail.value;
+      this.spinner.show();
+
+      this.ref.detectChanges();
+  	}
   	logout(){
+	    var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
 	    localStorage.clear();
+	    localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
 	    this.router.navigate(['/landing-page']);
   	}
 
@@ -113,13 +191,14 @@ export class AddRecommendationPage implements OnInit {
 		var dict = {
 	    	url: link
 	    }
-	  	this.apiService.presentLoading();
+	  	this.presentLoading();
 	    this.apiService.postData(dict,'scrapUrl').subscribe((result) => { 
-	      this.apiService.stopLoading();  
+	       this.ref.detectChanges();
+	      this.stopLoading();  
 	      console.log(result)
 	      this.opencontent = true;
 		this.link_content = result;
-		this.apiService.stopLoading();
+		// this.stopLoading();
 	    },
 	    err => {
 	        this.apiService.presentToast('Technical error,Please try after some time','success');
@@ -140,7 +219,11 @@ export class AddRecommendationPage implements OnInit {
   	}
 
   	ionViewDidEnter(){
+  		this.noti_count = localStorage.getItem('notiCount');
+  		this.type = 'Photo';
+  		this.authForm.reset();
   		this.getCategories();
+  		// this.getPlatforms();
   	}
 
   	typeChange(type){
@@ -164,15 +247,38 @@ export class AddRecommendationPage implements OnInit {
 
   	getCategories(){
 
-  		this.apiService.presentLoading();
+  		this.presentLoading();
   		var dict = {
 	    	user_id: localStorage.getItem('userId')
 	    }
 	  
 	    this.apiService.postData(dict,'categories').subscribe((result) => { 
-	      this.apiService.stopLoading();  
+	      this.stopLoading();  
+	      this.ref.detectChanges();
 	      if(result.status == 1){
 	        this.categories = result.data;
+	        this.getPlatforms();
+	        //this.category = this.categories[0]._id;
+	      }
+	      else{
+	        this.apiService.presentToast('Error while sending request,Please try after some time','success');
+	      }
+	    },
+	    err => {
+	        this.apiService.presentToast('Technical error,Please try after some time','success');
+	    });
+  	}
+
+  	
+  	getPlatforms(){
+
+  		this.presentLoading();
+  	
+	    this.apiService.postData({},'platform_listing').subscribe((result) => { 
+	      this.stopLoading();  
+	      this.ref.detectChanges();
+	      if(result.status == 1){
+	        this.platforms = result.data;
 	        //this.category = this.categories[0]._id;
 	      }
 	      else{
@@ -188,18 +294,95 @@ export class AddRecommendationPage implements OnInit {
 
   	getSubCategories(cat_id){
 
-  		this.apiService.presentLoading();
+  		this.presentLoading();
   		var dict = {
 	    	cat_id: cat_id
 	    }
 	  
 	    this.apiService.postData(dict,'subCategoryListingAdmin').subscribe((result) => { 
-	      this.apiService.stopLoading();  
+	      this.ref.detectChanges();
+	      this.stopLoading();
 	      if(result.status == 1){
 	        this.subcategories = result.data;
+         	this.ref.detectChanges();
+
+         	if(result.data.length > 0){
+			    this.authForm.controls['subcategory'].setValidators([Validators.required]);              
+			} else {                
+			    this.authForm.controls['subcategory'].clearValidators();               
+			}
+			this.authForm.controls['subcategory'].updateValueAndValidity();
+
 	      }
 	      else{
 	        //this.apiService.presentToast('Error while sending request,Please try after some time','success');
+	      }
+	       // this.stopLoading();  
+	    },
+	    err => {
+	        this.apiService.presentToast('Technical error,Please try after some time','success');
+	    });
+  	}
+
+  	platformSelection(event){
+
+  		this.plat_selected_value = this.platforms[this.platforms.findIndex(x => x._id == event.detail.value)].name;
+
+  		if(this.plat_selected_value === 'Others'){
+		    this.authForm.controls['platform_name'].setValidators([Validators.required]);              
+		} else {                
+		    this.authForm.controls['platform_name'].clearValidators();               
+		}
+		this.authForm.controls['platform_name'].updateValueAndValidity();
+  	}
+
+  	yourFunction(event){
+
+  		this.subcategories = [];
+  		console.log(event);
+  		this.authForm.patchValue({
+  			subcategory: ''
+  		})
+  		this.counter = 2;
+
+  		console.log(this.categories[this.categories.findIndex(x => x._id == event.detail.value)].name)
+  		
+
+  		if(this.categories[this.categories.findIndex(x => x._id == event.detail.value)].name === 'Movies' || this.categories[this.categories.findIndex(x => x._id == event.detail.value)].name === 'Shows/Series'){
+		    this.authForm.controls['platform'].setValidators([Validators.required]);              
+		} else {                
+		    this.authForm.controls['platform'].clearValidators();               
+		}
+		this.authForm.controls['platform'].updateValueAndValidity();
+  		this.getSubCategories(this.authForm.value.category);
+  	}
+
+
+
+  	add_platform(){
+  		this.is_submit_platform = true;
+  		if(this.errors.indexOf(this.authForm.value.platform_name) >= 0){
+	      return false;
+	    }
+	    this.presentLoading(); 
+     	this.apiService.postData({name: this.authForm.value.platform_name},'add_platform').subscribe((result) => { 
+	      
+	      if(result.status == 1){
+	        this.apiService.presentToast(result.msg,'success');
+	        this.stopLoading(); 
+	        this.plat_selected_value = '';
+
+	  		if(this.plat_selected_value === 'Others'){
+			    this.authForm.controls['platform_name'].setValidators([Validators.required]);              
+			} else {                
+			    this.authForm.controls['platform_name'].clearValidators();               
+			}
+			this.authForm.controls['platform_name'].updateValueAndValidity();
+	       	this.ref.detectChanges(); 
+	       	this.getPlatforms();
+	      }
+	      else{
+	        this.apiService.presentToast('Error while sending request,Please try after some time','success');
 	      }
 	    },
 	    err => {
@@ -207,23 +390,16 @@ export class AddRecommendationPage implements OnInit {
 	    });
   	}
 
-  	yourFunction(event){
-
-  		this.subcategories = [];
-  		console.log(event);
-  		this.getSubCategories(this.authForm.value.category);
-  	}
-
-
-
-
-
   	add_recc(){
 
   		this.is_submit = true;
   		console.log(this.authForm.value.type, this.authForm.value.category, this.authForm.value.description,this.authForm.value.web_link);
   		if(this.errors.indexOf(this.authForm.value.category) >= 0 || this.errors.indexOf(this.authForm.value.title) >= 0){
 	      return false;
+	    }
+
+	    if(this.errors.indexOf(this.authForm.value.subcategory) >= 0 && (this.subcategories.length > 0 || this.counter == 1)){
+	    	return false;
 	    }
   		/*if(this.authForm.value.type != 'Website'){
   			if(this.errors.indexOf(this.authForm.value.description) >= 0){
@@ -365,6 +541,7 @@ export class AddRecommendationPage implements OnInit {
   		this.apiService.postData(frmData,'uploadReccImage').subscribe((result) => { 
 	      		console.log(result);
 	      		this.image = result;
+	      		 this.ref.detectChanges();
 	      		this.profileImageSubmit();	      		
 	     
 	    },
@@ -374,14 +551,15 @@ export class AddRecommendationPage implements OnInit {
   	}
 
   	profileImageSubmit(){
-	    this.apiService.presentLoading();
+	    this.presentLoading();
 	    var dict = {
 	    	title: this.authForm.value.title,
 	    	// type: this.authForm.value.type,
 	    	type: this.typeTab,
 	    	description: this.authForm.value.description,
 	    	category: this.authForm.value.category,
-	    	sub_category: this.authForm.value.sub_category,
+	    	platform: this.authForm.value.platform,
+	    	sub_category: this.authForm.value.subcategory,
 	    	web_link: this.authForm.value.web_link,
 	    	image: this.image,
 	    	user_id: localStorage.getItem('userId'),
@@ -390,7 +568,7 @@ export class AddRecommendationPage implements OnInit {
 	    }
 	  
 	    this.apiService.postData(dict,'addRecc').subscribe((result) => { 
-	      this.apiService.stopLoading();  
+	      
 	      if(result.status == 1){
 
 	      	this.authForm.value.description = '';
@@ -398,24 +576,22 @@ export class AddRecommendationPage implements OnInit {
 	      	this.live_image_url = '';
 	      	this.imgBlob = '';
 	      	this.live_file_name = '';
-	      	this.authForm.patchValue({
-	          	type: 'Photo',
-	          	category: '',
-	          	description: '',
-	          	web_link: '',
-	          	
-	        });
+	      	
+	        this.authForm.reset();
 	      	// this.authForm.value.type = 'Photo';
 	      	// this.authForm.value.category = '';
 	      	// this.authForm.value.web_link = '';
 	      	this.link_content = '';
-	      	this.globalFooService.publishSomeData({
-            	foo: {'data': '', 'page': 'updateprofile'}
-        	});
+	      	
         	this.is_live_image_updated = false;
 	        this.image = '';
 	        
 	        this.apiService.presentToast(result.msg,'success');
+	        this.stopLoading(); 
+	       	this.ref.detectChanges(); 
+	       	this.globalFooService.publishSomeData({
+            	foo: {'data': '', 'page': 'updateprofile'}
+        	});
 	        this.router.navigate(['/tabs/home'])
 	      }
 	      else{

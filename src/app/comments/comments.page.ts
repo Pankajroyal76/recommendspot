@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
 import { ApiserviceService } from '../services/apiservice.service';
 import { GlobalFooService } from '../services/globalFooService.service';
 import { config } from '../services/config';
@@ -20,11 +20,12 @@ export class CommentsPage implements OnInit {
 	comment: any;
 	authForm: FormGroup;
 	user_name: any;
-  	user_image: any;
-  	user_email: any;
-  	is_response = false;
+	user_image: any;
+	user_email: any;
+	is_response = false;
+  noti_count = localStorage.getItem('notiCount');
 
-	constructor(public apiService: ApiserviceService, public router: Router, public location: Location, private globalFooService: GlobalFooService,private formBuilder: FormBuilder){ 
+	constructor(private ref: ChangeDetectorRef,public apiService: ApiserviceService, public router: Router, public location: Location, private globalFooService: GlobalFooService,private formBuilder: FormBuilder){ 
 		this.user_name = localStorage.getItem('user_name');
       	this.user_image = localStorage.getItem('user_image');
       	this.user_email = localStorage.getItem('user_email');
@@ -39,7 +40,13 @@ export class CommentsPage implements OnInit {
   	}
   	ngOnInit() {}
 
+    gotofollowing(){
+      var user_id = localStorage.getItem('userId');
+      localStorage.setItem('clickUserId' , user_id)
+    }
+
   	ionViewDidEnter() {
+      this.noti_count = localStorage.getItem('notiCount');
   		this.is_response = false;
   		this.getComments();
   	}
@@ -72,7 +79,8 @@ export class CommentsPage implements OnInit {
 	    }
 	  
 	    this.apiService.postData(dict,'getComments').subscribe((result) => { 
-	     this.apiService.stopLoading();  
+	     this.apiService.stopLoading(); 
+       this.ref.detectChanges(); 
 	     console.log(result.data);
 	     this.is_response = true;
 	      if(result.status == 1){
@@ -102,6 +110,7 @@ export class CommentsPage implements OnInit {
     	this.apiService.presentLoading();
       	this.apiService.postData(dict,'addComment').subscribe((result) => {
 	        this.apiService.stopLoading();
+          this.ref.detectChanges();
 	        if(result.status == 1){
 	          	
             	this.comments.push({
@@ -134,7 +143,9 @@ export class CommentsPage implements OnInit {
     };
 
     logout(){
-	    localStorage.clear();
+	    var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
+      localStorage.clear();
+      localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
 	    this.router.navigate(['/landing-page']);
   	}
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ApiserviceService } from '../services/apiservice.service';
 import { GlobalFooService } from '../services/globalFooService.service';
 import { config } from '../services/config';
@@ -65,9 +65,10 @@ export class ProfileSettingPage implements OnInit {
 	image_cover_error: any = false;
 	image_cover_file: any;
 	image_cover_url: any;
+	noti_count = localStorage.getItem('notiCount');
 
 	//test profile
-  	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath, private transfer: FileTransfer,private globalFooService: GlobalFooService,private formBuilder: FormBuilder, public sanitizer:DomSanitizer) { 
+  	constructor(private ref: ChangeDetectorRef,public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath, private transfer: FileTransfer,private globalFooService: GlobalFooService,private formBuilder: FormBuilder, public sanitizer:DomSanitizer) { 
 
   		this.createForm();
   		this.reg_exp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -92,8 +93,9 @@ export class ProfileSettingPage implements OnInit {
 	      name: ['', Validators.compose([Validators.required])],
 	      email: ['', Validators.compose([Validators.required])],
 	      contact: ['', Validators.compose([Validators.required])],
-	      bio: ['', Validators.compose([Validators.required])],
+	      bio: [''],
 	      location: ['', Validators.compose([Validators.required])],
+	      website: [''],
 	    });
 
 	    this.authForm1 = this.formBuilder.group({
@@ -103,16 +105,29 @@ export class ProfileSettingPage implements OnInit {
 	    });
   	};
 
+  	gotofollowing(){
+      var user_id = localStorage.getItem('userId');
+      localStorage.setItem('clickUserId' , user_id)
+    }
+
   	ngOnInit() {
   	}
 
+  	onSegmentChange(e){
+      console.log('event = ', e.detail.value);
+      this.profiletab = e.detail.value;
+      this.ref.detectChanges();
+  	}
+
   	logout(){
+	    var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
 	    localStorage.clear();
+	    localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
 	    this.router.navigate(['/landing-page']);
   	}
   	
   	ionViewDidEnter(){
-
+  		this.noti_count = localStorage.getItem('notiCount');
   		this.get_profile();
   	}
 
@@ -139,6 +154,7 @@ export class ProfileSettingPage implements OnInit {
 	    this.apiService.presentLoading();
 	    this.apiService.postData(dict,'getProfile').subscribe((result) => {
 	      this.apiService.stopLoading();
+	      this.ref.detectChanges();
 	      if(result.status == 1){
 
 	      	this.authForm.patchValue({
@@ -147,6 +163,7 @@ export class ProfileSettingPage implements OnInit {
 	          	contact: result.data.contact,
 	          	bio: result.data.bio,
 	          	location: result.data.location,
+	          	website: result.data.website,
 	          	
 	        });
 
@@ -190,6 +207,7 @@ export class ProfileSettingPage implements OnInit {
 	      contact: this.authForm.value.contact,
 	      bio: this.authForm.value.bio,
 	      location: this.authForm.value.location,
+	      website: this.authForm.value.website,
 	      email: this.authForm.value.email,
 	      image: this.profile.image,
 	      cover_image: this.profile.cover_image,
@@ -200,6 +218,7 @@ export class ProfileSettingPage implements OnInit {
 	    
 	    this.apiService.postData(dict,'updateProfile').subscribe((result) => {
 	      this.apiService.stopLoading();
+	      this.ref.detectChanges();
 	      if(result.status == 1){
 
 	      	this.profile.name = this.name;
@@ -247,6 +266,7 @@ export class ProfileSettingPage implements OnInit {
 	    this.apiService.presentLoading();
 	    this.apiService.postData(dict,'updatePassword').subscribe((result) => {
 	      this.apiService.stopLoading();
+	      this.ref.detectChanges();
 	      if(result.status == 1){
 	      	this.authForm1.value.password = '';
 	      	this.authForm1.value.confirm_password = '';
@@ -415,7 +435,7 @@ export class ProfileSettingPage implements OnInit {
 	    frmData.append("type", type);
 	  
 	    this.apiService.postData(frmData,'update_user_and_cover_image').subscribe((result) => { 
-	      
+	      this.ref.detectChanges();
 	      if(result.status == 1){
 	      	if(type == 'cover'){
 	      		this.bgImage = this.IMAGES_URL + '/images/' +  result.data;

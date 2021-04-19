@@ -14,6 +14,7 @@ export class ApiserviceService {
 
   loading:any;
   isLoggedIn:Boolean;
+  errors = config.errors;
 
   constructor(public modalController: ModalController, private http: Http, public router: Router, public toastController: ToastController, public loadingController: LoadingController,  public actionSheetController: ActionSheetController, public platform: Platform, public alertController: AlertController, public navCtrl: NavController) { }
 
@@ -79,13 +80,19 @@ export class ApiserviceService {
   }
 
   async presentLoading() {
-    this.loading = await this.loadingController.create();
+   // this.loading = await this.loadingController.create();
+   console.log('loading = ', this.errors.indexOf(this.loading))
+    if (this.errors.indexOf(this.loading) >= 0) {
+        this.loading = await this.loadingController.create({ 
+          spinner: 'bubbles', cssClass: 'my-loading-class'});
+    }
     await this.loading.present();
   }
 
   async stopLoading() {
-    if(this.loading != undefined){
+    if (this.errors.indexOf(this.loading) == -1) {
       await this.loading.dismiss();
+      this.loading  = null;
     }
     else{
       var self = this;

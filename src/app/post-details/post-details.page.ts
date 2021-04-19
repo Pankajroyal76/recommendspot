@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ModalController, ToastController, LoadingController} from '@ionic/angular'; 
 import { Router } from '@angular/router';
 // import { ToastController, LoadingController, Platform } from '@ionic/angular';
@@ -32,7 +32,10 @@ export class PostDetailsPage implements OnInit {
     selectedItemmShare = -1;
     selectedItemm = -1;
     likedpost = true;
-  	constructor(public location: Location, public toastController: ToastController, public apiService: ApiserviceService, public loadingController: LoadingController, public router: Router, private globalFooService: GlobalFooService, private iab: InAppBrowser, public modalController: ModalController, private photoViewer: PhotoViewer) { 
+    add_user_type: any;
+    noti_count = localStorage.getItem('notiCount');
+
+  	constructor(private ref: ChangeDetectorRef,public location: Location, public toastController: ToastController, public apiService: ApiserviceService, public loadingController: LoadingController, public router: Router, private globalFooService: GlobalFooService, private iab: InAppBrowser, public modalController: ModalController, private photoViewer: PhotoViewer) { 
       
       this.user_name = localStorage.getItem('user_name');
       this.user_image = localStorage.getItem('user_image');
@@ -56,15 +59,23 @@ export class PostDetailsPage implements OnInit {
 	hide() {
 	this.hideMe = !this.hideMe;
 	}
+
+  gotofollowing(){
+      var user_id = localStorage.getItem('userId');
+      localStorage.setItem('clickUserId' , user_id)
+    }
   	ngOnInit() {
   		this.profile = JSON.parse(localStorage.getItem('profile'));
   	}
     ionViewDidEnter(){
+        this.noti_count = localStorage.getItem('notiCount');
         this.getData();
     }
 
     logout(){
+      var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
       localStorage.clear();
+      localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
       this.router.navigate(['/landing-page']);
     }
 
@@ -107,15 +118,21 @@ export class PostDetailsPage implements OnInit {
   }
 
     getData(){
+      if(this.errors.indexOf(localStorage.getItem('item')) >= 0){
+          this.add_user_type = "user";
+      }else{
+        this.add_user_type = JSON.parse(localStorage.getItem('item')).add_user_type;
+      }
       let dict = {
         'postId': localStorage.getItem('postId'),
         'user_id': localStorage.getItem('userId'),
-        'add_user_type': JSON.parse(localStorage.getItem('item')).add_user_type
+        'add_user_type': this.add_user_type
       };
 
       this.presentLoading();
         this.apiService.postData(dict,'postDetail').subscribe((result) => {
           this.stopLoading();
+          this.ref.detectChanges();
           console.log(result)
           if(result.status == 1){
               this.post = result.data[0];
@@ -247,6 +264,7 @@ export class PostDetailsPage implements OnInit {
         this.apiService.postData(dict,'saveNotification').subscribe((result) => {
           // this.stopLoading();
           console.log(result);
+          this.ref.detectChanges();
         },
         err => {
           console.log(err);
@@ -280,6 +298,7 @@ export class PostDetailsPage implements OnInit {
         this.presentLoading();
         this.apiService.postData(dict,ApiEndPoint).subscribe((result) => {
           this.stopLoading();
+          this.ref.detectChanges();
           if(result.status == 1){
             if(!IsLiked){
               // this.sendNotification('like');
@@ -345,6 +364,7 @@ export class PostDetailsPage implements OnInit {
         this.presentLoading();
         this.apiService.postData(dict,ApiEndPoint).subscribe((result) => {
           this.stopLoading();
+          this.ref.detectChanges();
           if(result.status == 1){
             if(!IsLiked){
               this.post.dislikes.push(result.data);
@@ -393,6 +413,7 @@ export class PostDetailsPage implements OnInit {
     	this.presentLoading();
       	this.apiService.postData(dict,'addComment').subscribe((result) => {
 	        this.stopLoading();
+          this.ref.detectChanges();
 	        if(result.status == 1){
 	          	this.comment = '';
             	this.post.comments.push({
@@ -449,6 +470,7 @@ export class PostDetailsPage implements OnInit {
 	    this.apiService.presentLoading();
 	    this.apiService.postData(dict,'addRemoveRecc').subscribe((result) => {
 	      	this.apiService.stopLoading();
+          this.ref.detectChanges();
 	      	console.log(result);
 	      	this.post.fav = type;
            this.globalFooService.publishSomeData({

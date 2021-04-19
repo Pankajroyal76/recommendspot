@@ -39,10 +39,14 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { Http, HttpModule, RequestOptions } from '@angular/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
+
+//modules
+import { NgxSpinnerModule } from "ngx-spinner";
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, 
+  imports: [BrowserModule,NgxSpinnerModule, 
   IonicModule.forRoot(), 
   AppRoutingModule,
   HttpModule,

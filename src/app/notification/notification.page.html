@@ -4,17 +4,17 @@
 		<ul>
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
 			<li><a routerLink="/category" href="javascript:void(0)">Categories</a></li>
-			<li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
+			<li (click)="gotofollowing()"><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
 			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
 			 
 		</ul>
-		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon></a>
+		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge color="secondary">{{noti_count}}</ion-badge></a>
 		<span proImg>
 			<img routerLink="/tabs/profile"*ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
 	        <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
 	       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) >= 0" src="assets/img/default.png">
 
-			<p routerLink="/tabs/profile"><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
+			<p headerfixedheight routerLink="/tabs/profile"><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
 			<div profileDropdown>
 				<ul>
 					<li><a href="javascript:void(0)" routerLink="/profile-setting/{{user_id}}">Profile Settings</a></li>
@@ -37,8 +37,8 @@
 
 	<div container>
 <div notifications>
-  <ion-item lines="none" *ngFor="let item of listing;let i = index;" (click)="readNoti(item, i)" [ngClass]="{'unread': item.read == 0}">
-	 <ion-avatar>
+  <ion-item lines="none" *ngFor="let item of listing;let i = index;" [ngClass]="{'unread': item.read == 0}">
+	 <ion-avatar (click)="viewUser(item)">
 	<!--    <img *ngIf="errors.indexOf(item.sender_image) == -1 && item.sender_medium == 'simple'" src="{{IMAGES_URL + '/images/' + item.sender_image}}">
 	   <img *ngIf="errors.indexOf(item.sender_image) == -1 && item.sender_medium != 'simple'" src="{{item.sender_image}}">
 	 	<img *ngIf="errors.indexOf(item.sender_image) >= 0 " src="assets/img/default.png">
@@ -48,10 +48,14 @@
 		 <img *ngIf="errors.indexOf(item.sender_image) >= 0" src="assets/img/default.png">
 	 </ion-avatar>
 	 <ion-label>
-	 <p *ngIf="item.noti_type == 'add post'">{{item.sender_name}} added a new post: <b> {{errors.indexOf(item.item.title) == -1 ? item.item.title : item.item.description}}</b></p>
-	 <p *ngIf="item.noti_type == 'add like'">{{item.sender_name}} liked your post: <b> {{errors.indexOf(item.item.title) == -1 ? item.item.title : item.item.description}}</b></p>
-	 <p *ngIf="item.noti_type == 'add comment'">{{item.sender_name}} commented on your post: <b> {{errors.indexOf(item.item.title) == -1 ? item.item.title : item.item.description}}</b></p>
-	 <p *ngIf="item.noti_type == 'follow user'">{{item.sender_name}} started following you.</p>
+	 <p *ngIf="item.noti_type == 'add post'"><span (click)="viewUser(item)"> {{item.sender_name}}</span> <span    (click)="readNoti(item, i)" > added a new post: <b> {{errors.indexOf(item.item.title) == -1 ? item.item.title : item.item.description}}</b></span></p>
+
+	 <p *ngIf="item.noti_type == 'add like'"><span (click)="viewUser(item)"> {{item.sender_name}}</span><span (click)="readNoti(item, i)"> liked your post: <b> {{errors.indexOf(item.item.title) == -1 ? item.item.title : item.item.description}}</b></span></p>
+
+	 <p *ngIf="item.noti_type == 'add comment'"><span (click)="viewUser(item)">{{item.sender_name}}</span> <span (click)="readNoti(item, i)">commented on your post: <b> {{errors.indexOf(item.item.title) == -1 ? item.item.title : item.item.description}}</b></span></p>
+
+	 <p *ngIf="item.noti_type == 'follow user'"><span (click)="viewUser(item)">{{item.sender_name}}</span> <span (click)="readNoti(item, i)"> started following you.</span></p>
+
 	 <ion-note><ion-icon name="time-outline"></ion-icon> {{item.created_on | dateAgo }}</ion-note>
 	 </ion-label>
 	</ion-item>

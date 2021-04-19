@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ApiserviceService } from '../services/apiservice.service';
 import { config } from '../services/config';
 import { Router } from '@angular/router';
@@ -39,7 +39,7 @@ export class SignupPage implements OnInit {
 
 
 
-  	constructor(private fcm: FCM,public apiService: ApiserviceService, public router: Router,private globalFooService: GlobalFooService, private fb: Facebook, private googlePlus: GooglePlus, private platform: Platform,private formBuilder: FormBuilder, public fireAuth: AngularFireAuth) { 
+  	constructor(private ref: ChangeDetectorRef,private fcm: FCM,public apiService: ApiserviceService, public router: Router,private globalFooService: GlobalFooService, private fb: Facebook, private googlePlus: GooglePlus, private platform: Platform,private formBuilder: FormBuilder, public fireAuth: AngularFireAuth) { 
 
   		this.createForm();
   		this.reg_exp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -84,6 +84,7 @@ export class SignupPage implements OnInit {
 	      name: this.authForm.value.name,
 	      contact: '',
 	      location: '',
+	      website: '',
 	      bio: '',
 	      email: this.authForm.value.email,
 	      password: this.authForm.value.password,
@@ -94,6 +95,7 @@ export class SignupPage implements OnInit {
 	    this.apiService.presentLoading();
 	    this.apiService.postData(dict,'registerUser').subscribe((result) => {
 	      this.apiService.stopLoading();
+	      this.ref.detectChanges();
 	      if(result.status == 1){
 	      	localStorage.setItem('userId', result.data._id);
 	      	localStorage.setItem('user_name', result.data.name);
@@ -105,7 +107,12 @@ export class SignupPage implements OnInit {
             	foo: {'data': result.data, 'page': 'profile'}
         	});
         	this.apiService.presentToast('Register successfully!', 'success');
-	      	this.apiService.navCtrl.navigateRoot('tabs/home');
+	      	//this.apiService.navCtrl.navigateRoot('tabs/home');
+	      	if(result.data.first_login == true){
+	      		this.apiService.navCtrl.navigateRoot('tabs/home');
+	      	}else{
+	      		this.apiService.navCtrl.navigateRoot('/category');
+	      	}
 	      };
 	    });
 	};
@@ -264,6 +271,7 @@ export class SignupPage implements OnInit {
 	    // this.fcm.getToken().then(token => {
 	    this.apiService.postData(dict,'social_login').subscribe((result) => {
 	      this.apiService.stopLoading();
+	      this.ref.detectChanges();
 
 	      if(result.status == 1){
 	        
@@ -275,14 +283,23 @@ export class SignupPage implements OnInit {
         	localStorage.setItem('profile',JSON.stringify(result.data));
         	localStorage.setItem('user_name', result.data.name);
   			localStorage.setItem('user_image', result.data.image);
-  			localStorage.setItem('user_email', result.data.email);
+  			if(this.errors.indexOf(result.data.email) >= 0){
+  				localStorage.setItem('user_email', '');
+  			}else{
+  				localStorage.setItem('user_email', result.data.email);
+  			}
   			localStorage.setItem('user_medium', dict.medium);
   			localStorage.setItem('first_login', result.data.first_login);
   			this.globalFooService.publishSomeData({
             	foo: {'data': result.data, 'page': 'profile'}
         	});
         	this.apiService.presentToast('Login successfully!', 'success');
-	      	this.apiService.navCtrl.navigateRoot('tabs/home');
+	      	//this.apiService.navCtrl.navigateRoot('tabs/home');
+	      	if(result.data.first_login == true){
+	      		this.apiService.navCtrl.navigateRoot('tabs/home');
+	      	}else{
+	      		this.apiService.navCtrl.navigateRoot('/category');
+	      	}
 	      }
 	      else{
 	        this.apiService.presentToast('Error while signing up! Please try later', 'danger');

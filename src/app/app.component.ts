@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component , ChangeDetectorRef} from '@angular/core';
 
 import { Platform, MenuController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -61,7 +61,8 @@ export class AppComponent {
     private router: Router,
     private menuCtrl: MenuController,
     private fcm: FCM,
-    public apiService: ApiserviceService
+    public apiService: ApiserviceService,
+    private ref: ChangeDetectorRef
     ) {
     this.initializeApp();
 
@@ -114,9 +115,10 @@ export class AppComponent {
         this.router.navigate(["/tabs/home"]);
       }
 
-      
+      this.notificationCount();
       this.branchInit();
       this.fcmNotification();
+      
 
       
     });
@@ -127,8 +129,30 @@ export class AppComponent {
     });
   }
 
+  notificationCount(){
+
+    console.log('notiiiiiiiii')
+
+    let dict ={
+      userId: localStorage.getItem('userId'),
+    };
+    
+    this.apiService.postData(dict,'notificationCount').subscribe((result) => {
+       
+       console.log('noti count = ', result)
+      if(result.status == 1){
+        localStorage.setItem('notiCount', result.data.toString());
+      }else{
+        this.apiService.presentToast(result.msg, 'danger');
+        this.ref.detectChanges();
+      };
+    });
+  }
+
   logout(){
+    var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
     localStorage.clear();
+    localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
     this.router.navigate(['/landing-page']);
   }
 

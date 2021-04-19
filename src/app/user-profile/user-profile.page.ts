@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , ChangeDetectorRef} from '@angular/core';
 import { ApiserviceService } from '../services/apiservice.service';
 import { config } from '../services/config';
 import { Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { Location } from "@angular/common";
 declare var Branch;
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import {Platform} from '@ionic/angular';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-user-profile',
@@ -34,8 +35,11 @@ export class UserProfilePage implements OnInit {
   selectedItemm = -1;
   posts: any;
   selectedItemmShare = -1;
+  noti_count = localStorage.getItem('notiCount');
+  index = -1;
+  play_video = false;
   	
-  	constructor(public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService, private iab: InAppBrowser, private socialSharing: SocialSharing,public location: Location, private platform: Platform) { 
+  	constructor(public sanitizer:DomSanitizer,private ref: ChangeDetectorRef,public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService, private iab: InAppBrowser, private socialSharing: SocialSharing,public location: Location, private platform: Platform) { 
 
       this.user_name = localStorage.getItem('user_name');
       this.user_image = localStorage.getItem('user_image');
@@ -62,6 +66,45 @@ export class UserProfilePage implements OnInit {
       this.selectedItemm = i;
       }
     }
+
+    gotofollowing(){
+      var user_id = localStorage.getItem('userId');
+      localStorage.setItem('clickUserId' , user_id)
+    }
+
+    gotoFollowersFollowings(str){
+      localStorage.setItem('friend', str);
+      localStorage.setItem('clickUserId' , this.userId)
+      this.globalFooService.publishSomeData({
+          foo: {'data': '', 'page': 'updateprofile'}
+      });
+      this.router.navigate(['/followingfollowers'])
+      //this.apiService.navCtrl.navigateRoot('tabs/following');
+    }
+
+
+    playYoutube(web_link, index){
+
+      this.index = index;
+      this.play_video = true;
+    }
+
+    youtube_parser(url){
+      var regExp = /^https?\:\/\/(?:www\.youtube(?:\-nocookie)?\.com\/|m\.youtube\.com\/|youtube\.com\/)?(?:ytscreeningroom\?vi?=|youtu\.be\/|vi?\/|user\/.+\/u\/\w{1,2}\/|embed\/|watch\?(?:.*\&)?vi?=|\&vi?=|\?(?:.*\&)?vi?=)([^#\&\?\n\/<>"']*)/i;
+      var match = url.match(regExp);
+      return (match && match[1].length==11)? match[1] : false;
+    }
+
+    getId(url) {
+      var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      var match = url.match(regExp);
+
+      if (match && match[2].length == 11) {
+          return 'https://www.youtube.com/embed/' + match[2];
+      } else {
+          return 'error';
+      }
+    } 
 
     openUpdateShare(i){
       if(this.selectedItemmShare == i){
@@ -101,6 +144,7 @@ export class UserProfilePage implements OnInit {
           this.apiService.presentLoading();
           this.apiService.postData(dict,'deleteRecc').subscribe((result) => {
             this.apiService.stopLoading();
+            this.ref.detectChanges();
             if(result.status == 1){
               this.data.post.splice(i, 1);
               this.apiService.presentToast(result.msg,'success');
@@ -131,7 +175,9 @@ export class UserProfilePage implements OnInit {
     }
 
     logout(){
+      var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
       localStorage.clear();
+      localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
       this.router.navigate(['/landing-page']);
     }
 
@@ -142,7 +188,7 @@ export class UserProfilePage implements OnInit {
 
   	ionViewDidEnter(){
 
-  		
+  		this.noti_count = localStorage.getItem('notiCount');
   		this.userId = localStorage.getItem('clicked_user_id');
   		
   		this.get_profile();
@@ -188,6 +234,7 @@ export class UserProfilePage implements OnInit {
 	    this.apiService.presentLoading();
 	    this.apiService.postData(dict,'getProfile').subscribe((result) => {
 	      this.apiService.stopLoading();
+        this.ref.detectChanges();
 	      this.getData();
 	      if(result.status == 1){
 	      	this.profile = result.data;
@@ -208,6 +255,7 @@ export class UserProfilePage implements OnInit {
      
       this.apiService.postData({'userId': localStorage.getItem('clicked_user_id'), 'loggedUserId': localStorage.getItem('userId') , add_user_type: this.add_user_type},'influencerProfile').subscribe((result) => {
         this.apiService.stopLoading();
+        this.ref.detectChanges();
         console.log(result)
         if(result.status == 1){
           this.data = result.data;
@@ -234,6 +282,7 @@ export class UserProfilePage implements OnInit {
     	this.apiService.presentLoading();
       	this.apiService.postData({'userId': this.loggedUserId, 'friendId': this.userId},'addFriend').subscribe((result) => {
         this.apiService.stopLoading();
+        this.ref.detectChanges();
         console.log(result)
         if(result.status == 1)
         {
@@ -263,6 +312,7 @@ export class UserProfilePage implements OnInit {
 	    this.apiService.presentLoading();
 	    this.apiService.postData(dict,'removeFriend').subscribe((result) => {
 	      this.apiService.stopLoading();
+        this.ref.detectChanges();
 	      if(result.status == 1){
 	         this.joined = 'false';
 	         this.data.friends.pop();
@@ -302,6 +352,7 @@ export class UserProfilePage implements OnInit {
       this.apiService.presentLoading();
       this.apiService.postData(dict,ApiEndPoint).subscribe((result) => {
         this.apiService.stopLoading();
+        this.ref.detectChanges();
         if(result.status == 1){
           if(!IsLiked){
             this.data.post[index].likes.push(result.data);
@@ -352,6 +403,7 @@ export class UserProfilePage implements OnInit {
       this.apiService.presentLoading();
       this.apiService.postData(dict,ApiEndPoint).subscribe((result) => {
         this.apiService.stopLoading();
+        this.ref.detectChanges();
         if(result.status == 1){
           if(!IsLiked){
             this.data.post[index].dislikes.push(result.data);
@@ -397,7 +449,6 @@ export class UserProfilePage implements OnInit {
          }
         }
         
-        console.log(likesArray)
         if(IsLiked){
           return 'thumbs-up';
         }else{
@@ -453,6 +504,7 @@ export class UserProfilePage implements OnInit {
       this.apiService.presentLoading();
       this.apiService.postData(dict,'addRemoveRecc').subscribe((result) => {
           this.apiService.stopLoading();
+          this.ref.detectChanges();
           console.log(result);
           this.data.post[index].fav = type;
           this.globalFooService.publishSomeData({

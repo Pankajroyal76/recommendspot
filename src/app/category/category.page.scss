@@ -225,3 +225,26 @@ margin:0px;
 	}	
 }	
 }	
+
+.catHeader
+{
+	margin-bottom:10px;
+	display:flex;
+	align-items:center;
+	ion-segment{
+		margin-bottom:0 !important;
+		margin-right: 15px;
+	}
+}
+
+@media (max-width:767px){
+	.catHeader
+	{
+		.nextbtn{
+			display:none
+		}
+		ion-segment{
+			margin-right: 0px;
+		}
+	}	
+}

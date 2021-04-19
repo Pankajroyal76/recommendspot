@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , ChangeDetectorRef} from '@angular/core';
 import { ApiserviceService } from '../services/apiservice.service';
 import { config } from '../services/config';
 import { Router } from '@angular/router';
@@ -28,7 +28,7 @@ export class LoginPage implements OnInit {
 	withoutspace: any;
 	authForm: FormGroup;
 
-  	constructor(private fcm: FCM,public apiService: ApiserviceService, public router: Router,private globalFooService: GlobalFooService, private fb: Facebook, private googlePlus: GooglePlus, public fireAuth: AngularFireAuth, private platform: Platform,private formBuilder: FormBuilder) { 
+  	constructor(private ref: ChangeDetectorRef,private fcm: FCM,public apiService: ApiserviceService, public router: Router,private globalFooService: GlobalFooService, private fb: Facebook, private googlePlus: GooglePlus, public fireAuth: AngularFireAuth, private platform: Platform,private formBuilder: FormBuilder) { 
   		this.createForm();
   		this.reg_exp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   		this.withoutspace = /^\S*$/;
@@ -67,10 +67,10 @@ export class LoginPage implements OnInit {
 	    };
 	    console.log(dict)
 
-	    this.apiService.presentLoading();
+	    //this.apiService.presentLoading();
 	    this.apiService.postData(dict,'loginUser').subscribe((result) => {
 	      this.apiService.stopLoading();
-
+	      this.ref.detectChanges();
 	      if(result.status == 1){
 	      	this.apiService.presentToast(result.error, 'success');
 
@@ -171,7 +171,10 @@ export class LoginPage implements OnInit {
 			            social_id: profile['id'],
 			            image: profile['picture_large']['data']['url'],
 			            fcm_token: this.fcm_token,
-			            contact: ''
+			            contact: '',
+			            location: '',
+			            website: '',
+
 			        };
 	          		console.log('dict', dict);
 	          		this.finalSignup(dict); 
@@ -207,7 +210,9 @@ export class LoginPage implements OnInit {
 			            social_id: profile['userId'],
 			            image: !profile['imageUrl'] ? '' : profile['imageUrl'],
 			            fcm_token: this.fcm_token,
-			            contact: ''
+			            contact: '',
+			            location: '',
+			            website: '',
 		          	};
 		          	console.log('dict', dict);
 
@@ -232,7 +237,10 @@ export class LoginPage implements OnInit {
 	    // this.fcm.getToken().then(token => {
 	    this.apiService.postData(dict,'social_login').subscribe((result) => {
 	      this.apiService.stopLoading();
-
+	      this.ref.detectChanges();
+	      this.globalFooService.publishSomeData({
+            	foo: {'data': result.data, 'page': 'profile'}
+        	});
 	      if(result.status == 1){
 	        this.apiService.presentToast('Login successfully!', 'success');
 	      	
@@ -242,12 +250,20 @@ export class LoginPage implements OnInit {
         	localStorage.setItem('profile',JSON.stringify(result.data));
         	localStorage.setItem('user_name', result.data.name);
   			localStorage.setItem('user_image', result.data.image);
-  			localStorage.setItem('user_email', result.data.email);
+  			if(this.errors.indexOf(result.data.email) >= 0){
+  				localStorage.setItem('user_email', '');
+  			}else{
+  				localStorage.setItem('user_email', result.data.email);
+  			}
+  			
   			localStorage.setItem('user_medium', result.data.medium);
-  			this.globalFooService.publishSomeData({
-            	foo: {'data': result.data, 'page': 'profile'}
-        	});
-        	this.apiService.navCtrl.navigateRoot('tabs/home');
+  			localStorage.setItem('first_login', result.data.first_login);
+	      	if(result.data.first_login == true){
+	      		this.apiService.navCtrl.navigateRoot('tabs/home');
+	      	}else{
+	      		this.apiService.navCtrl.navigateRoot('/category');
+	      	}
+        	
 	      }
 	      else{
 	        this.apiService.presentToast('Error while signing up! Please try later', 'danger');

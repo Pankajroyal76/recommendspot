@@ -1,20 +1,20 @@
 <div headerWeb>
   <a href="javascript:void(0)" routerLink="/tabs/home" logo><!--Recommendspot--><img height="22px" src="assets/img/logo-white.png" alt="" ></a>
   <div ritHeader>
-    <ul>
-      <li><a routerLink="/category" href="javascript:void(0)">Categories</a></li>
+    <ul>      
       <li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
-      <li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
+      <li><a routerLink="/category" href="javascript:void(0)">Categories</a></li>
+      <li (click)="gotofollowing()"><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
       <li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
        
     </ul>
-    <a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon></a>
+    <a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge color="secondary">{{noti_count}}</ion-badge></a>
     <span proImg>
       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
      <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) >= 0" src="assets/img/default.png">
 
-      <p><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
+      <p headerfixedheight routerLink="/tabs/profile" ><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
 			<div profileDropdown>
 				<ul>
 					<li><a href="javascript:void(0)" routerLink="/profile-setting/{{user_id}}">Profile Settings</a></li>
@@ -29,7 +29,9 @@
   <!--ion-menu-button slot="start">
     <img height="15px" src="assets/img/menu.png"/>
   </ion-menu-button-->
-  <ion-back-button slot="start" defaultHref="/tabs/profile">
+
+  <!-- defaultHref="/tabs/profile" -->
+  <ion-back-button slot="start" >
    </ion-back-button>   
     <ion-title class="ion-text-center">Edit Profile</ion-title>
   </ion-toolbar>
@@ -66,7 +68,7 @@
     </div>
   </div>
   <div profilesetting>
-    <ion-segment [(ngModel)]="profiletab">
+    <ion-segment [(ngModel)]="profiletab" (ionChange)="onSegmentChange($event)" >
   		<ion-segment-button value="Basic">
   		   Basic Info
   		</ion-segment-button>
@@ -134,7 +136,7 @@
             <ion-label>
             <ion-icon name="link-outline"></ion-icon>
             </ion-label>
-            <ion-input  formControlName="location"  placeholder="Enter Website" ></ion-input>
+            <ion-input  formControlName="website"  placeholder="Enter Website" ></ion-input>
           </ion-item>
       
 

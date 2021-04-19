@@ -4,8 +4,8 @@
 		<ul>
 			
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
-			<li><a routerLink="/category" href="javascript:void(0)">Categories</a></li>
-			<li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
+			<li><a routerLink="/category" href="javascript:void(0)" (click)="gotToTop()">Categories</a></li>
+			<li (click)="gotofollowing()"><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
 			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
 			 
 		</ul>
@@ -15,7 +15,7 @@
 			<ion-select-option value="{{cat._id}}" *ngFor="let cat of categories"> {{cat.name}} </ion-select-option>
 			
 		</ion-select-->
-		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon></a>
+		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge color="secondary">{{noti_count}}</ion-badge></a>
 		<span proImg>
 			<!-- <img src="assets/img/user4.jpg" alt=""> -->
 
@@ -23,7 +23,7 @@
 	       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
 	      <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) >= 0" src="assets/img/default.png">
 
-			 <p routerLink="/tabs/profile"><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
+			 <p headerfixedheight routerLink="/tabs/profile"><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
 			<div profileDropdown>
 				<ul>
 					<li><a href="javascript:void(0)" routerLink="/profile-setting/{{user_id}}">Profile Settings</a></li>
@@ -47,19 +47,26 @@
 	</ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="ion-padding" #content [scrollEvents]="true">
 <div container>
 <div categorytab>
-	<span class="catdic">Follow categories and people you are interested into discover recommendations in your news feed.</span>
-  <ion-segment [(ngModel)]="categorytab">
-  		<ion-segment-button value="category">
-  		  Category
-  		</ion-segment-button>
+	<span class="catdic">Follow categories and people you are interested in to discover recommendations in your news feed.</span>
+
+	<div class="catHeader">
+	  	<ion-segment [(ngModel)]="categorytab" (ionChange)="onSegmentChange($event)">
+			<ion-segment-button value="category">
+			  Category
+			</ion-segment-button>
 			<ion-segment-button value="people">
-		 People
-		  </ion-segment-button>
-    </ion-segment>
+		 	People
+		  	</ion-segment-button>
+	    </ion-segment>
+	    <ion-buttons slot="end" class="nextbtn" routerLink="/tabs/home">
+			Next <ion-icon name="chevron-forward-circle-outline"></ion-icon> 
+		</ion-buttons>
+	</div>
 </div>
+
 <div [ngSwitch]="categorytab">
     	<ion-list *ngSwitchCase="'category'">
            <ion-row>

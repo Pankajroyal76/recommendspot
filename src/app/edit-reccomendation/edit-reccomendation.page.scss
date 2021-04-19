@@ -130,3 +130,25 @@ ion-item{
     font-size: 20px;
     z-index: 999;
 }
+
+.flexdiv
+{
+    display:flex;
+    align-items:center;
+    .ionitem{
+        min-width:86% !important;
+        ion-button{
+            margin-left:5px;
+        }
+    }
+}
+
+@media (max-width:767px)
+{
+    .flexdiv
+    {
+        .ionitem{
+            min-width:60% !important;
+        }
+    }
+}

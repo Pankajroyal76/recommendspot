@@ -135,16 +135,15 @@ ion-content
     margin:0px 0px 20px	;
 	.post-img
 	{
-		height: 170px;
 		border-radius: 5px;
 		padding:0px 15px;
 		overflow: hidden;	
 		position:relative;
 		img 
 		{
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
+			height: 380px;
+		    width: 100%;
+		    object-fit: cover;
 		}
 		span.servcs-badge 
 		{
@@ -449,11 +448,64 @@ ion-content
 	   img
 	   {
 	     border-radius:12px 12px 0px 0px;
+	     height: 350px;
+		    width: 100%;
+		    object-fit: cover;
 	   }
 	   .link-cnt {
-        padding: 7px 15px 7px;
-        font-size: 13px;
-     }
+	            padding: 8px;
+			    font-size: 13px;
+			    display: flex;
+			    border: 1px solid #ccc;
+			    border-radius: 10px;
+			    position:relative;
+			    &.youtube-link-cnt{
+			    	padding:0px;
+			    }
+			    .imgPLay
+			    {
+			    	position:relative;
+			    	margin-right:6px;
+			    	img{
+				    	width:118px;
+				    	height:118px;
+				    	object-fit:cover;
+				    	
+		    			border-radius: 5px 0 0 5px;
+				    }
+				    ion-icon[name="play-circle-outline"]{
+				    	position: absolute;
+					    top: 50%;
+					    left: 50%;
+					    color: #fff;
+					    transform:translate(-50%,-50%);
+					    font-size: 40px;
+				    }
+			    }
+	        
+		    .indiv
+		    {
+		    	padding:5px;
+		    	p{
+		    		font-size:12px
+		    	}
+		    }
+
+		    .weblinkbox {
+			    display: flex;
+			    align-items: flex-start;
+			    ion-icon{
+			    	font-size: 15px;
+				    margin-right: 3px;
+				    position: relative;
+				    top: -1px;
+			    }
+			    .weblink{
+			    	font-size: 11px;
+			    	font-style:oblique
+			    }
+			}
+		}
 		[weblink-sec] {
 			font-size: 11px;
 			ion-icon
@@ -474,7 +526,8 @@ ion-content
 	padding-left: 3px;
 }
 [dots-edit]
-{
+{	
+	margin-left: 20px;
     position:relative;
 	display:inline-block;
 	ion-icon 
@@ -514,4 +567,52 @@ ion-content
     right: 15px;
     font-size: 24px;
     color: #ee6234;
+}
+
+
+.savelater{
+	text-align: center;
+    padding: 10px 0;
+    background-color: lightblue;
+    width: 100%;
+    color: #fff;
+    border-radius: 5px;
+    margin-bottom: 5px;
+
+}
+
+.dotflex {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.profileDetails {
+    padding: 0px 0 5px;
+    margin: 0 16px 9px;
+    p{
+        font-size: 13px;
+	    margin: 0;
+	    color: #000;
+	    margin-bottom: 8px;
+	    display: flex;
+	    align-items: center;
+    	&:last-child{
+    		margin-bottom:0
+    	}
+    	ion-icon{
+    		color: var(--ion-color-secondary);
+		    padding-right: 5px;
+		    font-size: 15px;
+    	}
+    	.lineeot
+    	{
+    		padding-left:15px
+    	}
+    }
+}
+
+.ml
+{
+	margin: 0 16px 9px;
 }

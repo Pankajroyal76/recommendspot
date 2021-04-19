@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
 import { ApiserviceService } from '../services/apiservice.service';
 import { GlobalFooService } from '../services/globalFooService.service';
 import { config } from '../services/config';
@@ -12,7 +12,7 @@ import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-nati
 declare var window: any; 
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
-
+import { ModalController, ToastController, LoadingController , ActionSheetController, Platform, AlertController,NavController} from '@ionic/angular';
 @Component({
   selector: 'app-edit-reccomendation',
   templateUrl: './edit-reccomendation.page.html',
@@ -26,6 +26,7 @@ export class EditReccomendationPage implements OnInit {
 	type: any = 'Photo';
 	category: any = '';
 	description: any;
+	loading: any;
 	web_link: any = '';
 	is_live_image_updated = false;
 	live_image_url: any = '';
@@ -36,9 +37,10 @@ export class EditReccomendationPage implements OnInit {
 	IMAGES_URL = config.IMAGES_URL;
 	expression: any;
 	is_submit = false;
+	is_submit_platform = false;
 	post: any;
 	categories: any;
-	subcategories: any;
+	subcategories: any = [];
 	user_name: any;
     user_image: any;
     user_email: any;
@@ -52,8 +54,13 @@ export class EditReccomendationPage implements OnInit {
 	image_url: any;
 	is_image_uploaded: any;
 	typeTab = 'Photo';
+	counter = 0;
+	platforms: any;
+	plat_value = 'Others';
+	plat_selected_value = '';
+	noti_count = localStorage.getItem('notiCount');
 
- 	constructor(public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, public location: Location, private globalFooService: GlobalFooService,private formBuilder: FormBuilder, public sanitizer:DomSanitizer) { 
+ 	constructor(private ref: ChangeDetectorRef,public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, public location: Location, private globalFooService: GlobalFooService,private formBuilder: FormBuilder, public sanitizer:DomSanitizer, public loadingController: LoadingController) { 
   		
  		this.createForm();
   		this.expression = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
@@ -72,6 +79,12 @@ export class EditReccomendationPage implements OnInit {
   	ngOnInit() {
   	}
 
+  	gotofollowing(){
+      var user_id = localStorage.getItem('userId');
+      localStorage.setItem('clickUserId' , user_id)
+    }
+
+
   	onSegmentChanged(event){
 
   		console.log(event.detail.value);
@@ -84,6 +97,29 @@ export class EditReccomendationPage implements OnInit {
   		}
   	}
 
+  	async presentLoading() {
+        if (this.errors.indexOf(this.loading) >= 0) {
+            this.loading = await this.loadingController.create({ 
+            	spinner: 'bubbles', cssClass: 'my-loading-class'});
+        }
+        this.ref.detectChanges();
+        await this.loading.present();
+    }
+
+    async stopLoading() {
+        if (this.errors.indexOf(this.loading) == -1) {
+        	this.ref.detectChanges();
+	      	await this.loading.dismiss();
+	      	this.loading  = null;
+	    }
+	    else{
+	      	var self = this;
+	      	setTimeout(function(){
+	        	self.stopLoading();
+	      	},1000);
+	    }
+    }
+
   	//define the validators for form fields
   	createForm(){
 	    this.authForm = this.formBuilder.group({
@@ -91,6 +127,8 @@ export class EditReccomendationPage implements OnInit {
 	      type: ['', Validators.compose([Validators.required])],
 	      description: ['', Validators.compose([Validators.required])],
 	      category: ['', Validators.compose([Validators.required])],
+	      platform: ['', Validators.compose([Validators.required])],
+	      platform_name: [''],
 	      sub_category: ['', Validators.compose([Validators.required])],
 	      web_link: ['', Validators.compose([Validators.required])],
 	    });
@@ -115,13 +153,14 @@ export class EditReccomendationPage implements OnInit {
 		var dict = {
 	    	url: link
 	    }
-	  	this.apiService.presentLoading();
+	  	this.presentLoading();
 	    this.apiService.postData(dict,'scrapUrl').subscribe((result) => { 
-	      this.apiService.stopLoading();  
+	      this.stopLoading(); 
+	      this.ref.detectChanges(); 
 	      console.log(result)
 	      this.opencontent = true;
 		this.link_content = result;
-		this.apiService.stopLoading();
+		this.stopLoading();
 	    },
 	    err => {
 	        this.apiService.presentToast('Technical error,Please try after some time','success');
@@ -132,7 +171,9 @@ export class EditReccomendationPage implements OnInit {
 
 
   	logout(){
+	    var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
 	    localStorage.clear();
+	    localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
 	    this.router.navigate(['/landing-page']);
   	}
 
@@ -159,6 +200,7 @@ export class EditReccomendationPage implements OnInit {
 			this.image_url = '';
 			this.is_live_image_updated = false;
   		}
+  		this.ref.detectChanges();
   	}
   	getimage(img){
   		if(this.errors.indexOf(img) == -1){
@@ -178,6 +220,9 @@ export class EditReccomendationPage implements OnInit {
     }
 
   	ionViewDidEnter(){
+  		this.noti_count = localStorage.getItem('notiCount');
+  		this.counter = 0;
+  		this.getPlatforms();
   		this.getCategories();
   	}
 
@@ -188,19 +233,25 @@ export class EditReccomendationPage implements OnInit {
 
   	getCategories(){
 
-  		this.apiService.presentLoading();
+  		this.presentLoading();
   		var dict = {
 	    	user_id: localStorage.getItem('userId')
 	    }
 	  
 	    this.apiService.postData(dict,'categories').subscribe((result) => { 
-	     //this.apiService.stopLoading();  
+	     //this.stopLoading(); 
+	     
 	      if(result.status == 1){
 	        this.categories = result.data;	
+	        
 	        this.authForm.patchValue({
 	        	sub_category: ''
 	        });
+	        this.stopLoading();
+	        this.ref.detectChanges(); 
+	        this.counter = 1;
 	        this.getSubCategories(localStorage.getItem('category_id'), '');
+	        // this.getPlatforms(localStorage.getItem('category_id'), '');
 	        //this.getData();        
 	        
 	      }
@@ -213,21 +264,46 @@ export class EditReccomendationPage implements OnInit {
 	    });
   	}
 
+  	getPlatforms(){
+
+  		// this.presentLoading();
+  	
+	    this.apiService.postData({},'platform_listing').subscribe((result) => { 
+	      this.stopLoading();  
+	      this.ref.detectChanges();
+	      if(result.status == 1){
+	        this.platforms = result.data;
+	        //this.category = this.categories[0]._id;
+	      }
+	      else{
+	        this.apiService.presentToast('Error while sending request,Please try after some time','success');
+	      }
+	    },
+	    err => {
+	        this.apiService.presentToast('Technical error,Please try after some time','success');
+	    });
+  	}
+
+
   	getSubCategories(cat_id, str){
 
   		console.log('cat_id = ', cat_id, str)
 
-  		//this.apiService.presentLoading();
+  		if(this.counter == 0){
+  			this.presentLoading();
+  		}
+  		
   		var dict = {
 	    	cat_id: cat_id
 	    }
 	  
 	    this.apiService.postData(dict,'subCategoryListingAdmin').subscribe((result) => { 
-	      this.apiService.stopLoading();  
+	      
+	      
 	      console.log('sub categories = ', result )
 	      if(result.status == 1){
 	        this.subcategories = result.data;
-	        
+	        this.ref.detectChanges();
 	      }
 	      else{
 	        //this.apiService.presentToast('Error while sending request,Please try after some time','success');
@@ -237,6 +313,8 @@ export class EditReccomendationPage implements OnInit {
 	      }else{
 	      	this.getData();
 	      }
+	      this.ref.detectChanges();
+	      this.stopLoading();  
 	      
 	    },
 	    err => {
@@ -244,10 +322,36 @@ export class EditReccomendationPage implements OnInit {
 	    });
   	}
 
+  	platformSelection(event){
+
+  		this.plat_selected_value = this.platforms[this.platforms.findIndex(x => x._id == event.detail.value)].name;
+
+  		if(this.plat_selected_value === 'Others'){
+		    this.authForm.controls['platform_name'].setValidators([Validators.required]);              
+		} else {                
+		    this.authForm.controls['platform_name'].clearValidators();               
+		}
+		this.authForm.controls['platform_name'].updateValueAndValidity();
+  	}
+
   	yourFunction(event){
   		console.log(event);
+  		this.counter = 0;
   		this.subcategories = [];
+  		this.authForm.patchValue({
+  			sub_category: ''
+  		})
   		localStorage.setItem('category_id', event.detail.value);
+
+  		console.log(this.categories[this.categories.findIndex(x => x._id == event.detail.value)].name)
+
+  		if(this.categories[this.categories.findIndex(x => x._id == event.detail.value)].name === 'Movies' || this.categories[this.categories.findIndex(x => x._id == event.detail.value)].name === 'Shows/Series'){
+		    this.authForm.controls['platform'].setValidators([Validators.required]);              
+		} else {                
+		    this.authForm.controls['platform'].clearValidators();               
+		}
+		this.authForm.controls['platform'].updateValueAndValidity();
+
   		this.getSubCategories(localStorage.getItem('category_id'), 'change_subcat');
   	}
 
@@ -257,20 +361,23 @@ export class EditReccomendationPage implements OnInit {
         'user_id': localStorage.getItem('userId'),
       };
 
-      // this.apiService.presentLoading();
+      // this.presentLoading();
         this.apiService.postData(dict,'postDetail').subscribe((result) => {
-          this.apiService.stopLoading();
+          this.stopLoading();
+          this.ref.detectChanges();
           console.log(result)
           if(result.status == 1){
           	this.authForm.patchValue({
 	          	title: result.data[0].title,
 	          	type: result.data[0].type,
 	          	category: result.data[0].category_id,
+	          	platform: result.data[0].platform_id,
 	          	sub_category: result.data[0].sub_category_id,
 	          	description: result.data[0].description,
 	          	web_link: result.data[0].web_link,
 	          	
 	        });
+	        this.typeTab = result.data[0].type;
 
 	        var self = this;
 	        if(this.errors.indexOf(result.data[0].web_link) == -1){
@@ -278,9 +385,10 @@ export class EditReccomendationPage implements OnInit {
 				var dict = {
 			    	url: target
 			    }
-			  	// this.apiService.presentLoading();
+			  	// this.presentLoading();
 			    this.apiService.postData(dict,'scrapUrl').subscribe((result) => { 
-		     	 	this.apiService.stopLoading();  
+		     	 	this.stopLoading();  
+		     	 	this.ref.detectChanges();
 			      	console.log(result)
 			      	this.opencontent = true;
 					this.link_content = result;
@@ -301,10 +409,41 @@ export class EditReccomendationPage implements OnInit {
           }
         },
         err => {
-          this.apiService.stopLoading();
+          this.stopLoading();
             this.apiService.presentToast('Technical error,Please try after some time.','danger');
         });
     };
+
+    add_platform(){
+  		this.is_submit_platform = true;
+  		if(this.errors.indexOf(this.authForm.value.platform_name) >= 0){
+	      return false;
+	    }
+	    this.presentLoading(); 
+     	this.apiService.postData({name: this.authForm.value.platform_name},'add_platform').subscribe((result) => { 
+	      
+	      if(result.status == 1){
+	        this.apiService.presentToast(result.msg,'success');
+	        this.stopLoading(); 
+	        this.plat_selected_value = '';
+
+	  		if(this.plat_selected_value === 'Others'){
+			    this.authForm.controls['platform_name'].setValidators([Validators.required]);              
+			} else {                
+			    this.authForm.controls['platform_name'].clearValidators();               
+			}
+			this.authForm.controls['platform_name'].updateValueAndValidity();
+	       	this.ref.detectChanges(); 
+	       	this.getPlatforms();
+	      }
+	      else{
+	        this.apiService.presentToast('Error while sending request,Please try after some time','success');
+	      }
+	    },
+	    err => {
+	        this.apiService.presentToast('Technical error,Please try after some time','success');
+	    });
+  	}
 
 
     add_recc(){
@@ -320,6 +459,10 @@ export class EditReccomendationPage implements OnInit {
 		      return false;
 		    }
   		}
+
+  		if(this.errors.indexOf(this.authForm.value.subcategory) >= 0 && this.subcategories.length > 0){
+	    	return false;
+	    }
   		
 
 	    if(this.authForm.value.type == 'Website'){
@@ -430,6 +573,7 @@ export class EditReccomendationPage implements OnInit {
   		this.apiService.postData(frmData,'uploadReccImage').subscribe((result) => { 
 	      		console.log(result);
 	      		this.image = result;
+	      		this.ref.detectChanges();
 	      		this.profileImageSubmit();	      		
 	     
 	    },
@@ -439,12 +583,13 @@ export class EditReccomendationPage implements OnInit {
   	}
 
   	profileImageSubmit(){
-	    this.apiService.presentLoading();
+	    this.presentLoading();
 	    var dict = {
 	    	title: this.authForm.value.title,
 	    	type: this.authForm.value.type,
 	    	description: this.authForm.value.description,
 	    	category: this.authForm.value.category,
+	    	platform: this.authForm.value.platform,
 	    	sub_category: this.authForm.value.sub_category,
 	    	web_link: this.authForm.value.web_link,
 	    	image: this.image,
@@ -455,7 +600,8 @@ export class EditReccomendationPage implements OnInit {
 	    }
 	  
 	    this.apiService.postData(dict,'updateRecc').subscribe((result) => { 
-	      this.apiService.stopLoading();  
+	      this.stopLoading();  
+	      this.ref.detectChanges();
 	      if(result.status == 1){
 
 	      	this.authForm.value.description = '';

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ApiserviceService } from '../services/apiservice.service';
 import { GlobalFooService } from '../services/globalFooService.service';
 import { config } from '../services/config';
@@ -21,9 +21,11 @@ export class FollowingfollowersPage implements OnInit {
     user_image: any;
     user_email: any;
     user_id: any;
+    noti_count = localStorage.getItem('notiCount');
+    userId = localStorage.getItem('userId');
+    clickUserId = localStorage.getItem('clickUserId');
 
-
-  	constructor(public location: Location,public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService) { 
+  	constructor(private ref: ChangeDetectorRef,public location: Location,public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService) { 
 
 
   		if(localStorage.getItem('friend') == 'follower'){
@@ -53,7 +55,9 @@ export class FollowingfollowersPage implements OnInit {
   	}
 
   	logout(){
+	    var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
 	    localStorage.clear();
+	    localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
 	    this.router.navigate(['/landing-page']);
   	}
 
@@ -61,6 +65,7 @@ export class FollowingfollowersPage implements OnInit {
   	}
 
   	ionViewDidEnter(){
+  		this.noti_count = localStorage.getItem('notiCount');
   		this.getData();
   	}
 
@@ -81,9 +86,15 @@ export class FollowingfollowersPage implements OnInit {
   		}
   	}
 
+  	gotofollowing(){
+      var user_id = localStorage.getItem('userId');
+      localStorage.setItem('clickUserId' , user_id)
+    }
+
   	getData(){
 	    let dict = {
-	      userId: localStorage.getItem('userId')
+	      //userId: localStorage.getItem('userId')
+	      userId: localStorage.getItem('clickUserId')
 	    };
 	    this.apiService.presentLoading();
 	    var apiname;
@@ -95,6 +106,7 @@ export class FollowingfollowersPage implements OnInit {
 	    
 	    this.apiService.postData(dict,apiname).subscribe((result) => {
 	      this.apiService.stopLoading();
+	      this.ref.detectChanges();
 	      if(result.status == 1){
 	         this.listing = result.data;
 	         this.is_response = true;
@@ -144,6 +156,7 @@ export class FollowingfollowersPage implements OnInit {
 	    this.apiService.presentLoading();
 	    this.apiService.postData(dict,'removeFriend').subscribe((result) => {
 	      this.apiService.stopLoading();
+	      this.ref.detectChanges();
 	      if(result.status == 1){
 	        this.listing.splice(index, 1);
 	        // this.globalFooService.publishSomeData({

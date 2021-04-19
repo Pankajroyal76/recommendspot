@@ -5,17 +5,17 @@
 			
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
 			<li><a routerLink="/category" href="javascript:void(0)">Categories</a></li>
-			<li><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
+			<li (click)="gotofollowing()"><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
 			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
 			 
 		</ul>
-		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon></a>
+		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge color="secondary">{{noti_count}}</ion-badge></a>
 		<span proImg>
 			<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
 	        <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
 	       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) >= 0" src="assets/img/default.png">
 
-			<p routerLink="/tabs/profile"><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
+			<p headerfixedheight routerLink="/tabs/profile"><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
 			<div profileDropdown>
 				<ul>
 					<li><a href="javascript:void(0)" routerLink="/profile-setting/{{user_id}}">Profile Settings</a></li>
@@ -46,7 +46,9 @@
 	  <ion-label (click)="viewUser(item)">
 	    <h2>{{item.name}}</h2>
 	  </ion-label>
-	  <ion-button shape="round" fill="outline" color="secondary" (click)="presentAlertConfirm(item, i)" *ngIf="str == 'Following'">Unfollow</ion-button>
+	  <ion-button shape="round" fill="outline" color="secondary" (click)="presentAlertConfirm(item, i)" *ngIf="str == 'Following' && userId == clickUserId">Unfollow</ion-button>
+	  <!-- <ion-button shape="round" fill="outline" color="secondary" (click)="presentAlertConfirm(item, i)" *ngIf="str == 'Following' && userId != clickUserId">Follow</ion-button>
+	  <ion-button shape="round" fill="outline" color="secondary" (click)="presentAlertConfirm(item, i)" *ngIf="str == 'Following' && userId == clickUserId">Following</ion-button> -->
     </ion-item>
 	 
   </ion-list>

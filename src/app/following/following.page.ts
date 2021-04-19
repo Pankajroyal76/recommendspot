@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { ApiserviceService } from '../services/apiservice.service';
 import { GlobalFooService } from '../services/globalFooService.service';
 import { config } from '../services/config';
 import { Router } from '@angular/router';
-
+import { Platform, IonContent } from '@ionic/angular'; 
 @Component({
   selector: 'app-following',
   templateUrl: './following.page.html',
@@ -20,8 +20,10 @@ export class FollowingPage implements OnInit {
     user_image: any;
     user_email: any;
     user_id: any;
+    @ViewChild(IonContent, {static: true}) content: IonContent;
+    noti_count = localStorage.getItem('notiCount');
 
-  	constructor(public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService) { 
+  	constructor(private ref: ChangeDetectorRef,public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService) { 
   		
   		this.user_name = localStorage.getItem('user_name');
         this.user_image = localStorage.getItem('user_image');
@@ -38,13 +40,27 @@ export class FollowingPage implements OnInit {
   	ngOnInit() {
   	}
   	logout(){
+	    var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
 	    localStorage.clear();
+	    localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
 	    this.router.navigate(['/landing-page']);
   	}
 
+  	gotofollowing(){
+      var user_id = localStorage.getItem('userId');
+      localStorage.setItem('clickUserId' , user_id)
+    }
+
+
   	ionViewDidEnter(){
+  		this.noti_count = localStorage.getItem('notiCount');
   		this.getData();
   	}
+
+  	gotToTop() {
+	    this.content.scrollToTop(1000);
+  	}
+
 
   	getimage(img){
   		if(this.errors.indexOf(img) == -1){
@@ -67,6 +83,7 @@ export class FollowingPage implements OnInit {
 	    
 	    this.apiService.postData(dict,'followingListingTab').subscribe((result) => {
 	      this.apiService.stopLoading();
+	      this.ref.detectChanges();
 	      if(result.status == 1){
 	         this.listing = result.data;
 	         this.is_response = true;
@@ -117,6 +134,7 @@ export class FollowingPage implements OnInit {
 	    this.apiService.presentLoading();
 	    this.apiService.postData(dict,'removeFriend').subscribe((result) => {
 	      this.apiService.stopLoading();
+	      this.ref.detectChanges();
 	      if(result.status == 1){
 	        this.listing.splice(index, 1);
 	        // this.globalFooService.publishSomeData({

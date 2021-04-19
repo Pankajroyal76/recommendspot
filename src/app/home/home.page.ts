@@ -1,11 +1,11 @@
-import { Component, OnInit , ElementRef, ViewChild, Renderer2} from '@angular/core';
-
+import { Component, OnInit , ElementRef, ViewChild, Renderer2,ChangeDetectorRef} from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ApiserviceService } from '../services/apiservice.service';
 import { GlobalFooService } from '../services/globalFooService.service';
 import { config } from '../services/config';
 import { Router } from '@angular/router';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
-import { MenuController, AlertController, Platform } from '@ionic/angular'; 
+import { MenuController, AlertController, Platform, IonContent } from '@ionic/angular'; 
 
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import * as $ from "jquery";
@@ -23,7 +23,8 @@ export class HomePage implements OnInit {
 	
 	authForm: FormGroup;
 	selectedItem:any = 'item1';
- 	profiletab: string = "Basic";
+ 	profiletab = "Basic";
+  profiletab1: string = "Basic";
 	isAndroid: boolean = false;
 	posts: any = [];
 	is_response = false;
@@ -50,8 +51,12 @@ export class HomePage implements OnInit {
   filter_cat_array = JSON.parse(localStorage.getItem('categoriesCheck'));
   categoriesChecked = JSON.parse(localStorage.getItem('categoriesCheck'));
   categoriesCheck = [];
+  @ViewChild(IonContent, {static: true}) content: IonContent;
+  noti_count = localStorage.getItem('notiCount');
+  index: any = -1;
+  play_video = false;
 
-  	constructor(public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private menuCtrl: MenuController, private globalFooService: GlobalFooService, public alertController: AlertController,private formBuilder: FormBuilder,private renderer: Renderer2, private iab: InAppBrowser, private platform: Platform) { 
+  	constructor(public sanitizer:DomSanitizer,private ref: ChangeDetectorRef, public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private menuCtrl: MenuController, private globalFooService: GlobalFooService, public alertController: AlertController,private formBuilder: FormBuilder,private renderer: Renderer2, private iab: InAppBrowser, private platform: Platform) { 
 
   		this.createForm();
       this.user_name = localStorage.getItem('user_name');
@@ -59,29 +64,73 @@ export class HomePage implements OnInit {
       this.user_email = localStorage.getItem('user_email');
       this.user_id = localStorage.getItem('userId');
       var self = this;
+      self.profiletab = "Basic";
+    
   		this.globalFooService.getObservable().subscribe((data) => {
             console.log('Data received', data, localStorage.getItem('first_login'));
             self.menuCtrl.enable(true);
+            self.profiletab = "Basic";
             self.counter = 1;
-            if(localStorage.getItem('first_login') === 'false'){
-              self.router.navigate(['/category']);
-            }else{
-              self.page_number = 1;
-              self.is_response = false;
-              self.posts = [];
-              self.getAllReccomdations(false, '');
-              self.updateInfo(data);
-            }
+            self.page_number = 1;
+            self.is_response = false;
+            self.posts = [];
+            self.getAllReccomdations(false, '');
+
+            // if(localStorage.getItem('first_login') === 'false'){
+
+             
+              
+            //   // self.router.navigate(['/category']);
+            // }else{
+              
+            //   self.counter = 1;
+            //   self.page_number = 1;
+            //   self.is_response = false;
+            //   self.posts = [];
+            //   self.getAllReccomdations(false, '');
+            //   self.updateInfo(data);
+            // }           
             
-        });
-       
-       
+        }); 
   	}
+
+   
+    gotToTop() {
+      this.content.scrollToTop(1000);
+    }
+
+    gotofollowing(){
+      var user_id = localStorage.getItem('userId');
+      localStorage.setItem('clickUserId' , user_id)
+    }
 
   	ngOnInit() {
       this.platform1 = this.platform.is('cordova');
   	
 	  }
+
+    playYoutube(web_link, index){
+
+      this.index = index;
+      this.play_video = true;
+    }
+
+    youtube_parser(url){
+      var regExp = /^https?\:\/\/(?:www\.youtube(?:\-nocookie)?\.com\/|m\.youtube\.com\/|youtube\.com\/)?(?:ytscreeningroom\?vi?=|youtu\.be\/|vi?\/|user\/.+\/u\/\w{1,2}\/|embed\/|watch\?(?:.*\&)?vi?=|\&vi?=|\?(?:.*\&)?vi?=)([^#\&\?\n\/<>"']*)/i;
+      var match = url.match(regExp);
+      return (match && match[1].length==11)? match[1] : false;
+    }
+
+    getId(url) {
+      var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      var match = url.match(regExp);
+
+      if (match && match[2].length == 11) {
+          return 'https://www.youtube.com/embed/' + match[2];
+      } else {
+          return 'error';
+      }
+    } 
 
     catChange(cat, str){
 
@@ -115,7 +164,9 @@ export class HomePage implements OnInit {
     }
 
     logout(){
+      var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
       localStorage.clear();
+      localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
       this.router.navigate(['/landing-page']);
     }
 
@@ -208,11 +259,22 @@ export class HomePage implements OnInit {
   		}
   	}
 
-  	ionViewDidEnter(){
+    ionViewWillLeave() {
+      let listaFrames = document.getElementsByTagName("iframe");
+      for (var index = 0; index < listaFrames.length; index++) {
+          let iframe = listaFrames[index].contentWindow;          
+          iframe.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+       }
+    }
 
-      if(localStorage.getItem('first_login') === 'false'){
-        this.router.navigate(['/category']);
-      }else{
+  	ionViewDidEnter(){
+      this.noti_count = localStorage.getItem('notiCount');
+      console.log('noti = ', this.noti_count)
+      var self = this;
+      self.profiletab = "Basic";
+      // if(localStorage.getItem('first_login') === 'false'){
+      //   this.router.navigate(['/category']);
+      // }else{
         this.userId = '';
       
         this.counter = 0;
@@ -220,8 +282,13 @@ export class HomePage implements OnInit {
         this.posts = [];
         this.page_number = 1;
         this.getCategories();
-      }
-  		
+      // }
+
+      // self.counter = 1;
+      // self.page_number = 1;
+      // self.is_response = false;
+      // self.posts = [];
+      // self.getAllReccomdations(false, '');
 	    
 	    this.menuCtrl.enable(true);
 	  
@@ -229,12 +296,15 @@ export class HomePage implements OnInit {
 
 
 
-  	onSegmentChange(){
+  	onSegmentChange(e){
+      this.profiletab = '';
+      console.log('event = ', e.detail.value);
+      this.profiletab = e.detail.value;
   		this.counter = 0;
   		this.is_response = false;
 	    this.posts = [];
 	    this.page_number = 1;
-      this.apiService.presentLoading();
+      this.ref.detectChanges();
   		this.getAllReccomdations(false, '');
   	}
 
@@ -255,7 +325,7 @@ export class HomePage implements OnInit {
 
   	getAllReccomdations(isFirstLoad, event){
   		this.userId = localStorage.getItem('userId');
-
+      console.log('this.profiletab= ', this.profiletab)
       
   		let dict ={
 	      user_id: localStorage.getItem('userId'),
@@ -267,15 +337,19 @@ export class HomePage implements OnInit {
         filter_cat_array: this.filter_cat_array
 	    };
 	    console.log(dict)
-	    if(this.counter == 0){
-	    	// this.apiService.presentLoading();
+      console.log('this.counter = ', this.counter)
+	    if(this.counter != 1){
+	    	this.apiService.presentLoading();
 	    }
-      if(this.counter == 4){
+      // if(this.counter == 0){
         // this.apiService.presentLoading();
-      }
+      // }
 	   
 	    this.apiService.postData(dict,'getAllRecc').subscribe((result) => {
-	      	if(this.counter == 0){
+	      	this.is_response = true;
+
+
+          if(this.counter == 0){
              //this.apiService.stopLoading();
           }
           if(this.counter == 4){
@@ -285,79 +359,87 @@ export class HomePage implements OnInit {
           
 	      	console.log(result);
 	      	
-	      	this.is_response = true;
-	        // this.posts = result;
+	      	
+	        // this.posts = result.data;
 
-	        for (let i = 0; i < result.data.length; i++) {
-          // loop through the array, moving forwards:
-          // note in loop below we set `j = i` so we move on after finding greatest value:
-          for (let j = i; j < result.data.length; j++) {
+	       //  for (let i = 0; i < result.data.length; i++) {
+        //   // loop through the array, moving forwards:
+        //   // note in loop below we set `j = i` so we move on after finding greatest value:
 
-          if (parseInt(result.data[i].fav) < parseInt(result.data[j].fav)) {
-              let temp = result.data[i]; // store original value for swapping
-              result.data[i] = result.data[j]; // set original value position to greater value
-              result.data[j] = temp; // set greater value position to original value
-            };
-            if (result.data[i].comment_count < result.data[j].comment_count) {
-              if (result.data[i].comment_count < result.data[j].like_count) {
+          
 
-                let temp = result.data[i]; // store original value for swapping
-                result.data[i] = result.data[j]; // set original value position to greater value
-                result.data[j] = temp; // set greater value position to original value
-            }else{
-              if (result.data[i].like_count < result.data[j].comment_count) {
-                  let temp = result.data[i]; // store original value for swapping
-                  result.data[i] = result.data[j]; // set original value position to greater value
-                  result.data[j] = temp; // set greater value position to original value
-              };
-            }
-            }else if (result.data[i].like_count < result.data[j].like_count) {
-               if (result.data[i].like_count < result.data[j].comment_count) {
-                let temp = result.data[i]; // store original value for swapping
-                result.data[i] = result.data[j]; // set original value position to greater value
-                result.data[j] = temp; // set greater value position to original value
-            }else{
-              if (result.data[i].comment_count < result.data[j].like_count) {
+        //   for (let j = i; j < result.data.length; j++) {
 
-                  let temp = result.data[i]; // store original value for swapping
-                  result.data[i] = result.data[j]; // set original value position to greater value
-                  result.data[j] = temp; // set greater value position to original value
-              }
-            };
-            };
-            // if (result.data[i].comment_count < result.data[j].like_count) {
-            //   let temp = result.data[i]; // store original value for swapping
-            //   result.data[i] = result.data[j]; // set original value position to greater value
-            //   result.data[j] = temp; // set greater value position to original value
-            // }
-            // if (result.data[i].like_count < result.data[j].comment_count) {
-            //  let temp = result.data[i]; // store original value for swapping
-            //   result.data[i] = result.data[j]; // set original value position to greater value
-            //   result.data[j] = temp; // set greater value position to original value
-            // };
+        //   if (parseInt(result.data[i].fav) < parseInt(result.data[j].fav)) {
+        //       let temp = result.data[i]; // store original value for swapping
+        //       result.data[i] = result.data[j]; // set original value position to greater value
+        //       result.data[j] = temp; // set greater value position to original value
+        //     };
+        //     if (result.data[i].comment_count < result.data[j].comment_count) {
+        //       if (result.data[i].comment_count < result.data[j].like_count) {
+
+        //         let temp = result.data[i]; // store original value for swapping
+        //         result.data[i] = result.data[j]; // set original value position to greater value
+        //         result.data[j] = temp; // set greater value position to original value
+        //     }else{
+        //       if (result.data[i].like_count < result.data[j].comment_count) {
+        //           let temp = result.data[i]; // store original value for swapping
+        //           result.data[i] = result.data[j]; // set original value position to greater value
+        //           result.data[j] = temp; // set greater value position to original value
+        //       };
+        //     }
+        //     }else if (result.data[i].like_count < result.data[j].like_count) {
+        //        if (result.data[i].like_count < result.data[j].comment_count) {
+        //         let temp = result.data[i]; // store original value for swapping
+        //         result.data[i] = result.data[j]; // set original value position to greater value
+        //         result.data[j] = temp; // set greater value position to original value
+        //     }else{
+        //       if (result.data[i].comment_count < result.data[j].like_count) {
+
+        //           let temp = result.data[i]; // store original value for swapping
+        //           result.data[i] = result.data[j]; // set original value position to greater value
+        //           result.data[j] = temp; // set greater value position to original value
+        //       }
+        //     };
+        //     };
+        //     // if (result.data[i].comment_count < result.data[j].like_count) {
+        //     //   let temp = result.data[i]; // store original value for swapping
+        //     //   result.data[i] = result.data[j]; // set original value position to greater value
+        //     //   result.data[j] = temp; // set greater value position to original value
+        //     // }
+        //     // if (result.data[i].like_count < result.data[j].comment_count) {
+        //     //  let temp = result.data[i]; // store original value for swapping
+        //     //   result.data[i] = result.data[j]; // set original value position to greater value
+        //     //   result.data[j] = temp; // set greater value position to original value
+        //     // };
 
 
 
             
-          };
-        };
+        //   };
 
-        this.posts = result.data;
+          
+          
+        // };
 
-	     //    if(result.length == 0){
-	     //      this.is_response = false;
-	     //      event.target.complete();
-	     //    }else{
+        // this.posts = result.data;
+        console.log(this.posts);
+        this.ref.detectChanges();
+
+	        if(result.length == 0){
+	          this.is_response = false;
+	          event.target.complete();
+	        }else{
         
-      //      for (let i = 0; i < result.data.length; i++) {
-      //       this.posts.push(result.data[i]);
-      //     }
+           for (let i = 0; i < result.data.length; i++) {
+            this.posts.push(result.data[i]);
+          }
 
-      //   if (isFirstLoad)
-      //     event.target.complete();
+        if (isFirstLoad)
+          event.target.complete();
 
-      //   this.page_number++;
-      // }
+        this.page_number++;
+      }
 	    });
   	}
 
@@ -394,6 +476,7 @@ export class HomePage implements OnInit {
 	    this.apiService.presentLoading();
 	    this.apiService.postData(dict,'addRemoveRecc').subscribe((result) => {
 	      	this.apiService.stopLoading();
+          this.ref.detectChanges();
 	      	console.log(result);
 	      	this.posts[index].fav = type;
 	      	if(this.profiletab == "Saved"){
@@ -499,6 +582,7 @@ export class HomePage implements OnInit {
       this.apiService.presentLoading();
       this.apiService.postData(dict,ApiEndPoint).subscribe((result) => {
         this.apiService.stopLoading();
+        this.ref.detectChanges();
         if(result.status == 1){
           if(!IsLiked){
             this.posts[index].likes.push(result.data);
@@ -549,6 +633,7 @@ export class HomePage implements OnInit {
       this.apiService.presentLoading();
       this.apiService.postData(dict,ApiEndPoint).subscribe((result) => {
         this.apiService.stopLoading();
+        this.ref.detectChanges();
         if(result.status == 1){
           if(!IsLiked){
             this.posts[index].dislikes.push(result.data);
@@ -737,6 +822,7 @@ export class HomePage implements OnInit {
 	      this.apiService.presentLoading();
 	      this.apiService.postData(dict,'deleteRecc').subscribe((result) => {
 	        this.apiService.stopLoading();
+          this.ref.detectChanges();
 	        if(result.status == 1){
 	          this.posts.splice(i, 1);
 	          this.apiService.presentToast(result.msg,'success');
@@ -842,7 +928,7 @@ export class HomePage implements OnInit {
     
       this.apiService.postData(dict,'categories').subscribe((result) => { 
         //this.apiService.stopLoading();
-       
+       this.ref.detectChanges();
         
         for(var i = 0; i < result.data.length; i++){
           if(this.filter_cat_array.indexOf(result.data[i]._id) >= 0){
