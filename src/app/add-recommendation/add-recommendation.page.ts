@@ -59,7 +59,7 @@ export class AddRecommendationPage implements OnInit {
 	plat_value = 'Others';
 	plat_selected_value = '';
 	noti_count = localStorage.getItem('notiCount');
-	selected_cat: '';
+	selected_cat: any = '';
 
   	constructor(private spinner: NgxSpinnerService,private ref: ChangeDetectorRef,public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, private globalFooService: GlobalFooService,private formBuilder: FormBuilder, public sanitizer:DomSanitizer, public loadingController: LoadingController) { 
 
@@ -82,6 +82,12 @@ export class AddRecommendationPage implements OnInit {
 
   		
   	}
+
+  	ngOnDestroy(){
+      // alert('leaveccc');
+      this.apiService.stopLoading();
+     
+    }
 
   	gotofollowing(){
 	    var user_id = localStorage.getItem('userId');

@@ -45,6 +45,12 @@ export class CategoryPage implements OnInit {
 		
 	}
 
+  ngOnDestroy(){
+    // alert('leaveccc');
+    this.apiService.stopLoading();
+   
+  }
+
   gotofollowing(){
     var user_id = localStorage.getItem('userId');
     localStorage.setItem('clickUserId' , user_id)
@@ -166,6 +172,7 @@ export class CategoryPage implements OnInit {
 
     //localStorage.setItem('item', JSON.stringify(item));
     localStorage.setItem('clicked_user_id', item._id);
+    localStorage.setItem('add_user_type', 'user');
     this.router.navigate(['/user-profile'])
   }
   	

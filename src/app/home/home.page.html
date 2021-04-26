@@ -19,7 +19,7 @@
 
 		<a href="javascript:void(0)" routerLink="/tabs/notification" noti>
 				<ion-icon name="notifications-sharp"></ion-icon>
-				<ion-badge color="secondary"><span *ngIf="noti_count != 0">{{noti_count}}</span></ion-badge>
+				<ion-badge *ngIf="noti_count != '0'" color="secondary"><span *ngIf="noti_count != '0'">{{noti_count}}</span></ion-badge>
 		</a>
 
 		<span proImg>
@@ -61,14 +61,14 @@
 					
 			</ion-select>
 		</ion-item> -->
-		<form [formGroup]="authForm"  >
+		<form [formGroup]="authForm"  (ngSubmit)="setFilteredLocations(authForm.value.keyword)">
 			<ion-row>
 				<ion-col  size="12" size-lg="12"  style="margin: 0;padding: 0;">
-					<ion-searchbar class="ellipsis" placeholder="Search category,genres,title..." formControlName="keyword" sortbyPhn>
+					<ion-searchbar class="ellipsis" placeholder="Search category,genres,title..." formControlName="keyword" sortbyPhn (keyup.enter)="setFilteredLocations(authForm.value.keyword)">
 
 					</ion-searchbar>
 
-					<ion-searchbar class="ellipsis" placeholder="Search category,genres,title,description,name..." formControlName="keyword" sortbyWeb>
+					<ion-searchbar class="ellipsis" placeholder="Search category,genres,title,description,name..." formControlName="keyword" sortbyWeb (keyup.enter)="setFilteredLocations(authForm.value.keyword)">
 
 					</ion-searchbar>
 				</ion-col>
@@ -165,11 +165,11 @@
 					<div>
 
 						<ion-list *ngIf="posts?.length > 0 && is_response == true">
-							<ion-card post-sec-mn *ngFor="let item of posts| appFilter: authForm.value.keyword; let i = index;" >
+							<ion-card post-sec-mn *ngFor="let item of posts; let i = index;" >
 								<div class="post-name post-sec">	
 									<ion-item lines="none">
 
-										<ion-avatar (click)="viewUser(item)" style="cursor:pointer;">
+										<ion-avatar  (click)="viewUser(item)" style="cursor:pointer;">
 											<img *ngIf="errors.indexOf(item.user_image) == -1 && getimage(item.user_image) == true" src="{{item.user_image}}">
 											<img *ngIf="errors.indexOf(item.user_image) == -1 && getimage(item.user_image) == false" src="{{IMAGES_URL + '/images/' + item.user_image}}">
 											<img *ngIf="errors.indexOf(item.user_image) >= 0" src="assets/img/default.png">
@@ -245,7 +245,10 @@
 													  [startSeconds]="4"
 													  [endSeconds]="8">
 													</youtube-player> -->
-													<iframe *ngIf="youtube_parser(item.web_link) != false && i == index" style="width: 100%" height="315" [src]="sanitizer.bypassSecurityTrustResourceUrl(item.web_link)" frameborder="0" allowfullscreen></iframe>
+													<!-- <iframe *ngIf="youtube_parser(item.web_link) != false && i == index" style="width: 100%" height="315" [src]="sanitizer.bypassSecurityTrustResourceUrl(item.web_link + '?controls=1')" frameborder="0" allowfullscreen></iframe> -->
+													<object id="iframe{{i}}" width='100%' height="315" frameborder="0"  style="display: none;    margin-bottom: 5px;"></object>
+												    <!-- <iframe  id="iframe{{i}}" src="" style="width: 100%" height="315" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="display: none;"></iframe> -->
+
 
 												</ion-col>
 												<ion-col size="{{item.web_link_content?.data.title != '' ? 12 : 12}}">
@@ -469,7 +472,7 @@
 			</ion-row>
 		</div>
 
-		  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="is_response == true">
+		  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="is_response == true && authForm.value.keyword == '' && allposts?.length > 10">
 		    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
 		    </ion-infinite-scroll-content>
 		  </ion-infinite-scroll>

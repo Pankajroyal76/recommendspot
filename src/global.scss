@@ -180,7 +180,7 @@ ion-searchbar {
         }
     }
     [profilesetting]{
-        max-width: 450px;
+        /*max-width: 450px;*/
         margin:0px auto;
         ion-segment{
             max-width: 450px;
@@ -490,4 +490,9 @@ img:focus {
 .titlepost{
     font-size: 14px;
     color: #000;
+}
+
+iframe{
+    width: 100% !important;
+    height: 315px !important;
 }

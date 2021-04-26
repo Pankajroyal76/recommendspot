@@ -39,6 +39,12 @@ export class FollowingPage implements OnInit {
 
   	ngOnInit() {
   	}
+
+  	ngOnDestroy(){
+      // alert('leaveccc');
+      this.apiService.stopLoading();
+     
+    }
   	logout(){
 	    var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
 	    localStorage.clear();

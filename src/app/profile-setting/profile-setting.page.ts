@@ -113,6 +113,12 @@ export class ProfileSettingPage implements OnInit {
   	ngOnInit() {
   	}
 
+  	ngOnDestroy(){
+      // alert('leaveccc');
+      this.apiService.stopLoading();
+     
+    }
+
   	onSegmentChange(e){
       console.log('event = ', e.detail.value);
       this.profiletab = e.detail.value;

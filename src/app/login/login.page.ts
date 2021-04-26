@@ -85,7 +85,12 @@ export class LoginPage implements OnInit {
             	foo: {'data': result.data, 'page': 'profile'}
         	});
 	      	// this.router.navigate(['tabs/home'])
-	      	this.apiService.navCtrl.navigateRoot('tabs/home');
+	      	//this.apiService.navCtrl.navigateRoot('tabs/home');
+	      	if(result.data.first_login == 'true'){
+	      		this.apiService.navCtrl.navigateRoot('tabs/home');
+	      	}else{
+	      		this.apiService.navCtrl.navigateRoot('/category');
+	      	}
 	      }else{
 
 	      	this.apiService.presentToast(result.error, 'danger');

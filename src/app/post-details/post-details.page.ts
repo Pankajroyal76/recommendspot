@@ -60,6 +60,18 @@ export class PostDetailsPage implements OnInit {
 	this.hideMe = !this.hideMe;
 	}
 
+  ngOnDestroy(){
+    this.apiService.stopLoading();
+    
+    // alert('leaveccc');
+    // if (this.player === undefined || !this.player || null) {
+    //   console.log("Player could not be found.");
+    // } else {
+    //   // this.player.stopVideo();
+    //   this.player.destroy();
+    // }
+  }
+
   gotofollowing(){
       var user_id = localStorage.getItem('userId');
       localStorage.setItem('clickUserId' , user_id)

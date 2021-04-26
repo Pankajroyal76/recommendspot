@@ -35,6 +35,7 @@ export class ProfilePage implements OnInit {
   noti_count = localStorage.getItem('notiCount');
   index: any = -1;
   play_video = false;
+  player: any;
   
   	constructor(public sanitizer:DomSanitizer,private ref: ChangeDetectorRef,private globalFooService: GlobalFooService,public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private iab: InAppBrowser, public alertController: AlertController, private platform: Platform) { 
       this.user_name = localStorage.getItem('user_name');
@@ -55,6 +56,16 @@ export class ProfilePage implements OnInit {
   	ngOnInit() {
       this.platform1 = this.platform.is('cordova');
   	}
+
+    ngOnDestroy(){
+      // alert('leaveccc');
+      if (this.player === undefined || !this.player || null) {
+        console.log("Player could not be found.");
+      } else {
+        // this.player.stopVideo();
+        this.player.destroy();
+      }
+    }
 
     gotToTop() {
       this.content.scrollToTop(1000);
@@ -103,11 +114,71 @@ export class ProfilePage implements OnInit {
     }
 
 
+    // playYoutube(web_link, index){
+
+    //   this.index = index;
+    //   this.play_video = true;
+    // }
+
+
     playYoutube(web_link, index){
 
+      if (this.player === undefined || !this.player || null) {
+        console.log("Player could not be found.");
+      } else {
+        // this.player.stopVideo();
+        this.player.destroy();
+      }
       this.index = index;
       this.play_video = true;
+      console.log(web_link.split('embed/')[1])
+      
+        // create youtube player
+        // var player, iframe;
+          this.player = new YT.Player('iframe' + index, {
+            height: '390',
+            width: '640', 
+            videoId: web_link.split('embed/')[1],
+            playerVars: {
+              controls: 0,
+              disablekb: 1
+            },
+            events: {
+              'onStateChange': this.onPlayerStateChange,
+              'onReady': this.onPlayerReady
+            }
+          }); 
+          // document.getElementById('setContent').style.display = "block";
+         if (document.getElementById('iframe' + index) != undefined) {
+            var myImg = document.getElementById('iframe' + index);
+            myImg.setAttribute('src', 'https://www.youtube.com/embed/'  + web_link.split('embed/')[1] + '?autoplay=1');
+            document.getElementById('iframe' + index).style.display = "block";
+              
+        }            
+         
     }
+
+    // when video ends
+    onPlayerStateChange(event) { 
+      // let ptr = this;
+        let self = JSON.parse(localStorage.getItem('this'));
+        // // ptr.timestamp = event.target.getDuration();
+        // console.log(event, event.target.getDuration());
+      // if (event.data == YT.PlayerState.PLAYING) {
+     //       self.timestamp_callback(event);
+     //   }
+        // event.target.playVideo(); 
+        console.log(event)
+          if(event.data === 0) {           
+             
+          }
+    }      
+
+    onPlayerReady(event) {
+      console.log('play = ', event)
+      event.target.playVideo();
+    }
+
 
     youtube_parser(url){
       var regExp = /^https?\:\/\/(?:www\.youtube(?:\-nocookie)?\.com\/|m\.youtube\.com\/|youtube\.com\/)?(?:ytscreeningroom\?vi?=|youtu\.be\/|vi?\/|user\/.+\/u\/\w{1,2}\/|embed\/|watch\?(?:.*\&)?vi?=|\&vi?=|\?(?:.*\&)?vi?=)([^#\&\?\n\/<>"']*)/i;
@@ -125,6 +196,16 @@ export class ProfilePage implements OnInit {
           return 'error';
       }
     } 
+
+    ionViewWillLeave() {
+      
+      if (this.player === undefined || !this.player || null) {
+        console.log("Player could not be found.");
+      } else {
+        // this.player.stopVideo();
+        this.player.destroy();
+      }
+    }
 
   	ionViewDidEnter(){
       this.noti_count = localStorage.getItem('notiCount');

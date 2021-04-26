@@ -5,14 +5,14 @@ import { GlobalFooService } from '../services/globalFooService.service';
 import { config } from '../services/config';
 import { Router } from '@angular/router';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
-import { MenuController, AlertController, Platform, IonContent } from '@ionic/angular'; 
+import { MenuController, AlertController, Platform, IonContent, NavController } from '@ionic/angular'; 
 
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import * as $ from "jquery";
 declare var window: any; 
 declare var Branch;
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-
+// import { AddRecommendService } from '../services/addrecommend.service';
 
 @Component({
   selector: 'app-home',
@@ -27,6 +27,7 @@ export class HomePage implements OnInit {
   profiletab1: string = "Basic";
 	isAndroid: boolean = false;
 	posts: any = [];
+  allposts: any = [];
 	is_response = false;
 	IMAGES_URL: any = config.IMAGES_URL;
 	errors = config.errors;
@@ -55,8 +56,12 @@ export class HomePage implements OnInit {
   noti_count = localStorage.getItem('notiCount');
   index: any = -1;
   play_video = false;
+  iframeid: any;
+  player: any;
+  count = 10;
+  start_count = 0;
 
-  	constructor(public sanitizer:DomSanitizer,private ref: ChangeDetectorRef, public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private menuCtrl: MenuController, private globalFooService: GlobalFooService, public alertController: AlertController,private formBuilder: FormBuilder,private renderer: Renderer2, private iab: InAppBrowser, private platform: Platform) { 
+  	constructor(public sanitizer:DomSanitizer,private ref: ChangeDetectorRef, public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private menuCtrl: MenuController, private globalFooService: GlobalFooService, public alertController: AlertController,private formBuilder: FormBuilder,private renderer: Renderer2, private iab: InAppBrowser, private platform: Platform/*, private addrecommendService: AddRecommendService*/, public navController: NavController) { 
 
   		this.createForm();
       this.user_name = localStorage.getItem('user_name');
@@ -65,6 +70,17 @@ export class HomePage implements OnInit {
       this.user_id = localStorage.getItem('userId');
       var self = this;
       self.profiletab = "Basic";
+
+      /*this.addrecommendService.getObservable().subscribe((data) => {
+        console.log('Data received', data);
+        self.profiletab = "Basic";
+        self.counter = 1;
+        self.page_number = 1;
+        self.is_response = false;
+        self.posts = [];
+        self.getAllReccomdations(false, '');
+
+      });*/
     
   		this.globalFooService.getObservable().subscribe((data) => {
             console.log('Data received', data, localStorage.getItem('first_login'));
@@ -75,6 +91,10 @@ export class HomePage implements OnInit {
             self.is_response = false;
             self.posts = [];
             self.getAllReccomdations(false, '');
+            this.user_name = localStorage.getItem('user_name');
+            this.user_image = localStorage.getItem('user_image');
+            this.user_email = localStorage.getItem('user_email');
+            this.user_id = localStorage.getItem('userId');
 
             // if(localStorage.getItem('first_login') === 'false'){
 
@@ -111,28 +131,41 @@ export class HomePage implements OnInit {
 
     playYoutube(web_link, index){
 
+      if (this.player === undefined || !this.player || null) {
+        console.log("Player could not be found.");
+      } else {
+        // this.player.stopVideo();
+        this.player.destroy();
+      }
       this.index = index;
       this.play_video = true;
       console.log(web_link.split('embed/')[1])
       
         // create youtube player
         // var player, iframe;
-        //   player = new YT.Player('setContent', {
-        //     height: '390',
-        //     width: '640', 
-        //     videoId: 'Fzbe0bx0CFQ',
-        //     playerVars: {
-        //       controls: 0,
-        //       disablekb: 1
-        //     },
-        //     events: {
-        //       'onStateChange': this.onPlayerStateChange,
-        //       'onReady': this.onPlayerReady
-        //     }
-        //   }); 
-        //   document.getElementById('setContent').style.display = "block";
-        //   document.getElementById('iframe').src =  'https://www.youtube.com/embed/Fzbe0bx0CFQ';
-        //       document.getElementById('iframe').style.display = "block";
+          this.player = new YT.Player('iframe' + index, {
+            height: '390',
+            width: '640', 
+            videoId: web_link.split('embed/')[1],
+            playerVars: {
+              controls: 0,
+              disablekb: 1
+            },
+            events: {
+              'onStateChange': this.onPlayerStateChange,
+              'onReady': this.onPlayerReady
+            }
+          }); 
+          // document.getElementById('setContent').style.display = "block";
+         if (document.getElementById('iframe' + index) != undefined) {
+          var myImg = document.getElementById('iframe' + index);
+          myImg.setAttribute('src', 'https://www.youtube.com/embed/'  + web_link.split('embed/')[1] + '?autoplay=1');
+
+          // document.getElementById('iframe' + index).src =  'https://www.youtube.com/embed/'  + web_link.split('embed/')[1] + '?autoplay=1';
+              document.getElementById('iframe' + index).style.display = "block";
+              this.iframeid = 'iframe' + index;
+        }
+
              
          
     }
@@ -146,7 +179,7 @@ export class HomePage implements OnInit {
     // if (event.data == YT.PlayerState.PLAYING) {
    //       self.timestamp_callback(event);
    //   }
-      event.target.playVideo(); 
+      // event.target.playVideo(); 
       console.log(event)
         if(event.data === 0) {            
            
@@ -314,15 +347,34 @@ export class HomePage implements OnInit {
   		}
   	}
 
+    ngOnDestroy(){
+      // alert('leaveccc');
+      this.apiService.stopLoading();
+      if (this.player === undefined || !this.player || null) {
+        console.log("Player could not be found.");
+      } else {
+        // this.player.stopVideo();
+        this.player.destroy();
+      }
+    }
+
     ionViewWillLeave() {
-      let listaFrames = document.getElementsByTagName("iframe");
-      for (var index = 0; index < listaFrames.length; index++) {
-          let iframe = listaFrames[index].contentWindow;          
-          iframe.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-       }
+      // alert('leave')
+      // let listaFrames = document.getElementsByTagName("iframe");
+      // for (var index = 0; index < listaFrames.length; index++) {
+      //     let iframe = listaFrames[index].contentWindow;          
+      //     iframe.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+      // }
+      if (this.player === undefined || !this.player || null) {
+        console.log("Player could not be found.");
+      } else {
+        // this.player.stopVideo();
+        this.player.destroy();
+      }
     }
 
   	ionViewDidEnter(){
+      this.count = 10;
       this.noti_count = localStorage.getItem('notiCount');
       console.log('noti = ', this.noti_count)
       var self = this;
@@ -349,6 +401,18 @@ export class HomePage implements OnInit {
 	  
   	};
 
+    setFilteredLocations(searchText){
+
+        // this.posts = this.allposts.filter((location) => {
+        //   return location.title.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1;
+        // });
+
+      this.posts = this.allposts.filter(it => {
+        return (it.user_name.toLowerCase().includes(searchText) || it.user_name.toUpperCase().includes(searchText) || it.user_name.includes(searchText) || it.category.toLowerCase().includes(searchText)    ||it.category.toUpperCase().includes(searchText)    ||it.category.includes(searchText)    ||   it.sub_category.toLowerCase().includes(searchText)    ||   it.sub_category.toUpperCase().includes(searchText)    ||   it.sub_category.includes(searchText)  || it.title.toLowerCase().includes(searchText)  || it.title.toUpperCase().includes(searchText)  || it.title.includes(searchText) || it.description.toLowerCase().includes(searchText) || it.description.toUpperCase().includes(searchText) || it.description.includes(searchText) );
+      });
+
+    }
+
 
 
   	onSegmentChange(e){
@@ -359,6 +423,8 @@ export class HomePage implements OnInit {
   		this.is_response = false;
 	    this.posts = [];
 	    this.page_number = 1;
+      this.start_count = 0;
+      this.count = 10;
       this.ref.detectChanges();
   		this.getAllReccomdations(false, '');
   	}
@@ -476,30 +542,53 @@ export class HomePage implements OnInit {
           
           
         // };
-
-        // this.posts = result.data;
+        // var count = 10;
+        this.allposts = result.data;
+        console.log('result = ', result);
         console.log(this.posts);
         this.ref.detectChanges();
 
-	        if(result.length == 0){
-	          this.is_response = false;
-	          event.target.complete();
-	        }else{
-        
-           for (let i = 0; i < result.data.length; i++) {
-            this.posts.push(result.data[i]);
+        if(this.authForm.value.keyword == ''){
+
+          if(result.data.length > 10){
+            // this.posts = [];
+            if(this.count == result.length){
+  	          this.is_response = false;
+  	          event.target.complete();
+  	        }else{
+          
+              for (let i = this.start_count; i < this.count; i++) {
+                this.posts.push(result.data[i]); 
+                this.start_count = i + 1;                      
+              }
+
+              if (isFirstLoad)
+                event.target.complete();
+
+              this.page_number++;
+            }
+          }else{
+            this.posts = this.allposts;
+            // this.is_response = false;
+            //event.target.complete();
           }
-
-        if (isFirstLoad)
-          event.target.complete();
-
-        this.page_number++;
-      }
+        }else{
+          var searchText = this.authForm.value.keyword;
+          this.posts = this.allposts.filter(it => {
+            return (it.user_name.toLowerCase().includes(searchText) || it.user_name.toUpperCase().includes(searchText) || it.user_name.includes(searchText) || it.category.toLowerCase().includes(searchText)    ||it.category.toUpperCase().includes(searchText)    ||it.category.includes(searchText)    ||   it.sub_category.toLowerCase().includes(searchText)    ||   it.sub_category.toUpperCase().includes(searchText)    ||   it.sub_category.includes(searchText)  || it.title.toLowerCase().includes(searchText)  || it.title.toUpperCase().includes(searchText)  || it.title.includes(searchText) || it.description.toLowerCase().includes(searchText) || it.description.toUpperCase().includes(searchText) || it.description.includes(searchText) );
+          });
+        }
 	    });
   	}
 
   	doInfinite(event) {
   		this.counter = 1;
+      if((this.allposts.length - this.posts.length) < 10){
+        this.count = this.count + (this.allposts.length - this.posts.length);
+      }else{
+        this.count = this.count + 10;
+      }
+      
       this.getAllReccomdations(true, event);
     }
 
@@ -780,7 +869,9 @@ export class HomePage implements OnInit {
     	this.selectedItemm = -1;
     	localStorage.setItem('item', JSON.stringify(item));
     	localStorage.setItem('clicked_user_id', item.user_id);
-    	this.router.navigate(['/user-profile'])
+      localStorage.setItem('add_user_type', item.add_user_type);
+    	this.router.navigateByUrl('/user-profile', { replaceUrl: true })
+       // this.navController.navigateBack(['user-profile']);
     }
 
 

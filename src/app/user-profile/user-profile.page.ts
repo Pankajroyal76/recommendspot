@@ -38,6 +38,7 @@ export class UserProfilePage implements OnInit {
   noti_count = localStorage.getItem('notiCount');
   index = -1;
   play_video = false;
+  player: any;
   	
   	constructor(public sanitizer:DomSanitizer,private ref: ChangeDetectorRef,public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService, private iab: InAppBrowser, private socialSharing: SocialSharing,public location: Location, private platform: Platform) { 
 
@@ -58,6 +59,17 @@ export class UserProfilePage implements OnInit {
   	ngOnInit() {
       this.platform1 = this.platform.is('cordova');
   	}
+
+    ngOnDestroy(){
+      // alert('leaveccc');
+      this.apiService.stopLoading();
+      if (this.player === undefined || !this.player || null) {
+        console.log("Player could not be found.");
+      } else {
+        // this.player.stopVideo();
+        this.player.destroy();
+      }
+    }
 
     openUpdate(i){
       if(this.selectedItemm == i){
@@ -85,8 +97,60 @@ export class UserProfilePage implements OnInit {
 
     playYoutube(web_link, index){
 
+      if (this.player === undefined || !this.player || null) {
+        console.log("Player could not be found.");
+      } else {
+        // this.player.stopVideo();
+        this.player.destroy();
+      }
       this.index = index;
       this.play_video = true;
+      console.log(web_link.split('embed/')[1])
+      
+        // create youtube player
+        // var player, iframe;
+          this.player = new YT.Player('iframe' + index, {
+            height: '390',
+            width: '640', 
+            videoId: web_link.split('embed/')[1],
+            playerVars: {
+              controls: 0,
+              disablekb: 1
+            },
+            events: {
+              'onStateChange': this.onPlayerStateChange,
+              'onReady': this.onPlayerReady
+            }
+          }); 
+          // document.getElementById('setContent').style.display = "block";
+         if (document.getElementById('iframe' + index) != undefined) {
+          var myImg = document.getElementById('iframe' + index);
+            myImg.setAttribute('src', 'https://www.youtube.com/embed/'  + web_link.split('embed/')[1] + '?autoplay=1');
+              document.getElementById('iframe' + index).style.display = "block";
+              
+        }            
+         
+    }
+
+    // when video ends
+    onPlayerStateChange(event) { 
+      // let ptr = this;
+        let self = JSON.parse(localStorage.getItem('this'));
+        // // ptr.timestamp = event.target.getDuration();
+        // console.log(event, event.target.getDuration());
+      // if (event.data == YT.PlayerState.PLAYING) {
+     //       self.timestamp_callback(event);
+     //   }
+        // event.target.playVideo(); 
+        console.log(event)
+          if(event.data === 0) {           
+             
+          }
+    }      
+
+    onPlayerReady(event) {
+      console.log('play = ', event)
+      event.target.playVideo();
     }
 
     youtube_parser(url){
@@ -186,6 +250,16 @@ export class UserProfilePage implements OnInit {
       this.location.back();
     }
 
+    ionViewWillLeave() {
+      
+      if (this.player === undefined || !this.player || null) {
+        console.log("Player could not be found.");
+      } else {
+        // this.player.stopVideo();
+        this.player.destroy();
+      }
+    }
+
   	ionViewDidEnter(){
 
   		this.noti_count = localStorage.getItem('notiCount');
@@ -217,11 +291,13 @@ export class UserProfilePage implements OnInit {
 
   	get_profile(){
 
-    if(this.errors.indexOf(localStorage.getItem('item')) >= 0){
-        this.add_user_type = "user";
-    }else{
-      this.add_user_type = JSON.parse(localStorage.getItem('item')).add_user_type;
-    }
+    // if(this.errors.indexOf(localStorage.getItem('item')) >= 0){
+    //     this.add_user_type = "user";
+    // }else{
+    //   this.add_user_type = JSON.parse(localStorage.getItem('item')).add_user_type;
+    // }
+
+    this.add_user_type = localStorage.getItem('add_user_type');
 
     
 
@@ -489,6 +565,7 @@ export class UserProfilePage implements OnInit {
     viewUser(item){
       localStorage.setItem('item', JSON.stringify(item));
     	localStorage.setItem('clicked_user_id', item.user_id);
+      localStorage.setItem('add_user_type', item.add_user_type);
     	this.router.navigate(['/user-profile'])
     }
 

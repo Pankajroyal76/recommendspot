@@ -37,6 +37,12 @@ export class NotificationPage implements OnInit {
   	ngOnInit() {
   	}
 
+  	ngOnDestroy(){
+      // alert('leaveccc');
+      this.apiService.stopLoading();
+     
+    }
+
   	gotofollowing(){
       var user_id = localStorage.getItem('userId');
       localStorage.setItem('clickUserId' , user_id)

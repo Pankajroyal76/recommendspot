@@ -64,6 +64,12 @@ export class FollowingfollowersPage implements OnInit {
   	ngOnInit() {
   	}
 
+  	ngOnDestroy(){
+      // alert('leaveccc');
+      this.apiService.stopLoading();
+     
+    }
+
   	ionViewDidEnter(){
   		this.noti_count = localStorage.getItem('notiCount');
   		this.getData();

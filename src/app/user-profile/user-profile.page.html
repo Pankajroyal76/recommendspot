@@ -9,7 +9,7 @@
 			 
 		</ul>
 		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon>
-		<ion-badge color="secondary"><span *ngIf="noti_count != 0">{{noti_count}}</span></ion-badge></a>
+		<ion-badge *ngIf="noti_count != '0'" color="secondary"><span *ngIf="noti_count != '0'">{{noti_count}}</span></ion-badge></a>
 		<span proImg *ngIf="errors.indexOf(user_id) == -1">
 			<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
 	       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
@@ -18,7 +18,7 @@
 			 <p headerfixedheight routerLink="/tabs/profile"><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
 			<div profileDropdown>
 				<ul>
-					<li><a href="javascript:void(0)" routerLink="/profile-setting">Profile Settings</a></li>
+					<li><a href="javascript:void(0)" routerLink="/profile-setting/{{user_id}}">Profile Settings</a></li>
 					<li (click)="logout()"><a href="javascript:void(0)">Logout</a></li>
 				</ul>
 			</div>
@@ -87,10 +87,10 @@
 		</ion-col> -->
 	</ion-row>
 	<div class="profileDetails">
-		<p *ngIf="errors.indexOf(profile.bio) == -1"><ion-icon name="clipboard-outline"></ion-icon> {{profile?.bio}}</p>
-		<p *ngIf="errors.indexOf(profile.location) == -1 || errors.indexOf(profile.website) == -1">
-			<ion-icon name="location-outline" *ngIf="errors.indexOf(profile.location) == -1"></ion-icon>{{profile?.location}} 
-			<ion-icon class="lineeot" name="link-outline" *ngIf="errors.indexOf(profile.website) == -1"> </ion-icon>{{profile?.website}}
+		<p *ngIf="errors.indexOf(profile?.bio) == -1"><ion-icon name="clipboard-outline"></ion-icon> {{profile?.bio}}</p>
+		<p *ngIf="errors.indexOf(profile?.location) == -1 || errors.indexOf(profile?.website) == -1">
+			<ion-icon name="location-outline" *ngIf="errors.indexOf(profile?.location) == -1"></ion-icon>{{profile?.location}} 
+			<ion-icon class="lineeot" name="link-outline" *ngIf="errors.indexOf(profile?.website) == -1"> </ion-icon>{{profile?.website}}
 		</p>
 
 	</div>
@@ -160,7 +160,8 @@
 								<!-- {{getId(item.web_link)}} -->
 								<!-- getId(item.web_link) -->
 
-								<iframe *ngIf="youtube_parser(item.web_link) != false && i == index" style="width: 100%" height="315" [src]="sanitizer.bypassSecurityTrustResourceUrl(item.web_link)" frameborder="0" allowfullscreen></iframe>
+								<object id="iframe{{i}}" width="100%" height="315" frameborder="0"  style="    margin-bottom: 5px;display: none;"></object>
+							    <!-- <iframe  id="iframe{{i}}" src="" width="90%" height="200" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="display: none;"></iframe> -->
 
 							</ion-col>
 							<ion-col size="{{item.web_link_content?.data.title != '' ? 12 : 12}}">

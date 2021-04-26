@@ -9,7 +9,7 @@
 			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)" (click)="gotToTop()">Add Recommendation</a></li>
 			 
 		</ul>
-		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge color="secondary"><span *ngIf="noti_count != 0">{{noti_count}}</span></ion-badge></a>
+		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge *ngIf="noti_count != '0'" color="secondary"><span >{{noti_count}}</span></ion-badge></a>
 		<span proImg>
 			<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
 	        <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
@@ -81,7 +81,7 @@
 				</ion-item>
 				<span error *ngIf="errors.indexOf(authForm.value.category) >= 0 && is_submit == true">Please choose category</span>
 			</div>
-			<div form-group *ngIf="selected_cat == 'Shows/Series' || selected_cat == 'Movies '">
+			<div form-group *ngIf="selected_cat === 'Shows/Series' || selected_cat === 'Movies '">
 		 		<label>Platform</label>
 				<ion-item lines="none">
 					<ion-label>

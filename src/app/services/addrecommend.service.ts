@@ -4,7 +4,7 @@ import {Subject} from 'rxjs';
 @Injectable({
     providedIn: 'root'
 })
-export class GlobalFooService {
+export class AddRecommendService {
 
     private fooSubject = new Subject<any>();
 
