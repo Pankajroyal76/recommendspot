@@ -8,7 +8,7 @@ import { ApiserviceService } from './services/apiservice.service';
 import { config } from './services/config';
 import { Router } from '@angular/router';
 import { FCM } from '@ionic-native/fcm/ngx';
-
+import {ConnectionService} from 'ng-connection-service';
 declare var Branch;
 
 @Component({
@@ -53,6 +53,9 @@ export class AppComponent {
   selectedIndex: any;
   showBtn: boolean = false;
   noti_count = '0';
+  isConnected: any;
+  status: any;
+  alert: any;
 
   constructor(
     private platform: Platform,
@@ -63,9 +66,30 @@ export class AppComponent {
     private menuCtrl: MenuController,
     private fcm: FCM,
     public apiService: ApiserviceService,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    private ConnectionService: ConnectionService
     ) {
     this.initializeApp();
+
+
+    var self = this;
+    this.ConnectionService.monitor().subscribe(isConnected =>  {
+      this.isConnected = isConnected;
+      console.log('isConnected = ', isConnected)
+      if(this.isConnected){
+        this.status = "ONLINE";
+        this.alert.dismiss();
+        setTimeout(function(){
+          self.globalFooService.publishSomeData({
+              foo: {'data': '', 'page': 'profile'}
+          });
+        }, 5000);
+      } else {
+        this.status = "OFFLINE";
+        this.presentAlertConfirm();
+      }
+      //alert(this.status);
+    });
 
     this.globalFooService.getObservable().subscribe((data) => {
             console.log('Data received', data);
@@ -75,6 +99,16 @@ export class AppComponent {
             this.user_medium = localStorage.getItem('user_medium');
 
         });
+  }
+
+
+  async presentAlertConfirm() {
+      this.alert = await this.apiService.alertController.create({
+        message: 'No internet connection',
+        backdropDismiss: false
+      });
+
+      await this.alert.present();
   }
 
   getimage(img){

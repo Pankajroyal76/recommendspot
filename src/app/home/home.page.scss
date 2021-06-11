@@ -218,8 +218,8 @@ padding: 30px 15px 20px;
 	.post-img
 	{
 		
-		border-radius: 5px;
-		padding:0px 15px;
+		/*border-radius: 5px;
+		padding:0px 15px;*/
 		overflow: hidden;	
 		position:relative;
 		img 
@@ -470,7 +470,7 @@ padding: 30px 15px 20px;
 {
     background: #fbfbfb;
     padding: 10px;
-	margin:0px 15px;
+	/*margin:0px 15px;*/
 	&.ion-no-padding
 	{
 	padding:0px;
@@ -479,7 +479,7 @@ padding: 30px 15px 20px;
 	{
 	   img
 	   {
-	     border-radius:12px 12px 0px 0px;
+	     /*border-radius:12px 12px 0px 0px;*/
 	     height: 350px;
 		    width: 100%;
 		    object-fit: cover;
@@ -731,4 +731,9 @@ padding: 30px 15px 20px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
+}
+
+iframe{
+    width: 100% !important;
+    height: 315px !important;
 }

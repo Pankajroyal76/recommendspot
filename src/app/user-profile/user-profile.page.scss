@@ -124,8 +124,8 @@ ion-content
     margin:0px 0px 20px	;
 	.post-img
 	{
-		border-radius: 5px;
-		padding:0px 15px;
+		/*border-radius: 5px;
+		padding:0px 15px;*/
 		overflow: hidden;	
 		position:relative;
 		img 
@@ -427,7 +427,7 @@ ion-content
 {
     background: #fbfbfb;
     padding: 10px;
-	margin:0px 15px;
+	/*margin:0px 15px;*/
 	&.ion-no-padding
 	{
 	padding:0px;
@@ -436,7 +436,7 @@ ion-content
 	{
 	   img
 	   {
-	     border-radius:12px 12px 0px 0px;
+	     /*border-radius:12px 12px 0px 0px;*/
 	     height: 350px;
 		    width: 100%;
 		    object-fit: cover;
@@ -601,4 +601,9 @@ ion-content
     		padding-left:15px
     	}
     }
+}
+
+iframe{
+    width: 100% !important;
+    height: 315px !important;
 }

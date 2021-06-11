@@ -31,6 +31,7 @@ export class NotificationPage implements OnInit {
             this.user_image = localStorage.getItem('user_image');
             this.user_email = localStorage.getItem('user_email');
             this.user_id = localStorage.getItem('userId');
+
         });
   	}
 
@@ -51,6 +52,7 @@ export class NotificationPage implements OnInit {
   	viewUser(item){
     	
     	localStorage.setItem('clicked_user_id', item.senderId);
+    	localStorage.setItem('add_user_type', 'user');
     	this.router.navigate(['/user-profile'])
     }
 
@@ -94,11 +96,13 @@ export class NotificationPage implements OnInit {
 	      }
 	      else{
 	        this.apiService.presentToast('Technical error,Please try after some time.','danger');
+	        this.apiService.stopLoading(); 
 	      }
 	    },
 	    err => {
 	      this.apiService.stopLoading();
 	        this.apiService.presentToast('Technical error,Please try after some time.','danger');
+	        this.apiService.stopLoading(); 
 	    });
   	}
 
@@ -115,19 +119,29 @@ export class NotificationPage implements OnInit {
 	         this.notificationCount();
 	         if(item.noti_type == 'add post' || item.noti_type == 'add like' || item.noti_type == 'add comment'){
 			    localStorage.setItem('postId', item.itemId);
+			    localStorage.setItem('clicked_user_id', item.senderId);
+			    localStorage.setItem('add_user_type', 'user');
+			    localStorage.setItem('item', JSON.stringify(item.item));
 		      	this.router.navigate(['/post-details']);
 	         }else if(item.noti_type == 'follow user'){
 	         	localStorage.setItem('clicked_user_id', item.senderId);
+	         	localStorage.setItem('add_user_type', 'user');
     			this.router.navigate(['/user-profile']);
 	         }
+
+	        this.globalFooService.publishSomeData({
+            	foo: {'data': '', 'page': 'profile'}
+        	});
 	      }
 	      else{
 	        this.apiService.presentToast('Technical error,Please try after some time.','danger');
+	        this.apiService.stopLoading(); 
 	      }
 	    },
 	    err => {
 	      this.apiService.stopLoading();
 	        this.apiService.presentToast('Technical error,Please try after some time.','danger');
+	        this.apiService.stopLoading(); 
 	    });
   	}
 
@@ -141,8 +155,9 @@ export class NotificationPage implements OnInit {
 	       this.ref.detectChanges();
 	      if(result.status == 1){
 	        localStorage.setItem('notiCount', result.data.toString());
+	        this.noti_count = localStorage.getItem('notiCount');
 	      }else{
-	        this.apiService.presentToast(result.msg, 'danger');
+	        //this.apiService.presentToast(result.msg, 'danger');
 	      };
 	    });
   	}

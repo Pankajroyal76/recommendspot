@@ -32,6 +32,15 @@ export class LoginPage implements OnInit {
   		this.createForm();
   		this.reg_exp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   		this.withoutspace = /^\S*$/;
+  		var self = this;
+  		setTimeout(() => {
+  			if(localStorage.getItem('userId') != undefined)
+	       	{  
+	          self.router.navigate(['/tabs/home']);
+	       	}
+  		}, 100);
+
+		
   	}
 
   	ngOnInit() {
@@ -53,6 +62,55 @@ export class LoginPage implements OnInit {
   		});
   	}
 
+  	notificationCount(result){
+
+	    console.log('notiiiiiiiii')
+
+	    let dict ={
+	      userId: result.data._id,
+	    };
+	    
+	    this.apiService.postData(dict,'notificationCount').subscribe((result1) => {
+	       
+	       console.log('noti count = ', result1);
+	       this.ref.detectChanges();
+	      if(result1.status == 1){
+	        localStorage.setItem('notiCount', result1.data.toString());
+	        localStorage.setItem('userId', result.data._id);
+        	localStorage.setItem('IsLoggedIn', 'true');
+        	localStorage.setItem('profile',JSON.stringify(result.data));
+        	localStorage.setItem('user_name', result.data.name);
+  			localStorage.setItem('user_image', result.data.image);
+  			if(this.errors.indexOf(result.data.email) >= 0){
+  				localStorage.setItem('user_email', '');
+  			}else{
+  				localStorage.setItem('user_email', result.data.email);
+  			}
+  			// localStorage.setItem('user_email', result.data.email);
+  			localStorage.setItem('user_medium', result.data.medium);
+  			localStorage.setItem('first_login', result.data.first_login);
+  			this.globalFooService.publishSomeData({
+            	foo: {'data': result.data, 'page': 'profile'}
+        	});
+	      	 //this.router.navigate(['tabs/home'])
+	      	//this.apiService.navCtrl.navigateRoot('tabs/home');
+	      	if(result.data.first_login === 'true'){
+	      		// this.apiService.navCtrl.remove(this.apiService.navCtrl.getPrevious().index);
+	      		// this.apiService.navCtrl.navigateRoot('/tabs/home');
+	      		this.apiService.navCtrl.setDirection('root');
+	      		this.apiService.navCtrl.navigateRoot('/tabs/home'); 
+	      	}else{
+	      		//this.router.navigate(['/category']);
+	      		this.apiService.navCtrl.navigateRoot('category');
+	      	}
+
+	      }else{
+	        this.apiService.presentToast(result1.msg, 'danger');
+	        
+	      };
+	    });
+	}
+
   	login(){
 
 	    this.is_submit = true;
@@ -72,28 +130,33 @@ export class LoginPage implements OnInit {
 	      this.apiService.stopLoading();
 	      this.ref.detectChanges();
 	      if(result.status == 1){
+
+	      	this.notificationCount(result);
 	      	this.apiService.presentToast(result.error, 'success');
 
-	      	localStorage.setItem('userId', result.data._id);
-        	localStorage.setItem('IsLoggedIn', 'true');
-        	localStorage.setItem('profile',JSON.stringify(result.data));
-        	localStorage.setItem('user_name', result.data.name);
-  			localStorage.setItem('user_image', result.data.image);
-  			localStorage.setItem('user_email', result.data.email);
-  			localStorage.setItem('user_medium', result.data.medium);
-  			this.globalFooService.publishSomeData({
-            	foo: {'data': result.data, 'page': 'profile'}
-        	});
-	      	// this.router.navigate(['tabs/home'])
-	      	//this.apiService.navCtrl.navigateRoot('tabs/home');
-	      	if(result.data.first_login == 'true'){
-	      		this.apiService.navCtrl.navigateRoot('tabs/home');
-	      	}else{
-	      		this.apiService.navCtrl.navigateRoot('/category');
-	      	}
+	    //   	localStorage.setItem('userId', result.data._id);
+     //    	localStorage.setItem('IsLoggedIn', 'true');
+     //    	localStorage.setItem('profile',JSON.stringify(result.data));
+     //    	localStorage.setItem('user_name', result.data.name);
+  			// localStorage.setItem('user_image', result.data.image);
+  			// localStorage.setItem('user_email', result.data.email);
+  			// localStorage.setItem('user_medium', result.data.medium);
+  			// localStorage.setItem('first_login', result.data.first_login);
+  			// this.globalFooService.publishSomeData({
+     //        	foo: {'data': result.data, 'page': 'profile'}
+     //    	});
+	    //   	 //this.router.navigate(['tabs/home'])
+	    //   	//this.apiService.navCtrl.navigateRoot('tabs/home');
+	    //   	if(result.data.first_login === 'true'){
+	    //   		this.apiService.navCtrl.navigateRoot('tabs/home');
+	    //   	}else{
+	    //   		//this.router.navigate(['/category']);
+	    //   		this.apiService.navCtrl.navigateRoot('category');
+	    //   	}
 	      }else{
 
 	      	this.apiService.presentToast(result.error, 'danger');
+	      	this.apiService.stopLoading(); 
 	      };
 	    });
 
@@ -243,40 +306,47 @@ export class LoginPage implements OnInit {
 	    this.apiService.postData(dict,'social_login').subscribe((result) => {
 	      this.apiService.stopLoading();
 	      this.ref.detectChanges();
-	      this.globalFooService.publishSomeData({
-            	foo: {'data': result.data, 'page': 'profile'}
-        	});
+	      
 	      if(result.status == 1){
 	        this.apiService.presentToast('Login successfully!', 'success');
 	      	
 
-	  	 	localStorage.setItem('userId', result.data._id);
-        	localStorage.setItem('IsLoggedIn', 'true');
-        	localStorage.setItem('profile',JSON.stringify(result.data));
-        	localStorage.setItem('user_name', result.data.name);
-  			localStorage.setItem('user_image', result.data.image);
-  			if(this.errors.indexOf(result.data.email) >= 0){
-  				localStorage.setItem('user_email', '');
-  			}else{
-  				localStorage.setItem('user_email', result.data.email);
-  			}
+	  	 // 	localStorage.setItem('userId', result.data._id);
+     //    	localStorage.setItem('IsLoggedIn', 'true');
+     //    	localStorage.setItem('profile',JSON.stringify(result.data));
+     //    	localStorage.setItem('user_name', result.data.name);
+  			// localStorage.setItem('user_image', result.data.image);
+  			// if(this.errors.indexOf(result.data.email) >= 0){
+  			// 	localStorage.setItem('user_email', '');
+  			// }else{
+  			// 	localStorage.setItem('user_email', result.data.email);
+  			// }
   			
-  			localStorage.setItem('user_medium', result.data.medium);
-  			localStorage.setItem('first_login', result.data.first_login);
-	      	if(result.data.first_login == true){
-	      		this.apiService.navCtrl.navigateRoot('tabs/home');
-	      	}else{
-	      		this.apiService.navCtrl.navigateRoot('/category');
-	      	}
+  			// localStorage.setItem('user_medium', result.data.medium);
+  			// localStorage.setItem('first_login', result.data.first_login);
+
+  			// this.globalFooService.publishSomeData({
+     //        	foo: {'data': result.data, 'page': 'profile'}
+     //    	});
+  			//this.router.navigate(['tabs/home']);
+	      	// if(result.data.first_login === 'true'){
+	      	// 	this.router.navigate(['tabs/home']);
+	      	// }else{
+	      	// 	this.router.navigate(['/category']);
+	      	// }
+
+	      	this.notificationCount(result);
         	
 	      }
 	      else{
 	        this.apiService.presentToast('Error while signing up! Please try later', 'danger');
+	        this.apiService.stopLoading(); 
 	      }
 	    },
 	    err => {
 	      this.apiService.stopLoading();
 	        this.apiService.presentToast('Technical error,Please try after some time', 'danger');
+	        this.apiService.stopLoading(); 
 	    });
 	    // });
 	};

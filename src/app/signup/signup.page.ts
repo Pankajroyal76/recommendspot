@@ -46,6 +46,13 @@ export class SignupPage implements OnInit {
       	this.reg_exp_letters =  /^[a-zA-Z].*$/;;
       	this.reg_exp_digits = /^\d{6,10}$/;
       	this.withoutspace = /^\S*$/;
+      	var self = this;
+      	setTimeout(() => {
+  			if(localStorage.getItem('userId') != undefined)
+	       	{  
+	          self.router.navigate(['/tabs/home']);
+	       	}
+  		}, 100);
   	}
 
   	ngOnInit() {
@@ -113,7 +120,11 @@ export class SignupPage implements OnInit {
 	      	}else{
 	      		this.apiService.navCtrl.navigateRoot('/category');
 	      	}
-	      };
+	      }else{
+
+	      	this.apiService.presentToast(result.error, 'danger');
+
+	      }
 	    });
 	};
 
@@ -302,7 +313,7 @@ export class SignupPage implements OnInit {
 	      	}
 	      }
 	      else{
-	        this.apiService.presentToast('Error while signing up! Please try later', 'danger');
+	       	this.apiService.presentToast(result.error, 'danger');
 	      }
 	    },
 	    err => {

@@ -13,7 +13,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/fo
 })
 export class CommentsPage implements OnInit {
 	
-  	comments: any;
+  	comments: any = [];
  	user_id: any;
  	IMAGES_URL: any = config.IMAGES_URL;
 	errors = config.errors;
@@ -51,6 +51,11 @@ export class CommentsPage implements OnInit {
       localStorage.setItem('clickUserId' , user_id)
     }
 
+    ionViewDidLeave() {
+      this.comments = [];
+    
+    }
+
   	ionViewDidEnter() {
       this.noti_count = localStorage.getItem('notiCount');
   		this.is_response = false;
@@ -83,10 +88,11 @@ export class CommentsPage implements OnInit {
 	    	user_id: localStorage.getItem('userId'),
 	    	post_id: localStorage.getItem('postId'),
 	    }
+      //this.comments = [];
 	  
 	    this.apiService.postData(dict,'getComments').subscribe((result) => { 
 	     this.apiService.stopLoading(); 
-       this.ref.detectChanges(); 
+       
 	     console.log(result.data);
 	     this.is_response = true;
 	      if(result.status == 1){
@@ -94,10 +100,13 @@ export class CommentsPage implements OnInit {
 	      }
 	      else{
 	        this.apiService.presentToast('Error while sending request,Please try after some time','success');
+          this.apiService.stopLoading(); 
 	      }
+        this.ref.detectChanges(); 
 	    },
 	    err => {
 	        this.apiService.presentToast('Technical error,Please try after some time','success');
+          this.apiService.stopLoading(); 
 	    });
   	}
 
@@ -139,11 +148,13 @@ export class CommentsPage implements OnInit {
 	        }
 	        else{
 	          	this.apiService.presentToast('Technical error,Please try after some time.','danger');
+              this.apiService.stopLoading(); 
 	        }
       	},
       	err => {
 	        this.apiService.stopLoading();
           	this.apiService.presentToast('Technical error,Please try after some time.','danger');
+            this.apiService.stopLoading(); 
       	});
 
     };

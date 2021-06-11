@@ -60,7 +60,7 @@ export class EditReccomendationPage implements OnInit {
 	plat_selected_value = '';
 	noti_count = localStorage.getItem('notiCount');
 	selected_cat: any = '';
-
+	is_linkdata = false;
  	constructor(private ref: ChangeDetectorRef,public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, public location: Location, private globalFooService: GlobalFooService,private formBuilder: FormBuilder, public sanitizer:DomSanitizer, public loadingController: LoadingController) { 
   		
  		this.createForm();
@@ -160,17 +160,23 @@ export class EditReccomendationPage implements OnInit {
 		var dict = {
 	    	url: link
 	    }
+	    this.is_linkdata = false;
 	  	this.presentLoading();
 	    this.apiService.postData(dict,'scrapUrl').subscribe((result) => { 
 	      this.stopLoading(); 
 	      this.ref.detectChanges(); 
 	      console.log(result)
-	      this.opencontent = true;
-		this.link_content = result;
+	      if(result.data != null){
+	      		this.opencontent = true;
+		      	this.link_content = result;
+				this.is_linkdata = true;
+	      	}
+	     
 		this.stopLoading();
 	    },
 	    err => {
 	        this.apiService.presentToast('Technical error,Please try after some time','success');
+	        this.stopLoading(); 
 	    });
 		
   		
@@ -187,6 +193,7 @@ export class EditReccomendationPage implements OnInit {
   	typeChange(type){
   		if(type == 'Photo'){
   			this.authForm.patchValue({ web_link : ''});
+  			this.link_content = '';
   		}else if(type == 'Website'){
   			this.live_image_url = '';
   			this.is_live_image_updated = false;
@@ -198,6 +205,7 @@ export class EditReccomendationPage implements OnInit {
 			this.is_live_image_updated = false;
   		}else{
   			this.authForm.patchValue({ web_link : ''});
+  			this.link_content = '';
   			this.live_image_url = '';
   			this.is_live_image_updated = false;
   			this.imgBlob = '';
@@ -264,10 +272,12 @@ export class EditReccomendationPage implements OnInit {
 	      }
 	      else{
 	        this.apiService.presentToast('Error while sending request,Please try after some time','success');
+	        this.stopLoading(); 
 	      }
 	    },
 	    err => {
 	        this.apiService.presentToast('Technical error,Please try after some time','success');
+	        this.stopLoading(); 
 	    });
   	}
 
@@ -277,7 +287,7 @@ export class EditReccomendationPage implements OnInit {
   	
 	    this.apiService.postData({},'platform_listing').subscribe((result) => { 
 	      this.stopLoading();  
-	      this.ref.detectChanges();
+	      
 	      if(result.status == 1){
 	        this.platforms = result.data;
 	        //this.category = this.categories[0]._id;
@@ -285,6 +295,8 @@ export class EditReccomendationPage implements OnInit {
 	      else{
 	        this.apiService.presentToast('Error while sending request,Please try after some time','success');
 	      }
+
+	      this.ref.detectChanges();
 	    },
 	    err => {
 	        this.apiService.presentToast('Technical error,Please try after some time','success');
@@ -310,7 +322,7 @@ export class EditReccomendationPage implements OnInit {
 	      console.log('sub categories = ', result )
 	      if(result.status == 1){
 	        this.subcategories = result.data;
-	        this.ref.detectChanges();
+	        
 	      }
 	      else{
 	        //this.apiService.presentToast('Error while sending request,Please try after some time','success');
@@ -320,12 +332,13 @@ export class EditReccomendationPage implements OnInit {
 	      }else{
 	      	this.getData();
 	      }
-	      this.ref.detectChanges();
-	      this.stopLoading();  
+	      this.stopLoading();
+	      this.ref.detectChanges();  
 	      
 	    },
 	    err => {
 	        this.apiService.presentToast('Technical error,Please try after some time','success');
+	        this.apiService.stopLoading(); 
 	    });
   	}
 
@@ -388,6 +401,7 @@ export class EditReccomendationPage implements OnInit {
 	          	
 	        });
 	        this.typeTab = result.data[0].type;
+	        this.is_linkdata = true;
 
 	        var self = this;
 	        if(this.errors.indexOf(result.data[0].web_link) == -1){
@@ -416,11 +430,13 @@ export class EditReccomendationPage implements OnInit {
           }
           else{
               this.apiService.presentToast('Technical error,Please try after some time.','danger');
+              this.stopLoading(); 
           }
         },
         err => {
           this.stopLoading();
             this.apiService.presentToast('Technical error,Please try after some time.','danger');
+            this.stopLoading(); 
         });
     };
 
@@ -448,10 +464,12 @@ export class EditReccomendationPage implements OnInit {
 	      }
 	      else{
 	        this.apiService.presentToast('Error while sending request,Please try after some time','success');
+	        this.stopLoading(); 
 	      }
 	    },
 	    err => {
 	        this.apiService.presentToast('Technical error,Please try after some time','success');
+	        this.stopLoading(); 
 	    });
   	}
 
@@ -475,20 +493,27 @@ export class EditReccomendationPage implements OnInit {
 	    }
   		
 
-	    if(this.authForm.value.type == 'Website'){
+	    if(this.typeTab != 'Website'){
+  			if(this.errors.indexOf(this.authForm.value.description) >= 0){
+		      return false;
+		    }
+  		}
+  		
+
+	    if(this.typeTab == 'Website'){
 	    	if(this.errors.indexOf(this.authForm.value.web_link) >= 0 || !this.expression.test(this.authForm.value.web_link)){
 		      return false;
 		    }
 	    }
 
-	    if(this.authForm.value.type == 'Photo'){
-	    	if(this.errors.indexOf(this.image) >= 0 && this.errors.indexOf(this.live_image_url) >= 0){
+	    if(this.typeTab == 'Photo'){
+	    	if(this.errors.indexOf(this.image_file) >= 0 && this.errors.indexOf(this.image_url) >= 0){
 		      return false;
 		    }
 	    }
 	    
 	    
-	    if(this.authForm.value.type == 'Photo' && this.errors.indexOf(this.image_file) == -1){
+	    if(this.typeTab == 'Photo' && this.errors.indexOf(this.image_file) == -1){
 	    	this.uploadImage();
 	    }else{
 	    	this.profileImageSubmit();
@@ -596,7 +621,7 @@ export class EditReccomendationPage implements OnInit {
 	    this.presentLoading();
 	    var dict = {
 	    	title: this.authForm.value.title,
-	    	type: this.authForm.value.type,
+	    	type: this.typeTab,
 	    	description: this.authForm.value.description,
 	    	category: this.authForm.value.category,
 	    	platform: this.authForm.value.platform,
@@ -633,10 +658,12 @@ export class EditReccomendationPage implements OnInit {
 	      }
 	      else{
 	        this.apiService.presentToast('Error while sending request,Please try after some time','success');
+	        this.apiService.stopLoading(); 
 	      }
 	    },
 	    err => {
 	        this.apiService.presentToast('Technical error,Please try after some time','success');
+	        this.apiService.stopLoading(); 
 	    });
   	}
 

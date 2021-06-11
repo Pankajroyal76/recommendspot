@@ -50,21 +50,39 @@ export class ProfilePage implements OnInit {
           this.user_image = localStorage.getItem('user_image');
           this.user_email = localStorage.getItem('user_email');
           this.user_id = localStorage.getItem('userId');
+          this.noti_count = localStorage.getItem('notiCount');
       });
     }
 
   	ngOnInit() {
       this.platform1 = this.platform.is('cordova');
+      this.noti_count = localStorage.getItem('notiCount');
+      localStorage.setItem('clicked_user_id' , this.userId);
+      this.play_video = false;
   	}
 
-    ngOnDestroy(){
-      // alert('leaveccc');
+    stopPlayer(){
       if (this.player === undefined || !this.player || null) {
         console.log("Player could not be found.");
       } else {
         // this.player.stopVideo();
         this.player.destroy();
       }
+    }
+
+    ngOnDestroy(){
+      // alert('leaveccc');
+      this.apiService.stopLoading();
+      if (this.player === undefined || !this.player || null) {
+        console.log("Player could not be found.");
+      } else {
+        // this.player.stopVideo();
+        console.log('destroy ');
+        this.player.destroy();
+        
+      }
+      this.play_video = false;
+      // document.getElementById('iframetwo').style.display = "none";
     }
 
     gotToTop() {
@@ -75,7 +93,7 @@ export class ProfilePage implements OnInit {
       var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
       localStorage.clear();
       localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
-      this.router.navigate(['/landing-page']);
+      this.router.navigate(['/landing-page'], { replaceUrl: true });
     }
 
     openUpdate(i){
@@ -123,21 +141,23 @@ export class ProfilePage implements OnInit {
 
     playYoutube(web_link, index){
 
-      if (this.player === undefined || !this.player || null) {
-        console.log("Player could not be found.");
-      } else {
-        // this.player.stopVideo();
-        this.player.destroy();
-      }
-      this.index = index;
-      this.play_video = true;
-      console.log(web_link.split('embed/')[1])
-      
-        // create youtube player
-        // var player, iframe;
-          this.player = new YT.Player('iframe' + index, {
-            height: '390',
-            width: '640', 
+
+        if (this.errors.indexOf(this.player) >= 0) {
+          console.log("Player could not be found.");
+        } else {
+          // this.player.stopVideo();
+          this.player.destroy();
+        }
+
+         this.play_video = true;
+         this.index = index;
+        console.log(web_link.split('embed/')[1]);
+        console.log('index = ', web_link, index)
+
+        if(index == 0){
+          this.player = new YT.Player('iframetwo', {
+            height: '315',
+            width: '100%', 
             videoId: web_link.split('embed/')[1],
             playerVars: {
               controls: 0,
@@ -147,14 +167,51 @@ export class ProfilePage implements OnInit {
               'onStateChange': this.onPlayerStateChange,
               'onReady': this.onPlayerReady
             }
-          }); 
-          // document.getElementById('setContent').style.display = "block";
-         if (document.getElementById('iframe' + index) != undefined) {
-            var myImg = document.getElementById('iframe' + index);
+          });  
+
+           var myImg = document.getElementById('iframetwo');
+            console.log('myImg = ', myImg)
             myImg.setAttribute('src', 'https://www.youtube.com/embed/'  + web_link.split('embed/')[1] + '?autoplay=1');
+            console.log('myImg = ', myImg)
+            document.getElementById('iframetwo').style.display = "block"; 
+
+
+        }else{
+          
+          this.player = new YT.Player('iframe' + index, {
+            height: '315',
+            width: '100%', 
+            videoId: web_link.split('embed/')[1],
+            playerVars: {
+              controls: 0,
+              disablekb: 1
+            },
+            events: {
+              'onStateChange': this.onPlayerStateChange,
+              'onReady': this.onPlayerReady
+            }
+          });
+           var myImg = document.getElementById('iframe' + index);
+            console.log('myImg = ', myImg)
+            myImg.setAttribute('src', 'https://www.youtube.com/embed/'  + web_link.split('embed/')[1] + '?autoplay=1');
+            console.log('myImg = ', myImg)
             document.getElementById('iframe' + index).style.display = "block";
+        }
+        
+      
+     
+      
+        // create youtube player
+        // var player, iframe;
+           
+
+
+          console.log('player = ', this.player)
+          // document.getElementById('setContent').style.display = "block";
+         // if (document.getElementById('iframe' + index) != undefined) {
+           
               
-        }            
+        // }            
          
     }
 
@@ -203,14 +260,20 @@ export class ProfilePage implements OnInit {
         console.log("Player could not be found.");
       } else {
         // this.player.stopVideo();
+        console.log('destroy ');
         this.player.destroy();
+       
       }
+      this.play_video = false;
+       // document.getElementById('iframetwo').style.display = "none";
     }
 
   	ionViewDidEnter(){
       this.noti_count = localStorage.getItem('notiCount');
       this.counter = 0;
+      this.play_video = false;
   		this.userId = localStorage.getItem('userId');
+      localStorage.setItem('clicked_user_id' , this.userId);
   		
   		
   		this.get_profile();
@@ -233,11 +296,12 @@ export class ProfilePage implements OnInit {
 
     gotoFollowersFollowings(str){
       localStorage.setItem('friend', str);
-      localStorage.setItem('clickUserId' , this.userId)
+      localStorage.setItem('clickUserId' , this.userId);
+      
       this.globalFooService.publishSomeData({
           foo: {'data': '', 'page': 'updateprofile'}
       });
-      this.router.navigate(['/followingfollowers'])
+      this.router.navigate(['/followingfollowers'], { replaceUrl: true })
       //this.apiService.navCtrl.navigateRoot('tabs/following');
     }
 
@@ -282,7 +346,7 @@ export class ProfilePage implements OnInit {
   	getData(){
      
       this.apiService.postData({'userId': localStorage.getItem('userId'), 'loggedUserId': localStorage.getItem('userId'), add_user_type: 'user'},'influencerProfile').subscribe((result) => {
-        this.apiService.stopLoading();
+        
         this.ref.detectChanges();
         console.log(result)
         if(result.status == 1){
@@ -293,6 +357,7 @@ export class ProfilePage implements OnInit {
         else{
           this.apiService.presentToast('Technical error,Please try after some time.','danger');
         }
+        this.apiService.stopLoading();
       },
       err => {
         this.apiService.stopLoading();
@@ -301,7 +366,7 @@ export class ProfilePage implements OnInit {
     }
 
   	goto_profile_setting(){
-  		this.router.navigate(['/profile-setting/', this.profile._id]);
+  		this.router.navigate(['/profile-setting/', this.profile._id], { replaceUrl: true });
   	}
 
   	like(likesArray, index){
@@ -382,14 +447,14 @@ export class ProfilePage implements OnInit {
     this.selectedItemm = -1;
       localStorage.setItem('item', JSON.stringify(post));
       localStorage.setItem('postId', post._id);
-      this.router.navigate(['/post-details']);
+      this.router.navigate(['/post-details'], { replaceUrl: true });
   }
 
   viewComments(post){
     this.selectedItemm = -1;
     localStorage.setItem('item', JSON.stringify(post));
     localStorage.setItem('postId', post._id);
-    this.router.navigate(['/comments']);
+    this.router.navigate(['/comments'], { replaceUrl: true });
   }
 
 
@@ -475,7 +540,7 @@ export class ProfilePage implements OnInit {
     localStorage.setItem('postId', item._id);
     localStorage.setItem('category_id', item.category_id);
     localStorage.setItem('route', '/tabs/profile');
-    this.router.navigate(['/edit-reccomendation'])
+    this.router.navigate(['/edit-reccomendation'], { replaceUrl: true })
   }
 
 

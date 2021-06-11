@@ -12,10 +12,24 @@ export class AuthGuard implements CanActivate {
     errors : any = ['',null,undefined,'undefined','null'];
     constructor(private router: Router,public apiService: ApiserviceService) { }
 
-    canActivate(): boolean {
-        if (!this.apiService.gettoken()) {
-          this.router.navigateByUrl("/");
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean | UrlTree  {
+        // if (!this.apiService.gettoken()) {
+        //   this.router.navigateByUrl("/");
+        // }
+        // return this.apiService.gettoken();
+
+
+
+        var token = localStorage.getItem('userId');
+        if(this.errors.indexOf(token) == -1){
+          return true;
         }
-        return this.apiService.gettoken();
-    }  
+        else{
+          return this.router.navigate(['/']);
+        }
+
+    } 
+
+
+  
 }

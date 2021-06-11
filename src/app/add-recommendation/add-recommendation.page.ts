@@ -60,6 +60,7 @@ export class AddRecommendationPage implements OnInit {
 	plat_selected_value = '';
 	noti_count = localStorage.getItem('notiCount');
 	selected_cat: any = '';
+	is_linkdata = false;
 
   	constructor(private spinner: NgxSpinnerService,private ref: ChangeDetectorRef,public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, private globalFooService: GlobalFooService,private formBuilder: FormBuilder, public sanitizer:DomSanitizer, public loadingController: LoadingController) { 
 
@@ -198,17 +199,24 @@ export class AddRecommendationPage implements OnInit {
 		var dict = {
 	    	url: link
 	    }
+	    this.is_linkdata = false;
 	  	this.presentLoading();
 	    this.apiService.postData(dict,'scrapUrl').subscribe((result) => { 
-	       this.ref.detectChanges();
-	      this.stopLoading();  
-	      console.log(result)
-	      this.opencontent = true;
-		this.link_content = result;
+	       	this.ref.detectChanges();
+	      	this.stopLoading();  
+	      	console.log(result)
+	      	
+	      	if(result.data != null){
+	      		this.opencontent = true;
+		      	this.link_content = result;
+				this.is_linkdata = true;
+	      	}
+			
 		// this.stopLoading();
 	    },
 	    err => {
-	        this.apiService.presentToast('Technical error,Please try after some time','success');
+	        this.apiService.presentToast('Technical error,Please try after some time','danger');
+	        this.stopLoading();
 	    });
   		
   	}
@@ -272,7 +280,8 @@ export class AddRecommendationPage implements OnInit {
 	      }
 	    },
 	    err => {
-	        this.apiService.presentToast('Technical error,Please try after some time','success');
+	        this.apiService.presentToast('Technical error,Please try after some time','danger');
+	        this.stopLoading();
 	    });
   	}
 
@@ -293,7 +302,8 @@ export class AddRecommendationPage implements OnInit {
 	      }
 	    },
 	    err => {
-	        this.apiService.presentToast('Technical error,Please try after some time','success');
+	        this.apiService.presentToast('Technical error,Please try after some time','danger');
+	        this.stopLoading();
 	    });
   	}
 
@@ -327,7 +337,8 @@ export class AddRecommendationPage implements OnInit {
 	       // this.stopLoading();  
 	    },
 	    err => {
-	        this.apiService.presentToast('Technical error,Please try after some time','success');
+	        this.apiService.presentToast('Technical error,Please try after some time','danger');
+	        this.stopLoading();
 	    });
   	}
 
@@ -394,7 +405,8 @@ export class AddRecommendationPage implements OnInit {
 	      }
 	    },
 	    err => {
-	        this.apiService.presentToast('Technical error,Please try after some time','success');
+	        this.apiService.presentToast('Technical error,Please try after some time','danger');
+	        this.stopLoading();
 	    });
   	}
 
@@ -416,11 +428,7 @@ export class AddRecommendationPage implements OnInit {
   		}
   		
 
-	    if(this.authForm.value.type == 'Website'){
-	    	if(this.errors.indexOf(this.authForm.value.web_link) >= 0 || !this.expression.test(this.authForm.value.web_link)){
-		      return false;
-		    }
-	    }
+	   
 
 	    if(this.authForm.value.type == 'Photo'){
 	    	if(this.errors.indexOf(this.image_file) >= 0){
@@ -554,7 +562,7 @@ export class AddRecommendationPage implements OnInit {
 	     
 	    },
 	    err => {
-	        this.apiService.presentToast('Technical error,Please try after some time','success');
+	        this.apiService.presentToast('Technical error,Please try after some time','danger');
 	    });
   	}
 
@@ -604,10 +612,12 @@ export class AddRecommendationPage implements OnInit {
 	      }
 	      else{
 	        this.apiService.presentToast('Error while sending request,Please try after some time','success');
+	        this.stopLoading();
 	      }
 	    },
 	    err => {
-	        this.apiService.presentToast('Technical error,Please try after some time','success');
+	        this.apiService.presentToast('Technical error,Please try after some time','danger');
+	        this.stopLoading();
 	    });
   	}
 

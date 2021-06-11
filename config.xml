@@ -21,6 +21,7 @@
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
     <preference name="AllowInlineMediaPlayback" value="true" />
+    <allow-navigation href="https://*youtube.com/*"/>
     
     <branch-config>
         <branch-key value="key_test_jcR8RwwmzyfU5xROVJP6yhedBznHRjqY" />

@@ -8,7 +8,7 @@
 			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
 			 
 		</ul>
-		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge *ngIf="noti_count != '0'" color="secondary"><span *ngIf="noti_count != '0'">{{noti_count}}</span></ion-badge></a>
+		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge *ngIf="noti_count != '0'  && errors.indexOf(noti_count) == -1" color="secondary"><span *ngIf="noti_count != '0'">{{noti_count}}</span></ion-badge></a>
 		<span proImg>
 			<img routerLink="/tabs/profile"*ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
 	        <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
@@ -37,8 +37,8 @@
 
 	<div container>
 <div notifications>
-  <ion-item lines="none" *ngFor="let item of listing;let i = index;" [ngClass]="{'unread': item.read == 0}">
-	 <ion-avatar (click)="viewUser(item)">
+  <ion-item lines="none" *ngFor="let item of listing;let i = index;" [ngClass]="{'unread': item.read == 0}" style="cursor: pointer;">
+	 <ion-avatar (click)="viewUser(item)" >
 	<!--    <img *ngIf="errors.indexOf(item.sender_image) == -1 && item.sender_medium == 'simple'" src="{{IMAGES_URL + '/images/' + item.sender_image}}">
 	   <img *ngIf="errors.indexOf(item.sender_image) == -1 && item.sender_medium != 'simple'" src="{{item.sender_image}}">
 	 	<img *ngIf="errors.indexOf(item.sender_image) >= 0 " src="assets/img/default.png">
@@ -52,7 +52,7 @@
 
 	 <p *ngIf="item.noti_type == 'add like'"><span (click)="viewUser(item)"> {{item.sender_name}}</span><span (click)="readNoti(item, i)"> liked your post: <b> {{errors.indexOf(item.item.title) == -1 ? item.item.title : item.item.description}}</b></span></p>
 
-	 <p *ngIf="item.noti_type == 'add comment'"><span (click)="viewUser(item)">{{item.sender_name}}</span> <span (click)="readNoti(item, i)">commented on your post: <b> {{errors.indexOf(item.item.title) == -1 ? item.item.title : item.item.description}}</b></span></p>
+	 <p *ngIf="item.noti_type == 'add comment'"><span (click)="viewUser(item)">{{item.sender_name}}</span> <span (click)="readNoti(item, i)"> commented on your post: <b> {{errors.indexOf(item.item.title) == -1 ? item.item.title : item.item.description}}</b></span></p>
 
 	 <p *ngIf="item.noti_type == 'follow user'"><span (click)="viewUser(item)">{{item.sender_name}}</span> <span (click)="readNoti(item, i)"> started following you.</span></p>
 

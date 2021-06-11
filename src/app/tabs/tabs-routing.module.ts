@@ -38,6 +38,7 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: '/tabs/home',
+    canActivate: [AuthGuard],
     pathMatch: 'full'
   }
 ];

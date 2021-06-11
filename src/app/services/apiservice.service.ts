@@ -15,6 +15,8 @@ export class ApiserviceService {
   loading:any;
   isLoggedIn:Boolean;
   errors = config.errors;
+  isLoading = false;
+  loaderCounter = 0;
 
   constructor(public modalController: ModalController, private http: Http, public router: Router, public toastController: ToastController, public loadingController: LoadingController,  public actionSheetController: ActionSheetController, public platform: Platform, public alertController: AlertController, public navCtrl: NavController) { }
 
@@ -79,12 +81,32 @@ export class ApiserviceService {
 	toast.present();
   }
 
+  // async presentLoading() {
+  //   this.loaderCounter = this.loaderCounter + 1;
+
+  //   if (this.loaderCounter === 1) {
+  //     this.isLoading = true;
+  //     // const { loadingDuration, loadingMessage = loadingDefaultOptions.loadingMessage, loadingCssClass } = options;
+  //     this.loading = await this.loadingController.create({ 
+  //         spinner: 'bubbles', cssClass: 'my-loading-class'});
+  //     await this.loading.present();
+  //   }
+  // }
+
+  // async stopLoading() {
+  //   this.loaderCounter = this.loaderCounter - 1;
+  //   if (this.loaderCounter == 0) {
+  //       this.isLoading = false;
+  //       await this.loading.dismiss();
+  //   }
+  // }
+
   async presentLoading() {
    // this.loading = await this.loadingController.create();
    console.log('loading = ', this.errors.indexOf(this.loading))
     if (this.errors.indexOf(this.loading) >= 0) {
         this.loading = await this.loadingController.create({ 
-          spinner: 'bubbles', cssClass: 'my-loading-class'});
+          spinner: 'bubbles', cssClass: 'my-loading-class', duration: 20000});
     }
     await this.loading.present();
   }

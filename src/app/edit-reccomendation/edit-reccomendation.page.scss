@@ -117,6 +117,10 @@ ion-item{
     border-radius: 40px;
     position: relative;
     ion-col{
+        img{
+            height: 118px;
+            object-fit: cover;
+        }
         p{
             margin:2px 15px;
         }

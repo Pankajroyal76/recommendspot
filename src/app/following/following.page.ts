@@ -89,7 +89,7 @@ export class FollowingPage implements OnInit {
 	    
 	    this.apiService.postData(dict,'followingListingTab').subscribe((result) => {
 	      this.apiService.stopLoading();
-	      this.ref.detectChanges();
+	      
 	      if(result.status == 1){
 	         this.listing = result.data;
 	         this.is_response = true;
@@ -97,11 +97,13 @@ export class FollowingPage implements OnInit {
 	      }
 	      else{
 	        this.apiService.presentToast('Technical error,Please try after some time.','danger');
+	        this.apiService.stopLoading(); 
 	      }
+	      this.ref.detectChanges();
 	    },
 	    err => {
-	      this.apiService.stopLoading();
 	        this.apiService.presentToast('Technical error,Please try after some time.','danger');
+	        this.apiService.stopLoading(); 
 	    });
   	}
 
@@ -140,7 +142,7 @@ export class FollowingPage implements OnInit {
 	    this.apiService.presentLoading();
 	    this.apiService.postData(dict,'removeFriend').subscribe((result) => {
 	      this.apiService.stopLoading();
-	      this.ref.detectChanges();
+	      
 	      if(result.status == 1){
 	        this.listing.splice(index, 1);
 	        // this.globalFooService.publishSomeData({
@@ -149,11 +151,14 @@ export class FollowingPage implements OnInit {
 	      }
 	      else{
 	        this.apiService.presentToast('Technical error,Please try after some time.','danger');
+	        this.apiService.stopLoading(); 
 	      }
+	      this.ref.detectChanges();
 	    },
 	    err => {
 	      this.apiService.stopLoading();
 	        this.apiService.presentToast('Technical error,Please try after some time.','danger');
+	        this.apiService.stopLoading(); 
 	    });
   	}
 
@@ -161,6 +166,7 @@ export class FollowingPage implements OnInit {
 
     viewUser(item){
     	localStorage.setItem('clicked_user_id', item._id);
+    	localStorage.setItem('add_user_type', 'user');
     	this.router.navigate(['/user-profile'])
     }
 

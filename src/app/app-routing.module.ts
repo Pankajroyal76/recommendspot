@@ -1,26 +1,35 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './services/auth.guard';
-
+var IsLoggedIn = localStorage.getItem('IsLoggedIn');
 const routes: Routes = [
 
   {
-    path: '',
-    redirectTo: "posts",
-    pathMatch: 'full' 
-  },
-  {
     path: 'login',
     loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule),
+    
+    
   },
   {
     path: 'home',
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule),
-     canActivate: [AuthGuard] 
+    
   },
+
+
+
+  {
+    path: '',
+    loadChildren: () => IsLoggedIn == 'true' ? import("./tabs/tabs.module").then((m) => m.TabsPageModule) : import('./landing-page/landing-page.module').then( m => m.LandingPagePageModule) ,
+    canActivate: [AuthGuard]
+  },
+
+
   {
     path: '',
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule),
+
+    
   },
   {
     path: 'posts',
@@ -28,13 +37,11 @@ const routes: Routes = [
   },
   {
     path: 'profile',
-    loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule),
-     canActivate:[AuthGuard]
+    loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule)
   },
   {
     path: 'notification',
     loadChildren: () => import('./notification/notification.module').then( m => m.NotificationPageModule),
-     canActivate:[AuthGuard]
   },
 
   {
@@ -42,6 +49,7 @@ const routes: Routes = [
     loadChildren: () => import('./signup/signup.module').then( m => m.SignupPageModule),
   },
   {
+
     path: 'forgotpassword',
     loadChildren: () => import('./forgotpassword/forgotpassword.module').then( m => m.ForgotpasswordPageModule)
   },
@@ -51,8 +59,7 @@ const routes: Routes = [
   },
   {
     path: 'following',
-    loadChildren: () => import('./following/following.module').then( m => m.FollowingPageModule),
-     canActivate:[AuthGuard]
+    loadChildren: () => import('./following/following.module').then( m => m.FollowingPageModule)
   },
   {
     path: 'add-recommendation',
@@ -73,9 +80,10 @@ const routes: Routes = [
   {
     path: 'followingfollowers',
     loadChildren: () => import('./followingfollowers/followingfollowers.module').then( m => m.FollowingfollowersPageModule)
-  },  {
+  },
+  {
     path: 'landing-page',
-    loadChildren: () => import('./landing-page/landing-page.module').then( m => m.LandingPagePageModule)
+    loadChildren: () => import('./landing-page/landing-page.module').then( m => m.LandingPagePageModule),
   },
   {
     path: 'comments',
@@ -83,7 +91,8 @@ const routes: Routes = [
   },
   {
     path: 'category',
-    loadChildren: () => import('./category/category.module').then( m => m.CategoryPageModule)
+    loadChildren: () => import('./category/category.module').then( m => m.CategoryPageModule),
+    canActivate: [AuthGuard] 
   }
 
 ];

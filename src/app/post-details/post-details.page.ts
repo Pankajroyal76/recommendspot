@@ -34,6 +34,9 @@ export class PostDetailsPage implements OnInit {
     likedpost = true;
     add_user_type: any;
     noti_count = localStorage.getItem('notiCount');
+    play_video = false;
+    iframeid: any;
+    player: any;
 
   	constructor(private ref: ChangeDetectorRef,public location: Location, public toastController: ToastController, public apiService: ApiserviceService, public loadingController: LoadingController, public router: Router, private globalFooService: GlobalFooService, private iab: InAppBrowser, public modalController: ModalController, private photoViewer: PhotoViewer) { 
       
@@ -46,6 +49,7 @@ export class PostDetailsPage implements OnInit {
           this.user_image = localStorage.getItem('user_image');
           this.user_email = localStorage.getItem('user_email');
           this.user_id = localStorage.getItem('userId');
+          this.notificationCount();
       });
     }openUpdateShare(){
      if(this.selectedItemmShare == 0){
@@ -70,6 +74,69 @@ export class PostDetailsPage implements OnInit {
     //   // this.player.stopVideo();
     //   this.player.destroy();
     // }
+    this.play_video = false;
+  }
+
+  youtube_parser(url){
+    var regExp = /^https?\:\/\/(?:www\.youtube(?:\-nocookie)?\.com\/|m\.youtube\.com\/|youtube\.com\/)?(?:ytscreeningroom\?vi?=|youtu\.be\/|vi?\/|user\/.+\/u\/\w{1,2}\/|embed\/|watch\?(?:.*\&)?vi?=|\&vi?=|\?(?:.*\&)?vi?=)([^#\&\?\n\/<>"']*)/i;
+    var match = url.match(regExp);
+    return  (match && match[1].length==11)? match[1] : false;
+  }
+
+
+  playYoutube(web_link){
+
+    if (this.player === undefined || !this.player || null) {
+      console.log("Player could not be found.");
+    } else {
+      // this.player.stopVideo();
+      this.player.destroy();
+    }
+    // this.index = index;
+    this.play_video = true;
+    console.log(web_link.split('embed/')[1])
+    
+      // create youtube player
+      // var player, iframe;
+        this.player = new YT.Player('iframe', {
+          height: '315',
+          width: '100%', 
+          videoId: web_link.split('embed/')[1],
+          playerVars: {
+            controls: 0,
+            disablekb: 1
+          },
+          events: {
+            'onStateChange': this.onPlayerStateChange,
+            'onReady': this.onPlayerReady
+          }
+        }); 
+        // document.getElementById('setContent').style.display = "block";
+       if (document.getElementById('iframe') != undefined) {
+        var myImg = document.getElementById('iframe');
+        myImg.setAttribute('src', 'https://www.youtube.com/embed/'  + web_link.split('embed/')[1] + '?autoplay=1');
+
+        // document.getElementById('iframe' + index).src =  'https://www.youtube.com/embed/'  + web_link.split('embed/')[1] + '?autoplay=1';
+            document.getElementById('iframe').style.display = "block";
+            this.iframeid = 'iframe';
+      } 
+  }
+
+  // when video ends
+  onPlayerStateChange(event) { 
+    // let ptr = this;
+    let self = JSON.parse(localStorage.getItem('this'));  
+    console.log(event)
+    if(event.data === 0) {            
+       
+    }
+  }    
+
+  onPlayerReady(event) {
+
+    console.log('play = ', event)
+    event.target.playVideo();
+
   }
 
   gotofollowing(){
@@ -78,10 +145,29 @@ export class PostDetailsPage implements OnInit {
     }
   	ngOnInit() {
   		this.profile = JSON.parse(localStorage.getItem('profile'));
+      this.noti_count = localStorage.getItem('notiCount');
   	}
     ionViewDidEnter(){
-        this.noti_count = localStorage.getItem('notiCount');
+        this.notificationCount();
         this.getData();
+    }
+
+    notificationCount(){
+
+      let dict ={
+        userId: localStorage.getItem('userId'),
+      };
+      
+      this.apiService.postData(dict,'notificationCount').subscribe((result) => {
+         this.ref.detectChanges();
+        if(result.status == 1){
+          localStorage.setItem('notiCount', result.data.toString());
+          this.noti_count = localStorage.getItem('notiCount');
+        }else{
+          //this.apiService.presentToast(result.msg, 'danger');
+        };
+
+      });
     }
 
     logout(){
@@ -156,7 +242,8 @@ export class PostDetailsPage implements OnInit {
                   for(var i=0; i < this.post.likes.length; i++){
                    
                     if(this.post.likes[i].userId == this.userId){
-                      IsLiked = false;
+                      IsLiked = true;
+                      break;
                     }
                  }
                 }
@@ -175,11 +262,13 @@ export class PostDetailsPage implements OnInit {
           }
           else{
               this.presentToast('Technical error,Please try after some time.','danger');
+              this.apiService.stopLoading(); 
           }
         },
         err => {
           this.stopLoading();
             this.presentToast('Technical error,Please try after some time.','danger');
+            this.apiService.stopLoading(); 
         });
     }
 
@@ -315,6 +404,7 @@ export class PostDetailsPage implements OnInit {
             if(!IsLiked){
               // this.sendNotification('like');
               this.post.likes.push(result.data);
+              this.post.like_count = this.post.like_count + 1; 
               for(var i=0; i < dislikesArray.length; i++)
               {
                 if(dislikesArray[i].userId == this.userId){
@@ -326,6 +416,7 @@ export class PostDetailsPage implements OnInit {
               {
                 if(likesArray[i].userId == this.userId){
                   this.post.likes.splice(i, 1);
+                  this.post.like_count = this.post.like_count - 1;
 
                 }
               }
@@ -341,11 +432,13 @@ export class PostDetailsPage implements OnInit {
           }
           else{
             this.presentToast('Technical error,Please try after some time.','danger');
+            this.apiService.stopLoading(); 
           }
         },
         err => {
           this.stopLoading();
             this.presentToast('Technical error,Please try after some time.','danger');
+            this.apiService.stopLoading(); 
         });
     }
     };
@@ -401,11 +494,13 @@ export class PostDetailsPage implements OnInit {
           }
           else{
             this.presentToast('Technical error,Please try after some time.','danger');
+            this.apiService.stopLoading(); 
           }
         },
         err => {
           this.stopLoading();
             this.presentToast('Technical error,Please try after some time.','danger');
+            this.apiService.stopLoading(); 
         });
     }
     };
@@ -444,11 +539,14 @@ export class PostDetailsPage implements OnInit {
 	        }
 	        else{
 	          	this.presentToast('Technical error,Please try after some time.','danger');
+              this.apiService.stopLoading(); 
 	        }
+
       	},
       	err => {
 	        this.stopLoading();
           	this.presentToast('Technical error,Please try after some time.','danger');
+            this.apiService.stopLoading(); 
       	});
 
     };
@@ -489,7 +587,11 @@ export class PostDetailsPage implements OnInit {
             foo: {'data': '', 'page': 'add-post'}
           });
 	      	this.apiService.presentToast(result.msg, 'success');
-	    });
+	    },
+      err => {
+            this.presentToast('Technical error,Please try after some time.','danger');
+            this.apiService.stopLoading(); 
+        });
   	};
 
 }

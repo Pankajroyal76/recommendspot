@@ -53,7 +53,7 @@ ion-content[bg-grey] {
 			background:#fff;
 			img {
 				width: 100%;
-				height: auto;
+				/*height: auto;*/
 			    min-height: 90px;	
 				object-fit: cover;
 			}
@@ -389,7 +389,8 @@ span.servcs-badge
     --padding-start: 0px;
     --padding-end: 0px;
     --background: transparent;
-    --color: #989898;
+    /*--color: #989898;*/
+    --color: #000;
 	    height: auto;
     font-size: 13px;margin: 0;
 	    text-transform: capitalize;
@@ -449,7 +450,7 @@ align-items: flex-start;
 	
 }
 }
-.linkcontent
+/*.linkcontent
 {  background: #fbfbfb;
     [title-cont]
 	{
@@ -480,6 +481,90 @@ align-items: flex-start;
         padding: 7px 15px 7px;
         font-size: 13px;
      }
+		[weblink-sec] {
+			font-size: 11px;
+			ion-icon
+			{
+				font-size: 17px!important;
+			}
+			a{
+			color: initial;
+			}
+		}
+	}
+}*/
+.linkcontent
+{
+    background: #fbfbfb;
+    padding: 10px;
+	/*margin:0px 15px;*/
+	&.ion-no-padding
+	{
+	padding:0px;
+	}
+	&.contfull
+	{
+	   img
+	   {
+	     /*border-radius:12px 12px 0px 0px;*/
+	     height: 350px;
+		    width: 100%;
+		    object-fit: cover;
+	   }
+	   	.link-cnt {
+	            padding: 8px;
+			    font-size: 13px;
+			    display: flex;
+			    border: 1px solid #ccc;
+			    border-radius: 10px;
+			    position:relative;
+			    &.youtube-link-cnt{
+			    	padding:0px;
+			    }
+			    .imgPLay
+			    {
+			    	position:relative;
+			    	margin-right:6px;
+			    	img{
+				    	width:118px;
+				    	height:118px;
+				    	object-fit:cover;
+				    	    min-width: 95px;
+		    			border-radius: 5px 0 0 5px;
+				    }
+				    ion-icon[name="play-circle-outline"]{
+				    	position: absolute;
+					    top: 50%;
+					    left: 50%;
+					    color: #fff;
+					    transform:translate(-50%,-50%);
+					    font-size: 40px;
+				    }
+			    }
+	        
+		    .indiv
+		    {
+		    	padding:5px;
+		    	p{
+		    		font-size:12px
+		    	}
+		    }
+
+		    .weblinkbox {
+			    display: flex;
+			    align-items: flex-start;
+			    ion-icon{
+			    	font-size: 15px;
+				    margin-right: 3px;
+				    position: relative;
+				    top: -1px;
+			    }
+			    .weblink{
+			    	font-size: 11px;
+			    	font-style:oblique
+			    }
+			}
+		}
 		[weblink-sec] {
 			font-size: 11px;
 			ion-icon
@@ -524,7 +609,7 @@ ion-fab
 					img 
 					{
 						min-height: auto;
-						height:200px;
+						height:350px;
 					}
 				}
 			}

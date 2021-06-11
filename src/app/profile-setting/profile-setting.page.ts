@@ -73,7 +73,7 @@ export class ProfileSettingPage implements OnInit {
   		this.createForm();
   		this.reg_exp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       	this.reg_exp_letters =  /^[a-zA-Z].*$/;
-      	this.reg_exp_digits = /^\d{6,10}$/;
+      	this.reg_exp_digits = /^\d{7,15}$/;
       	this.withoutspace = /^\S*$/;
       	this.user_name = localStorage.getItem('user_name');
         this.user_image = localStorage.getItem('user_image');
@@ -84,6 +84,7 @@ export class ProfileSettingPage implements OnInit {
             this.user_image = localStorage.getItem('user_image');
             this.user_email = localStorage.getItem('user_email');
             this.user_id = localStorage.getItem('userId');
+            this.noti_count = localStorage.getItem('notiCount');
         });
   	}
 
@@ -92,7 +93,7 @@ export class ProfileSettingPage implements OnInit {
 	    this.authForm = this.formBuilder.group({
 	      name: ['', Validators.compose([Validators.required])],
 	      email: ['', Validators.compose([Validators.required])],
-	      contact: ['', Validators.compose([Validators.required])],
+	      contact: ['', Validators.compose([Validators.required, Validators.min(7), Validators.max(15)])],
 	      bio: [''],
 	      location: ['', Validators.compose([Validators.required])],
 	      website: [''],
@@ -100,7 +101,7 @@ export class ProfileSettingPage implements OnInit {
 
 	    this.authForm1 = this.formBuilder.group({
 	      confirm_new_password: ['', Validators.compose([Validators.required])],
-	      password: ['', Validators.compose([Validators.required])],
+	      password: [''],
 	      confirm_password: ['', Validators.compose([Validators.required])],
 	    });
   	};
@@ -174,6 +175,13 @@ export class ProfileSettingPage implements OnInit {
 	        });
 
 	      	this.profile = result.data;
+
+	      	if(result.data.medium === 'simple'){
+			    this.authForm1.controls['password'].setValidators([Validators.required]);              
+			} else {                
+			    this.authForm1.controls['password'].clearValidators();               
+			}
+			this.authForm1.controls['password'].updateValueAndValidity();
 	      	
 	      	this.bgImage = this.errors.indexOf(result.data.cover_image) >= 0 ? '../../assets/img/no-image.png' :  this.IMAGES_URL + '/images/' +  result.data.cover_image;
 	      	console.log(this.profile);
@@ -230,7 +238,7 @@ export class ProfileSettingPage implements OnInit {
 	      	this.profile.name = this.name;
 
 	      	localStorage.setItem('user_name', this.authForm.value.name);
-  			localStorage.setItem('user_image', this.authForm.value.image);
+  			localStorage.setItem('user_image', this.profile.image);
   			localStorage.setItem('user_email', this.authForm.value.email);
 
 	      	this.apiService.presentToast(result.msg, 'success');
@@ -253,7 +261,7 @@ export class ProfileSettingPage implements OnInit {
 	    };
 
 	    if(this.profile.medium == 'simple'){
-	    	if(this.errors.indexOf(this.password) >= 0 || this.authForm1.value.password.length < 6 || !this.withoutspace.test(this.authForm1.value.password)){
+	    	if(/*this.errors.indexOf(this.password) >= 0 || */this.authForm1.value.password.length < 6 || !this.withoutspace.test(this.authForm1.value.password)){
 	    		return false;
 	    	}
 	    }
@@ -274,9 +282,12 @@ export class ProfileSettingPage implements OnInit {
 	      this.apiService.stopLoading();
 	      this.ref.detectChanges();
 	      if(result.status == 1){
-	      	this.authForm1.value.password = '';
-	      	this.authForm1.value.confirm_password = '';
-	      	this.authForm1.value.confirm_new_password = '';
+	      	this.authForm1.patchValue({
+	      		password: '',
+				confirm_password: '',
+				confirm_new_password: ''
+	      	})
+	      	
 	      	this.is_submit_pass = false;
 	      	this.apiService.presentToast(result.msg, 'success');
 	      }else{

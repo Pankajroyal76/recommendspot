@@ -8,7 +8,7 @@
 			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
 			 
 		</ul>
-		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge *ngIf="noti_count != '0'" color="secondary"><span *ngIf="noti_count != '0'">{{noti_count}}</span></ion-badge></a>
+		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge *ngIf="noti_count != '0'  && errors.indexOf(noti_count) == -1" color="secondary"><span *ngIf="noti_count != '0'">{{noti_count}}</span></ion-badge></a>
 		<span proImg>
 			<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
 	        <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
@@ -167,9 +167,9 @@
 
 						<ion-col size="{{link_content?.title != '' ? 9 : 12}}">
 							<p *ngIf="link_content?.data?.title != ''">{{link_content?.data?.title}}</p>
-							<p *ngIf="link_content?.data == null"> Lorem Ipsum is simply dummy text of the industry. </p>
+							<p *ngIf="errors.indexOf(link_content?.data) >= 0 && is_linkdata == true"> Lorem Ipsum is simply dummy text of the industry. </p>
 							<p *ngIf="link_content?.data?.title != ''">{{link_content?.data?.description}}</p>
-							<p *ngIf="link_content?.data == null">Lorem Ipsum is simply dummy text of the industry.</p>
+							<p *ngIf="errors.indexOf(link_content?.data) >= 0 && is_linkdata == true"> Lorem Ipsum is simply dummy text of the industry. </p>
 						</ion-col>
 					</ion-row>
 			

@@ -8,7 +8,7 @@
       <li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
        
     </ul>
-    <a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge *ngIf="noti_count != '0'" color="secondary"><span *ngIf="noti_count != '0'">{{noti_count}}</span></ion-badge></a>
+    <a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge *ngIf="noti_count != '0'  && errors.indexOf(noti_count) == -1" color="secondary"><span *ngIf="noti_count != '0'">{{noti_count}}</span></ion-badge></a>
     <span proImg>
       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
@@ -72,7 +72,7 @@
   		<ion-segment-button value="Basic">
   		   Basic Info
   		</ion-segment-button>
-			<ion-segment-button value="pwd">
+			<ion-segment-button value="pwd" *ngIf="profile?.medium === 'simple'">
 		   Change Password
 		  </ion-segment-button>
     </ion-segment>
@@ -116,7 +116,7 @@
           </ion-item>
 
           <span error *ngIf="errors.indexOf(authForm.value.contact) >= 0 && is_submit == true">Please enter your phone number</span>
-          <span error *ngIf="!reg_exp_digits.test(authForm.value.contact) && errors.indexOf(authForm.value.contact) == -1 && is_submit == true">Phone number should consist min. 6 digits and max. 10 digits</span>
+          <span error *ngIf="!reg_exp_digits.test(authForm.value.contact) && errors.indexOf(authForm.value.contact) == -1 && is_submit == true">Phone number should consist of min. 7 digits and max. 15 digits</span>
         </div>
         <div form-group>
           <label>Location</label>
@@ -162,7 +162,7 @@
       
       <ion-list *ngSwitchCase="'pwd'">
          <form [formGroup]="authForm1" (keyup.enter)="update_password()">
-    	  <div form-group>
+    	  <div form-group *ngIf="profile?.medium == 'simple'">
           <label>Current Password</label>
           <ion-item lines="none">
             <ion-label>

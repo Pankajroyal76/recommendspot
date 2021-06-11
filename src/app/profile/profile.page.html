@@ -1,14 +1,14 @@
 <div headerWeb>
 	<a href="javascript:void(0)" routerLink="/tabs/home" logo><!--Recommendspot--><img height="22px" src="assets/img/logo-white.png" alt="" ></a>
 	<div ritHeader>
-		<ul>
+		<ul (click)="stopPlayer()">
 			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
 			<li><a routerLink="/category" href="javascript:void(0)">Categories</a></li>
 			<li (click)="gotofollowing()"><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
 			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
 			 
 		</ul>
-		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge *ngIf="noti_count != '0'" color="secondary"><span *ngIf="noti_count != '0'">{{noti_count}}</span></ion-badge></a>
+		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge *ngIf="noti_count != '0'  && errors.indexOf(noti_count) == -1" color="secondary"><span *ngIf="noti_count != '0'">{{noti_count}}</span></ion-badge></a>
 		<span proImg>
 			<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}" (click)="gotToTop()">
 	        <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}" (click)="gotToTop()">
@@ -17,7 +17,7 @@
 			<p headerfixedheight routerLink="/tabs/profile" (click)="gotToTop()"><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
 			<div profileDropdown>
 				<ul>
-					<li><a href="javascript:void(0)" routerLink="/profile-setting/{{user_id}}">Edit Profile </a></li>
+					<li><a href="javascript:void(0)" routerLink="/profile-setting/{{user_id}}">Profile Settings </a></li>
 					<li (click)="logout()"><a href="javascript:void(0)">Logout</a></li>
 				</ul>
 			</div>
@@ -66,13 +66,13 @@
 			</div>
 		</ion-col>
 		<ion-col size="3">
-			<div class="folow-mn" (click)="gotoFollowersFollowings('follower')">
+			<div class="folow-mn" (click)="gotoFollowersFollowings('follower')"  style="cursor:pointer;">
 			    <ion-icon class="ion-hide-sm-down" name="people-outline"></ion-icon>
 			    <h3><span>{{profile?.follower}}</span><br/>Followers</h3>
 			</div>
 		</ion-col>
 		<ion-col size="3">
-			<div class="folow-mn" (click)="gotoFollowersFollowings('following')">
+			<div class="folow-mn" (click)="gotoFollowersFollowings('following')"  style="cursor:pointer;">
 			    <ion-icon class="ion-hide-sm-down" name="person-add-outline"></ion-icon>
 			    <h3><span>{{profile?.following}}</span><br/>Following</h3>			
 			</div>
@@ -109,9 +109,28 @@
 					 <img *ngIf="errors.indexOf(item.user_image) == -1 && getimage(item.user_image) == false" src="{{IMAGES_URL + '/images/' + item.user_image}}">
 					 <img *ngIf="errors.indexOf(item.user_image) >= 0" src="assets/img/default.png">
 					 </ion-avatar>
-					<ion-label style="cursor:pointer;">
+					<ion-label>
 					<h2>{{item.user_name}}</h2>
-					<span  style="cursor:pointer;" (click)="viewPost(item)" class="mobshow desshow" *ngIf="item.category != ''">{{item.category}}<span *ngIf="item.platform != ''"><ion-icon name="chevron-forward-outline"></ion-icon>{{item.platform}}</span><small *ngIf="item.sub_category != ''"><ion-icon name="chevron-forward-outline"></ion-icon> {{item.sub_category}}</small></span>  
+
+
+
+					<span (click)="viewPost(item)" class=" mobshow desshow" *ngIf="item.category != ''">
+						<span class="str">{{item.category}}
+						</span>
+
+							<small *ngIf="item.platform != ''">
+								<ion-icon name="chevron-forward-outline"></ion-icon> 
+									{{item.platform}}
+							</small>
+
+							<small *ngIf="item.sub_category != ''">
+								<ion-icon name="chevron-forward-outline"></ion-icon> 
+									{{item.sub_category}}
+							</small>
+					</span>
+
+
+					<!-- <span  style="cursor:pointer;" (click)="viewPost(item)" class="mobshow desshow" *ngIf="item.category != ''">{{item.category}}<span *ngIf="item.platform != ''"><ion-icon name="chevron-forward-outline"></ion-icon>{{item.platform}}</span><small *ngIf="item.sub_category != ''"><ion-icon name="chevron-forward-outline"></ion-icon> {{item.sub_category}}</small></span>  --> 
 					<p>{{item.created_at  | dateAgo}}</p>
 					</ion-label>
 					<!--ion-icon class="icon-dots" name="ellipsis-vertical" *ngIf="userId == item.user_id" (click)="openUpdate(i)"></ion-icon>
@@ -148,11 +167,14 @@
 								<!-- getId(item.web_link) -->
 
 								<!-- <iframe *ngIf="youtube_parser(item.web_link) != false && i == index" style="width: 100%" height="315" [src]="sanitizer.bypassSecurityTrustResourceUrl(item.web_link)" frameborder="0" allowfullscreen></iframe> -->
-								<object id="iframe{{i}}" width="100%" height="315" frameborder="0"  style="display: none;margin-bottom: 5px;"></object>
+
+								
+								<object *ngIf = "i == 0" id="iframetwo" width="100%" height="315" frameborder="0"  style="display: none;margin-bottom: 5px;"></object>
+								<object *ngIf = "i > 0" id="iframe{{i}}" width="100%" height="315" frameborder="0"  style="display: none;margin-bottom: 5px;"></object>
 							  <!--   <iframe  id="iframe{{i}}" src="" style="width: 100%" height="315" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="display: none;"></iframe> -->
 
 							</ion-col>
-							<ion-col size="{{item.web_link_content?.data.title != '' ? 12 : 12}}">
+							<ion-col size="{{item.web_link_content?.data.title != '' ? 12 : 12}}" style="padding: 0px 15px 0px 15px;">
 								<div class="link-cnt" [ngClass]="{'youtube-link-cnt': youtube_parser(item.web_link) != false}">
 									<div class="imgPLay" *ngIf="!play_video || i != index">
 									<ion-icon name="play-circle-outline" *ngIf="youtube_parser(item.web_link) != false"  (click)="playYoutube(item.web_link, i)"></ion-icon>
@@ -200,9 +222,20 @@
 			<div class="post-share">
 
 							<div class="postlikecomt">
-								<span  class=" commentstitle" *ngIf="item.like_count != 0"><ion-icon name="thumbs-up"></ion-icon> {{item.like_count}} </span> 
+								<!-- <span  class=" commentstitle" *ngIf="item.like_count != 0"><ion-icon name="thumbs-up"></ion-icon> {{item.like_count}} </span> 
 
-								<span style="cursor:pointer;" class="padding-8 commentstitle" *ngIf="item.comment_count > 0" (click)="viewComments(item)">{{item.comment_count}} <span *ngIf="item.comment_count == 1">Comment</span><span *ngIf="item.comment_count > 1">Comments</span> </span> 
+								<span style="cursor:pointer;" class="padding-8 commentstitle" *ngIf="item.comment_count > 0" (click)="viewComments(item)">{{item.comment_count}} <span *ngIf="item.comment_count == 1">Comment</span><span *ngIf="item.comment_count > 1">Comments</span> </span>  -->
+
+								<ion-row style="width: 100%;">
+									<ion-col size="6">
+										<span class="padding-8 commentstitle" *ngIf="item.like_count != 0" style="float: left;"><ion-icon name="thumbs-up"></ion-icon> {{item.like_count}} </span> 
+									</ion-col>
+
+									<ion-col size="6">
+										<span style="cursor:pointer;" class="padding-8 commentstitle" *ngIf="item.comment_count > 0" (click)="viewComments(item)">{{item.comment_count}} <span *ngIf="item.comment_count == 1">Comment</span><span *ngIf="item.comment_count > 1">Comments</span> </span>
+									</ion-col> 
+
+								</ion-row>
 							</div>
 
 								<ion-row style="cursor:pointer;">
@@ -220,7 +253,7 @@
 										</div>
 									</ion-row>
 								<ion-row>
-									<ion-col size="4" class="ion-text-left" style="cursor:pointer;">
+									<ion-col size="4" class="ion-text-left">
 											<div post-fav-icon>
 										
 											<ion-button class="socl-btn" (click)="like(item.likes, i)">
@@ -356,7 +389,7 @@
 		</ion-card>
 
 		 <div class="no-record" *ngIf="data?.post?.length == 0 && is_response == true">
-		No Record Found
+		No recommendations yet.
 		</div>
 </div>
 

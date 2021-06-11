@@ -51,6 +51,7 @@ export class UserProfilePage implements OnInit {
           this.user_image = localStorage.getItem('user_image');
           this.user_email = localStorage.getItem('user_email');
           this.user_id = localStorage.getItem('userId');
+          this.notificationCount();
       });
       
 
@@ -58,7 +59,17 @@ export class UserProfilePage implements OnInit {
 
   	ngOnInit() {
       this.platform1 = this.platform.is('cordova');
+      this.noti_count = localStorage.getItem('notiCount');
   	}
+
+    stopPlayer(){
+      if (this.player === undefined || !this.player || null) {
+        console.log("Player could not be found.");
+      } else {
+        // this.player.stopVideo();
+        this.player.destroy();
+      }
+    }
 
     ngOnDestroy(){
       // alert('leaveccc');
@@ -67,8 +78,13 @@ export class UserProfilePage implements OnInit {
         console.log("Player could not be found.");
       } else {
         // this.player.stopVideo();
+        console.log('destroy ');
         this.player.destroy();
+        // document.getElementById('iframethree').style.display = "none";
       }
+
+      // document.getElementById('iframethree').style.display = "none";
+      this.play_video = false;
     }
 
     openUpdate(i){
@@ -90,7 +106,7 @@ export class UserProfilePage implements OnInit {
       this.globalFooService.publishSomeData({
           foo: {'data': '', 'page': 'updateprofile'}
       });
-      this.router.navigate(['/followingfollowers'])
+      this.router.navigate(['/followingfollowers'], { replaceUrl: true })
       //this.apiService.navCtrl.navigateRoot('tabs/following');
     }
 
@@ -109,9 +125,31 @@ export class UserProfilePage implements OnInit {
       
         // create youtube player
         // var player, iframe;
-          this.player = new YT.Player('iframe' + index, {
-            height: '390',
-            width: '640', 
+        //   this.player = new YT.Player('iframe' + index, {
+        //     height: '315',
+        //     width: '100%', 
+        //     videoId: web_link.split('embed/')[1],
+        //     playerVars: {
+        //       controls: 0,
+        //       disablekb: 1
+        //     },
+        //     events: {
+        //       'onStateChange': this.onPlayerStateChange,
+        //       'onReady': this.onPlayerReady
+        //     }
+        //   }); 
+        //   // document.getElementById('setContent').style.display = "block";
+        //  if (document.getElementById('iframe' + index) != undefined) {
+        //   var myImg = document.getElementById('iframe' + index);
+        //     myImg.setAttribute('src', 'https://www.youtube.com/embed/'  + web_link.split('embed/')[1] + '?autoplay=1');
+        //       document.getElementById('iframe' + index).style.display = "block";
+              
+        // }            
+
+        if(index == 0){
+          this.player = new YT.Player('iframethree', {
+            height: '315',
+            width: '100%', 
             videoId: web_link.split('embed/')[1],
             playerVars: {
               controls: 0,
@@ -121,14 +159,36 @@ export class UserProfilePage implements OnInit {
               'onStateChange': this.onPlayerStateChange,
               'onReady': this.onPlayerReady
             }
-          }); 
-          // document.getElementById('setContent').style.display = "block";
-         if (document.getElementById('iframe' + index) != undefined) {
-          var myImg = document.getElementById('iframe' + index);
+          });  
+
+           var myImg = document.getElementById('iframethree');
+            console.log('myImg = ', myImg)
             myImg.setAttribute('src', 'https://www.youtube.com/embed/'  + web_link.split('embed/')[1] + '?autoplay=1');
-              document.getElementById('iframe' + index).style.display = "block";
-              
-        }            
+            console.log('myImg = ', myImg)
+            document.getElementById('iframethree').style.display = "block"; 
+
+
+        }else{
+          
+          this.player = new YT.Player('iframe' + index, {
+            height: '315',
+            width: '100%', 
+            videoId: web_link.split('embed/')[1],
+            playerVars: {
+              controls: 0,
+              disablekb: 1
+            },
+            events: {
+              'onStateChange': this.onPlayerStateChange,
+              'onReady': this.onPlayerReady
+            }
+          });
+           var myImg = document.getElementById('iframe' + index);
+            console.log('myImg = ', myImg)
+            myImg.setAttribute('src', 'https://www.youtube.com/embed/'  + web_link.split('embed/')[1] + '?autoplay=1');
+            console.log('myImg = ', myImg)
+            document.getElementById('iframe' + index).style.display = "block";
+        }
          
     }
 
@@ -183,7 +243,7 @@ export class UserProfilePage implements OnInit {
       this.selectedItemm = -1;
       localStorage.setItem('item', JSON.stringify(post));
       localStorage.setItem('postId', post._id);
-      this.router.navigate(['/comments']);
+      this.router.navigate(['/comments'], { replaceUrl: true });
     }
 
     editPost(item, i){
@@ -192,7 +252,7 @@ export class UserProfilePage implements OnInit {
       localStorage.setItem('postId', item._id);
       localStorage.setItem('category_id', item.category_id);
       localStorage.setItem('route', '/tabs/home');
-      this.router.navigate(['/edit-reccomendation'])
+      this.router.navigate(['/edit-reccomendation'], { replaceUrl: true })
     }
 
 
@@ -242,7 +302,7 @@ export class UserProfilePage implements OnInit {
       var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
       localStorage.clear();
       localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
-      this.router.navigate(['/landing-page']);
+      this.router.navigate(['/landing-page'], { replaceUrl: true });
     }
 
 
@@ -255,18 +315,39 @@ export class UserProfilePage implements OnInit {
       if (this.player === undefined || !this.player || null) {
         console.log("Player could not be found.");
       } else {
-        // this.player.stopVideo();
+        
+        console.log('destroy ');
         this.player.destroy();
+        
       }
+
+      // document.getElementById('iframethree').style.display = "none";
+      this.play_video = false;
     }
 
   	ionViewDidEnter(){
-
-  		this.noti_count = localStorage.getItem('notiCount');
+  		// this.noti_count = localStorage.getItem('notiCount');
   		this.userId = localStorage.getItem('clicked_user_id');
-  		
+  		this.notificationCount();
   		this.get_profile();
   	}
+
+    notificationCount(){
+
+      let dict ={
+        userId: localStorage.getItem('userId'),
+      };
+      
+      this.apiService.postData(dict,'notificationCount').subscribe((result) => {
+         this.ref.detectChanges();
+        if(result.status == 1){
+          localStorage.setItem('notiCount', result.data.toString());
+          this.noti_count = localStorage.getItem('notiCount');
+        }else{
+          //this.apiService.presentToast(result.msg, 'danger');
+        };
+      });
+    }
 
     getimage(img){
       if(this.errors.indexOf(img) == -1){
@@ -558,7 +639,7 @@ export class UserProfilePage implements OnInit {
      viewPost(post){
       localStorage.setItem('item', JSON.stringify(post));
       localStorage.setItem('postId', post._id);
-      this.router.navigate(['/post-details']);
+      this.router.navigate(['/post-details'], { replaceUrl: true });
     }
 
 
@@ -566,7 +647,7 @@ export class UserProfilePage implements OnInit {
       localStorage.setItem('item', JSON.stringify(item));
     	localStorage.setItem('clicked_user_id', item.user_id);
       localStorage.setItem('add_user_type', item.add_user_type);
-    	this.router.navigate(['/user-profile'])
+    	this.router.navigate(['/user-profile'], { replaceUrl: true })
     }
 
     addRemoveReccomdation(item, type, index){

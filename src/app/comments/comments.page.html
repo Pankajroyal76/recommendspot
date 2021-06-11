@@ -8,7 +8,7 @@
 			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
 			 
 		</ul>
-		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge *ngIf="noti_count != '0'" color="secondary"><span *ngIf="noti_count != '0'">{{noti_count}}</span></ion-badge></a>
+		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge *ngIf="noti_count != '0'  && errors.indexOf(noti_count) == -1" color="secondary"><span *ngIf="noti_count != '0'">{{noti_count}}</span></ion-badge></a>
 		<span proImg *ngIf="errors.indexOf(user_id) == -1">
 			<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
 	       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
@@ -43,8 +43,9 @@
 				<p> {{doc.comment}} </p>
 			</div>
 			<div class="follow-category" *ngIf="comments?.length == 0 && is_response == true">
-				<div followimg>
-				<img style="max-width: 100%; padding: 60px;" src="assets/img/nodata.png"/>
+				<div followimg class="no-record">
+				<!-- <img style="max-width: 100%; padding: 60px;" src="assets/img/nodata.png"/> -->
+				No Comments Yet.
 					
 				</div>
 			</div>

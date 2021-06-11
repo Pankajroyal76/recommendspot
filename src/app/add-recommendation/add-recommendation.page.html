@@ -9,7 +9,7 @@
 			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)" (click)="gotToTop()">Add Recommendation</a></li>
 			 
 		</ul>
-		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge *ngIf="noti_count != '0'" color="secondary"><span >{{noti_count}}</span></ion-badge></a>
+		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge *ngIf="noti_count != '0'  && errors.indexOf(noti_count) == -1" color="secondary"><span >{{noti_count}}</span></ion-badge></a>
 		<span proImg>
 			<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
 	        <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
@@ -107,7 +107,7 @@
 			</div>
 
 
-			<div form-group>
+			<div form-group *ngIf="subcategories.length >= 0">
 		 		<label>Sub Category</label>
 				<ion-item lines="none">
 					<ion-label>
@@ -155,18 +155,18 @@
 	</ion-item>
 	<span error *ngIf=" typeTab == 'Website' && errors.indexOf(authForm.value.web_link) >= 0 && is_submit == true">Please enter web link</span>
 	<span error *ngIf="typeTab == 'Website' && errors.indexOf(authForm.value.web_link) == -1 && !expression.test(authForm.value.web_link) && is_submit == true">Please enter valid web link (i.e. http://www.example.com, https://www.example.com, www.example.com, example.com)</span>
+
 	<div class="linkcontent" *ngIf="authForm.value.web_link != '' && opencontent == true">
 		<ion-icon name="close-circle-outline" class="linkcontentclose" (click)="closeLinkContent()"></ion-icon> 
 		<ion-row>
 			<ion-col size="4" size-md="1" *ngIf="link_content?.image != ''">
 				<img src="{{link_content?.data?.image}}" />
 			</ion-col>
-
 			<ion-col size="{{link_content?.title != '' ? 8 : 12}}">
 				<p style="padding-right: 25px; font-weight: 600;" *ngIf="link_content?.data?.title != ''">{{link_content?.data?.title | slice:0:35}}</p>
-				<p *ngIf="link_content?.data == null"> Lorem Ipsum is simply dummy text of the industry. </p>
-				<p *ngIf="link_content?.data?.title != ''">{{link_content?.data?.description | slice:0:70}}...</p>
-				<p *ngIf="link_content?.data == null">Lorem Ipsum is simply dummy text of the industry.</p>
+				<p *ngIf="errors.indexOf(link_content?.data) >= 0 && is_linkdata == true"> Lorem Ipsum is simply dummy text of the industry. </p>
+				<p *ngIf="link_content?.data?.title != ''">{{link_content?.data?.description | slice:0:70}}<span *ngIf="errors.indexOf(link_content?.data?.description) == -1">...</span></p>
+				<p *ngIf="errors.indexOf(link_content?.data) >= 0 && is_linkdata == true">Lorem Ipsum is simply dummy text of the industry.</p>
 			</ion-col>
 		</ion-row>
 				

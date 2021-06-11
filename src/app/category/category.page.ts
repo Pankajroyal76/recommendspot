@@ -25,7 +25,7 @@ export class CategoryPage implements OnInit {
   counter = 0;
   @ViewChild(IonContent, {static: true}) content: IonContent;
   noti_count = localStorage.getItem('notiCount');
-  	
+ 
 	constructor(private ref: ChangeDetectorRef,public apiService: ApiserviceService, public router: Router, public location: Location, private globalFooService: GlobalFooService){ 
 
   		this.user_name = localStorage.getItem('user_name');
@@ -35,15 +35,23 @@ export class CategoryPage implements OnInit {
     	var self = this;
   		this.globalFooService.getObservable().subscribe((data) => {
           console.log('Data received', data);
+          this.user_name = localStorage.getItem('user_name');
+          this.user_image = localStorage.getItem('user_image');
+          this.user_email = localStorage.getItem('user_email');
+          this.user_id = localStorage.getItem('userId');
 
       });
+      //this.ref.detectChanges(); 
 
 	}
 
 	ngOnInit() {
 
-		
+		  this.ref.detectChanges(); 
 	}
+  gotohome(){
+    this.router.navigate(['/tabs/home'])
+  }
 
   ngOnDestroy(){
     // alert('leaveccc');
@@ -61,10 +69,13 @@ export class CategoryPage implements OnInit {
   }
 
   onSegmentChange(e){
+    this.ref.detectChanges(); 
+    this.apiService.stopLoading();
     console.log('event = ', e.detail.value);
     this.categorytab = e.detail.value;
     this.getUsers();
-    this.ref.detectChanges();
+
+    //this.ref.detectChanges();
   }
 
 	getimage(img){
@@ -92,11 +103,12 @@ export class CategoryPage implements OnInit {
     }
   
     this.apiService.postData(dict,'categories').subscribe((result) => { 
-     
+     this.ref.detectChanges();
      console.log(result.data)
       if(result.status == 1){
-        this.categories = result.data;	        
-       //this.getUsers();
+        this.categories = result.data;
+        this.ref.detectChanges(); 	        
+       this.getUsers();
       }
       else{
         this.apiService.presentToast('Error while sending request,Please try after some time','success');
@@ -105,7 +117,8 @@ export class CategoryPage implements OnInit {
       this.ref.detectChanges(); 
     },
     err => {
-        this.apiService.presentToast('Technical error,Please try after some time','success');
+        this.apiService.presentToast('Technical error,Please try after some time','danger');
+        this.apiService.stopLoading(); 
     });
 	}
 
@@ -131,10 +144,12 @@ export class CategoryPage implements OnInit {
       }
       else{
         this.apiService.presentToast('Error while sending request,Please try after some time','danger');
+        this.apiService.stopLoading(); 
       }
     },
     err => {
         this.apiService.presentToast('Technical error,Please try after some time','success');
+        this.apiService.stopLoading(); 
     });
 	}
 
@@ -161,10 +176,12 @@ export class CategoryPage implements OnInit {
       }
       else{
         this.apiService.presentToast('Error while sending request,Please try after some time','danger');
+        this.apiService.stopLoading(); 
       }
     },
     err => {
         this.apiService.presentToast('Technical error,Please try after some time','success');
+        this.apiService.stopLoading(); 
     });
 	}
 
@@ -192,10 +209,13 @@ export class CategoryPage implements OnInit {
       }
       else{
         this.apiService.presentToast('Error while sending request,Please try after some time','success');
+        this.apiService.stopLoading(); 
       }
+      this.ref.detectChanges();
     },
     err => {
         this.apiService.presentToast('Technical error,Please try after some time','success');
+        this.apiService.stopLoading(); 
     });
 	}
 
@@ -215,7 +235,7 @@ export class CategoryPage implements OnInit {
   	this.apiService.presentLoading();
     	this.apiService.postData(dict,str).subscribe((result) => {
       this.apiService.stopLoading();
-      this.ref.detectChanges();
+      
       console.log(result)
       if(result.status == 1)
       {
@@ -229,11 +249,14 @@ export class CategoryPage implements OnInit {
       else
       {
         this.apiService.presentToast('Technical error,Please try after some time.','danger');
+        this.apiService.stopLoading(); 
       }
+      this.ref.detectChanges();
     },
     err => {
       this.apiService.stopLoading();
         this.apiService.presentToast('Technical error,Please try after some time.','danger');
+        this.apiService.stopLoading(); 
     });
   }
 
