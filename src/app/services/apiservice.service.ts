@@ -61,8 +61,6 @@ export class ApiserviceService {
   async presentToast(message,color) {
    
 
-
-
     const toast = await this.toastController.create({
 	  message: message,
 	  position: 'bottom',

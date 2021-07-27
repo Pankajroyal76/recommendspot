@@ -5,15 +5,17 @@ import { GlobalFooService } from '../services/globalFooService.service';
 import { config } from '../services/config';
 import { Router } from '@angular/router';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
-import { MenuController,LoadingController, AlertController, Platform, IonContent, NavController } from '@ionic/angular'; 
+import { MenuController,LoadingController, AlertController, Platform, IonContent, NavController, ModalController } from '@ionic/angular'; 
 
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import * as $ from "jquery";
+import {  GooglePlaceDirective } from "ngx-google-places-autocomplete";
 declare var window: any; 
 declare var Branch;
+declare var google: any;
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 // import { AddRecommendService } from '../services/addrecommend.service';
-
+import { ImagepopupPage } from '../imagepopup/imagepopup.page';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -21,12 +23,16 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 })
 export class HomePage implements OnInit {
 	
+  @ViewChild("placesRef") placesRef : GooglePlaceDirective;
 	authForm: FormGroup;
+  authSearchForm: FormGroup;
 	selectedItem:any = 'item1';
- 	profiletab = "Basic";
+ 	profiletab = "Local";
+  profiletab1local = 'Today';
   profiletab1: string = "Basic";
 	isAndroid: boolean = false;
 	posts: any = [];
+  local_posts: any = [];
   allposts: any = [];
 	is_response = false;
 	IMAGES_URL: any = config.IMAGES_URL;
@@ -48,7 +54,10 @@ export class HomePage implements OnInit {
   user_id: any;
 	platform1: any;
   categories: any;
+  latest_categories: any;
   cat: any = "All";
+  filter_cat_array_local: any = [];
+  filter_cat_array_global: any = [];
   filter_cat_array = JSON.parse(localStorage.getItem('categoriesCheck'));
   categoriesChecked = JSON.parse(localStorage.getItem('categoriesCheck'));
   categoriesCheck = [];
@@ -59,10 +68,33 @@ export class HomePage implements OnInit {
   iframeid: any;
   player: any;
   count = 10;
+  local_count = 10;
   start_count = 0;
   loading: any;
+  latitude: any;
+  longitude: any;
+  category_type: any = '1';
 
-	constructor(public sanitizer:DomSanitizer,private ref: ChangeDetectorRef, public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private menuCtrl: MenuController, private globalFooService: GlobalFooService, public alertController: AlertController,private formBuilder: FormBuilder,private renderer: Renderer2, private iab: InAppBrowser, private platform: Platform/*, private addrecommendService: AddRecommendService*/, public navController: NavController, private loadingController: LoadingController) { 
+hideMe2=false;
+hide2() {
+this.hideMe2 = !this.hideMe2;
+} slideOpts2 = {
+	autoWidth:true,
+    slidesPerView: 2.25,
+	spaceBetween:10,
+    speed: 400,
+	breakpoints: {
+			767: {autoWidth:true,
+			  slidesPerView:4,
+			  spaceBetween: 15
+			},
+			1024: {autoWidth:true,
+			  slidesPerView:4,
+			  spaceBetween: 15
+			},
+		  }
+  };
+	constructor(public sanitizer:DomSanitizer,private ref: ChangeDetectorRef, public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private menuCtrl: MenuController, private globalFooService: GlobalFooService, public alertController: AlertController,private formBuilder: FormBuilder,private renderer: Renderer2, private iab: InAppBrowser, private platform: Platform/*, private addrecommendService: AddRecommendService*/, public navController: NavController, private loadingController: LoadingController, public modalController: ModalController) { 
 
 		this.createForm();
     this.user_name = localStorage.getItem('user_name');
@@ -74,12 +106,14 @@ export class HomePage implements OnInit {
 		this.globalFooService.getObservable().subscribe((data) => {
           console.log('Data received', data, localStorage.getItem('first_login'));
           self.menuCtrl.enable(true);
-          self.profiletab = "Basic";
+          self.profiletab = "Local";
           self.counter = 1;
           self.page_number = 1;
           self.is_response = false;
           self.posts = [];
-          self.getAllReccomdations(false, '');
+          // self.getAllReccomdations(false, '');
+           this.getAllLocalRecommendations(false, '');
+           // this.searchLocalRecc(false, '');
           this.user_name = localStorage.getItem('user_name');
           this.user_image = localStorage.getItem('user_image');
           this.user_email = localStorage.getItem('user_email');
@@ -113,6 +147,17 @@ export class HomePage implements OnInit {
     // this.selectedItemmShare = -1;
   }
 
+  async openImagePopup(image) {
+    //this.photoViewer.show(image);
+    const modal = await this.modalController.create({
+      component: ImagepopupPage,
+      componentProps: { value: image },
+      cssClass: 'imgMod'
+    });
+    return await modal.present();
+  }
+
+
 
 
   async presentLoading() {
@@ -143,7 +188,8 @@ export class HomePage implements OnInit {
   }
 
   gotocat(){
-    this.router.navigate(['/category'], { replaceUrl: true });
+    // this.router.navigate(['/category'], { replaceUrl: true });
+    this.router.navigate(['/category']);
   }
 
   gotofollowing(){
@@ -179,7 +225,13 @@ export class HomePage implements OnInit {
       this.posts = [];
       this.page_number = 1;
       // this.getCategories();
-      this.getAllReccomdations(false, '');
+      this.getCategoriesLatest();
+      this.getAllLocalRecommendations(false, '');
+      // this.getAllReccomdations(false, '');
+
+      
+      
+      
 	
   }
 
@@ -333,6 +385,11 @@ export class HomePage implements OnInit {
     this.authForm = this.formBuilder.group({
       keyword: ['', Validators.compose([Validators.required])]
     });
+
+    this.authSearchForm = this.formBuilder.group({
+      keyword: [''],
+      location: [''],
+    });
 	};
 
   viewPostSocial(post, link){
@@ -343,7 +400,12 @@ export class HomePage implements OnInit {
 
   logout(){
     var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
+    var lat = localStorage.getItem('lat');
+    var lng = localStorage.getItem('long');
     localStorage.clear();
+
+    localStorage.setItem('lat', lat);
+    localStorage.setItem('long', lng);
     localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
     this.router.navigate(['/landing-page'], { replaceUrl: true });
   }
@@ -628,10 +690,18 @@ export class HomePage implements OnInit {
 		this.counter = 0;
 		this.is_response = false;
     this.posts = [];
+    this.allposts = [];
     this.page_number = 1;
     this.start_count = 0;
     this.count = 10;
+    this.play_video = false;
     this.ref.detectChanges();
+    if(e.detail.value == 'Global'){
+      this.category_type = '2';
+    }else{
+      this.category_type = '1';
+    }
+    this.getCategoriesLatest();
 		this.getAllReccomdations(false, '');
 	}
 
@@ -640,7 +710,8 @@ export class HomePage implements OnInit {
 		this.is_response = false;
     this.posts = [];
     this.page_number = 1;
-    this.getAllReccomdations(false, '');
+    // this.getAllReccomdations(false, '');
+     this.getAllLocalRecommendations(false, '');
 	}
 
   updateInfo(data){
@@ -653,15 +724,20 @@ export class HomePage implements OnInit {
 	getAllReccomdations(isFirstLoad, event){
 		this.userId = localStorage.getItem('userId');
     console.log('this.profiletab= ', this.profiletab)
+    // this.posts = [];
+    // this.allposts = [];
     
 		let dict ={
       user_id: localStorage.getItem('userId'),
       skip: this.page_number, 
       limit: this.page_limit,
-      type: this.profiletab,
+      // type: this.profiletab,
+      type: this.profiletab1,
       cat: this.cat,
       keyword: this.authForm.value.keyword,
-      filter_cat_array: this.filter_cat_array
+      filter_cat_array: this.filter_cat_array,
+      filter_cat_array_global: this.filter_cat_array_global,
+
     };
 
     console.log(dict)
@@ -801,6 +877,8 @@ export class HomePage implements OnInit {
       //      this.apiService.stopLoading();
       //   }
 
+      console.log('posts = ', this.posts);
+
       this.stopLoading();
     },
     err => {
@@ -821,6 +899,31 @@ export class HomePage implements OnInit {
     this.getAllReccomdations(true, event);
   }
 
+  doInfiniteLocal(event) {
+    console.log('event local = ', event)
+    this.counter = 1;
+     console.log('this.local_count in infinite = ', this.local_count)
+    if((this.allposts.length - this.local_posts.length) < 10){
+
+      console.log('this.allposts.length = ', this.allposts.length)
+      console.log('this.local_posts.length = ', this.local_posts.length)
+      var countlength = (this.allposts.length - this.local_posts.length);
+      this.local_count = this.local_count + countlength;
+      // if(this.local_count > this.allposts.length){
+      //   this.local_count = this.local_count -1 ;
+      // }
+      console.log('this.local_count in infinitessss = ', this.local_count)
+    }else{
+     
+      this.local_count = this.local_count + 10;
+      // this.local_count = this.local_count + (this.allposts.length - this.local_posts.length);
+      console.log('this.local_count in infinite = ', this.local_count);
+      console.log('(this.allposts.length - this.local_posts.length) = ', (this.allposts.length - this.local_posts.length))
+    }
+    
+    this.getAllLocalRecommendations(true, event);
+  }
+
   openLink(web_link){
   	//window.open(web_link, '_system');
   	if(web_link.includes('http') == false  || web_link.includes('https') == false){
@@ -838,7 +941,7 @@ export class HomePage implements OnInit {
     this.iab.create(web_link, '_system', {location: 'yes', closebuttoncaption: 'done'});
   }
 
-	addRemoveReccomdation(item, type, index){
+	addRemoveReccomdation(str, item, type, index){
 
 		let dict ={
       user_id: localStorage.getItem('userId'),
@@ -852,9 +955,19 @@ export class HomePage implements OnInit {
       	this.stopLoading();
         this.ref.detectChanges();
       	console.log(result);
-      	this.posts[index].fav = type;
+        if(str == 'local'){
+          this.local_posts[index].fav = type;
+        }else{
+          this.posts[index].fav = type;
+        }
+      	
       	if(this.profiletab == "Saved"){
-      		this.posts.splice(index, 1);
+      		
+          if(str == 'local'){
+            this.local_posts.splice(index, 1);
+          }else{
+            this.posts.splice(index, 1);
+          }
       	}
       	this.apiService.presentToast(result.msg, 'success');
     });
@@ -883,7 +996,7 @@ export class HomePage implements OnInit {
 	 this.win.plugins.socialsharing.shareWithOptions(options, onSuccess, onError);
 	}
 
-  like(likesArray,dislikesArray, index){
+  like(str,likesArray,dislikesArray, index, post){
     let IsLiked = false;
     let likeId = null;
     for(var i=0; i < likesArray.length; i++)
@@ -897,7 +1010,8 @@ export class HomePage implements OnInit {
     let dict = {
       userId: this.userId,
       _id: likeId,
-      postId: this.posts[index]._id
+      // postId: this.posts[index]._id
+      postId: post._id
     };
 
     let ApiEndPoint = IsLiked == true ? 'deleteLike' : 'addLike';
@@ -908,18 +1022,33 @@ export class HomePage implements OnInit {
       this.ref.detectChanges();
       if(result.status == 1){
         if(!IsLiked){
-          this.posts[index].likes.push(result.data);
+          if(str == 'local'){
+            this.local_posts[index].likes.push(result.data);
+          }else{
+            this.posts[index].likes.push(result.data);
+          }
+          
         for(var i=0; i < dislikesArray.length; i++)
           {
             if(dislikesArray[i].userId == this.userId){
-              this.posts[index].dislikes.splice(i, 1);
+              
+              if(str == 'local'){
+                this.local_posts[index].dislikes.splice(i, 1);
+              }else{
+                this.posts[index].dislikes.splice(i, 1);
+              }
             }
           }
         }else{
           for(var i=0; i < likesArray.length; i++)
           {
             if(likesArray[i].userId == this.userId){
-              this.posts[index].likes.splice(i, 1);
+              
+              if(str == 'local'){
+                this.local_posts[index].likes.splice(i, 1);
+              }else{
+                this.posts[index].likes.splice(i, 1);
+              }
             }
           }
         }
@@ -1050,8 +1179,8 @@ export class HomePage implements OnInit {
   	localStorage.setItem('item', JSON.stringify(item));
   	localStorage.setItem('clicked_user_id', item.user_id);
     localStorage.setItem('add_user_type', item.add_user_type);
-  	this.router.navigateByUrl('/user-profile', { replaceUrl: true })
-     // this.navController.navigateBack(['user-profile']);
+  	// this.router.navigateByUrl('/user-profile', { replaceUrl: true })
+     this.router.navigate(['user-profile']);
   }
 
 
@@ -1240,6 +1369,27 @@ export class HomePage implements OnInit {
 	}
 
   ///category area
+  getCategoriesLatest(){
+
+      //this.apiService.presentLoading();
+      var dict = {
+        user_id: localStorage.getItem('userId'),
+        type: this.category_type
+      }
+    
+      this.apiService.postData(dict,'onlycategories').subscribe((result) => { 
+        //this.apiService.stopLoading();
+       this.ref.detectChanges();
+       console.log(result.data);
+        this.latest_categories = result.data;
+      },
+      err => {
+          this.apiService.presentToast('Technical error,Please try after some time','success');
+          this.apiService.stopLoading(); 
+      });
+  }
+
+  ///category area
   getCategories(){
 
       //this.apiService.presentLoading();
@@ -1395,4 +1545,280 @@ export class HomePage implements OnInit {
     console.log(this.filter_cat_array);
     
   }
+
+  //local feeds
+  selectCatForLocalFeed(cat, i){
+
+    this.allposts = [];
+    this.local_posts = [];
+
+    if( i == 'Today'){
+      this.profiletab1local = i;
+      this.filter_cat_array_local = [];
+    }else{
+
+      this.profiletab1local = '';
+      this.filter_cat_array_local = [];
+      
+      if(this.filter_cat_array_local.indexOf(cat._id) == -1){
+        this.filter_cat_array_local.push(cat._id);
+      }else{
+        this.filter_cat_array_local.splice(this.filter_cat_array_local.indexOf(cat._id),1);
+      } 
+    }
+    
+
+    console.log(this.filter_cat_array_local);
+    this.getAllLocalRecommendations(false, '');
+  }
+
+
+
+
+
+  getAllLocalRecommendations(isFirstLoad, event){
+		this.userId = localStorage.getItem('userId');
+    console.log('this.profiletab= ', this.profiletab)
+    
+		let dict ={
+      user_id: localStorage.getItem('userId'),
+      skip: this.page_number, 
+      limit: this.page_limit,
+      type: this.profiletab,
+      cat: this.cat,
+      keyword: this.authSearchForm.value.keyword,
+      location: this.authSearchForm.value.location,
+      lat : parseFloat(localStorage.getItem('lat')),
+      lng :  parseFloat(localStorage.getItem('long')),
+      selected_cat: this.filter_cat_array_local,
+      recc_type: 'local',
+      category: this.filter_cat_array_local,
+      recc_type_for_all: this.profiletab1local == "Today" ? "All" : '' 
+
+    };
+
+    console.log(dict)
+    console.log('this.counter = ', this.counter)
+    if(this.counter == 0){
+    	this.apiService.presentLoading();
+    }
+    // if(this.counter == 0){
+      // this.apiService.presentLoading();
+    // }
+    var endpoint = this.profiletab == 'Local' ? 'getAllLocalfilterRecc' : 'getAllLocalRecc';
+   // this.apiService.postData(dict,'getAllLocalRecc').subscribe((result) => {
+    this.apiService.postData(dict,'getAllLocalfilterRecc').subscribe((result) => {
+      	
+
+        this.ref.detectChanges();
+        // if(this.counter == 0){
+        //    this.apiService.stopLoading();
+        // }
+        if(this.counter == 4){
+           //this.apiService.stopLoading();
+        }
+        
+        
+        console.log(result);
+        // this.local_posts = result.data;
+
+
+
+
+        this.local_posts = result.data;
+        // this.allposts = result.data;
+        // this.ref.detectChanges();
+        // this.is_response = true;
+        // console.log('result = ', result);
+        // console.log('local_count = ', this.local_count);
+        // console.log(this.local_posts);
+        
+
+        // if(this.authSearchForm.value.keyword == ''){
+
+        //   if(result.data.length > 10){
+        //     // this.posts = [];
+        //     if(this.local_count == result.data.length){
+        //       this.is_response = false;
+        //       event.target.complete();
+        //     }else{
+        //       if(this.local_posts.length == 0){
+        //         this.local_posts = result.data.slice(0, 10);
+        //         this.start_count = 9;
+        //       }else{
+        //         for (let i = this.start_count; i < this.local_count; i++) {
+        //           this.local_posts.push(result.data[i]); 
+        //           this.start_count = i + 1;                      
+        //         }
+        //       }
+              
+              
+
+        //       if (isFirstLoad)
+        //         event.target.complete();
+
+        //       this.page_number++;
+        //     }
+        //   }else{
+        //     this.local_posts = this.allposts;
+        //     this.ref.detectChanges();
+        //     // this.is_response = false;
+        //     //event.target.complete();
+        //   }
+        //   console.log('local_posts = ', this.local_posts)
+        // }else{
+        //   var searchText = this.authSearchForm.value.keyword;
+        //   this.local_posts = this.allposts.filter(it => {
+        //     return (it.user_name.toLowerCase().includes(searchText) || it.user_name.toUpperCase().includes(searchText) || it.user_name.includes(searchText) || it.category.toLowerCase().includes(searchText)    ||it.category.toUpperCase().includes(searchText)    ||it.category.includes(searchText)|| it.title.toLowerCase().includes(searchText)  || it.title.toUpperCase().includes(searchText)  || it.title.includes(searchText) || (this.errors.indexOf(it.description) == -1 ? it.description.toLowerCase().includes(searchText): '') || (this.errors.indexOf(it.description) == -1 ? it.description.toUpperCase().includes(searchText): '') || (this.errors.indexOf(it.description) == -1 ? it.description.includes(searchText): '') );
+        //   });
+          
+        //   this.searchLocalRecc(false, '');
+        // }
+
+        this.ref.detectChanges();
+
+
+      	
+      this.ref.detectChanges();
+      this.is_response = true;
+      console.log('result = ', result);
+      console.log(this.local_posts);
+    
+
+      this.apiService.stopLoading();
+    },
+    err => {
+          this.stopLoading();
+            this.apiService.presentToast('Technical error,Please try after some time.','danger');
+            this.apiService.stopLoading(); 
+        });
+	}
+
+  public handleAddressChange(address) {
+    // Do some stuff
+    console.log(address)
+    this.authSearchForm.patchValue({
+      location: address.formatted_address
+    })
+
+    this.geoCode(address.formatted_address)
+  }
+  
+  geoCode(address:any) {
+    let geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ 'address': address }, (results, status) => {
+    this.latitude = results[0].geometry.location.lat();
+    this.longitude = results[0].geometry.location.lng();
+
+    localStorage.setItem('lat', this.latitude.toString());
+    localStorage.setItem('long', this.longitude.toString());
+    console.log("lat: " + this.latitude + ", long: " + this.longitude);
+     });
+   }
+
+
+
+  searchLocalRecc(isFirstLoad, event){
+
+      console.log(this.authSearchForm.value);
+      this.presentLoading();
+      var dict = {
+        lat : parseFloat(localStorage.getItem('lat')),
+        lng :  parseFloat(localStorage.getItem('long')),
+        recc_type: 'local',
+        category: this.filter_cat_array_local,
+        keyword: this.authSearchForm.value.keyword,
+        recc_type_for_all: this.profiletab1local == "Today" ? "All" : '' 
+      }
+      this.apiService.postData(dict,'getAllLocalfilterRecc').subscribe((result) => {
+        console.log(result)
+        this.allposts = result.data;
+        this.ref.detectChanges();
+        this.is_response = true;
+        console.log('result = ', result);
+        console.log(this.local_posts);
+
+        this.stopLoading();
+        if(this.authSearchForm.value.keyword == ''){
+
+          if(result.data.length > 10){
+            // this.posts = [];
+            if(this.count == result.data.length){
+              this.is_response = false;
+              event.target.complete();
+            }else{
+              if(this.local_posts.length == 0){
+                this.local_posts = result.data.slice(0, 9);
+                this.start_count = 9;
+              }else{
+                for (let i = this.start_count; i < this.count; i++) {
+                  this.local_posts.push(result.data[i]); 
+                  this.start_count = i + 1;                      
+                }
+              }
+              
+              
+
+              if (isFirstLoad)
+                event.target.complete();
+
+              this.page_number++;
+            }
+          }else{
+            this.local_posts = this.allposts;
+            this.ref.detectChanges();
+            // this.is_response = false;
+            //event.target.complete();
+          }
+        }else{
+          var searchText = this.authSearchForm.value.keyword;
+          this.local_posts = this.allposts.filter(it => {
+            return (it.user_name.toLowerCase().includes(searchText) || it.user_name.toUpperCase().includes(searchText) || it.user_name.includes(searchText) || it.category.toLowerCase().includes(searchText)    ||it.category.toUpperCase().includes(searchText)    ||it.category.includes(searchText) || it.title.toLowerCase().includes(searchText)  || it.title.toUpperCase().includes(searchText)  || it.title.includes(searchText) || (this.errors.indexOf(it.description) == -1 ? it.description.toLowerCase().includes(searchText): '') || (this.errors.indexOf(it.description) == -1 ? it.description.toUpperCase().includes(searchText): '') || (this.errors.indexOf(it.description) == -1 ? it.description.includes(searchText): '') );
+          });
+        }
+
+        this.ref.detectChanges();
+
+      });
+
+
+  }
+
+  setFilteredLocalLocations(searchText){
+    console.log(searchText)
+    this.local_posts = this.allposts.filter(it => {
+      return (it.user_name.toLowerCase().includes(searchText) || it.user_name.toUpperCase().includes(searchText) || it.user_name.includes(searchText) || it.category.toLowerCase().includes(searchText)    ||it.category.toUpperCase().includes(searchText)    ||it.category.includes(searchText) || it.title.toLowerCase().includes(searchText)  || it.title.toUpperCase().includes(searchText)  || it.title.includes(searchText) || (this.errors.indexOf(it.description) == -1 ? it.description.toLowerCase().includes(searchText): '') || (this.errors.indexOf(it.description) == -1 ? it.description.toUpperCase().includes(searchText): '') || (this.errors.indexOf(it.description) == -1 ? it.description.includes(searchText): '') );
+    });
+    // this.is_response = false;
+  }
+
+
+  //global feeds
+  selectCatForGlobalFeed(cat, i){
+
+    this.allposts = [];
+    this.posts = [];
+    this.ref.detectChanges();
+    if( i == 'Today' || i == 'Basic'){
+      this.profiletab1 = i;
+      this.filter_cat_array_global = [];
+    }else{
+
+      this.profiletab1 = '';
+      this.filter_cat_array_global = [];
+      if(this.filter_cat_array_global.indexOf(cat._id) == -1){
+
+        this.filter_cat_array_global.push(cat._id);
+      }else{
+        this.filter_cat_array_global.splice(this.filter_cat_array_global.indexOf(cat._id),1);
+      }
+
+    }
+
+    
+
+    console.log(this.filter_cat_array_global);
+    this.getAllReccomdations(false, '');
+  }
+
 }

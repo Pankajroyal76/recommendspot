@@ -1,0 +1,149 @@
+<div headerWeb>
+	<a href="javascript:void(0)" routerLink="/tabs/home" logo><!--Recommendspot--><img height="22px" src="assets/img/logo-white.png" alt="" ></a>
+	<div ritHeader>
+		<ul>
+			
+			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
+			<li><a routerLink="/category" href="javascript:void(0)" (click)="gotToTop()">Categories</a></li>
+			<li (click)="gotofollowing()"><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
+			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
+			 
+		</ul>
+		<!--ion-label style="display: none;"><span>Select Category</span></ion-label-->
+		<!--ion-select  style="color: #fff;font-size: 15px;font-weight: 500;    margin-top: 3px;" interface="alert" [(ngModel)]="cat" (ionChange)="catChange(type, 'web')">
+			<ion-select-option value="All"> All Categories </ion-select-option>
+			<ion-select-option value="{{cat._id}}" *ngFor="let cat of categories"> {{cat.name}} </ion-select-option>
+			
+		</ion-select-->
+		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge *ngIf="noti_count != '0' && errors.indexOf(noti_count) == -1" color="secondary"><span *ngIf="noti_count != '0'">{{noti_count}}</span></ion-badge></a>
+		<span proImg>
+			<!-- <img src="assets/img/user4.jpg" alt=""> -->
+
+			<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
+	       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
+	      <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) >= 0" src="assets/img/default.png">
+
+			 <p headerfixedheight routerLink="/tabs/profile"><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
+			<div profileDropdown>
+				<ul>
+					<li><a href="javascript:void(0)" routerLink="/profile-setting/{{user_id}}">Profile Settings</a></li>
+					<li (click)="logout()"> <a href="javascript:void(0)">Logout</a></li>
+				</ul>
+			</div>
+			
+		</span>
+	</div>
+</div>
+<ion-header class="ion-no-border heder-main" align-title="center">
+	<ion-toolbar color="secondary">
+		
+    	<ion-back-button slot="start">
+        </ion-back-button> 
+		<ion-title class="ion-text-center"> Category </ion-title>
+
+		<ion-buttons slot="end" class="nextbtn" routerLink="/tabs/home">
+			Next <ion-icon name="chevron-forward-circle-outline"></ion-icon> 
+        </ion-buttons> 
+	</ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" #content [scrollEvents]="true">
+<div container>
+<div categorytab>
+	<span class="catdic">Follow categories and people you are interested in to discover recommendations in your news feed.</span>
+
+	<div class="catHeader">
+	  	<ion-segment [(ngModel)]="categorytab" (ionChange)="onSegmentChange($event)">
+			<ion-segment-button value="category">
+			  Category
+			</ion-segment-button>
+			<ion-segment-button value="people">
+		 	People
+		  	</ion-segment-button>
+	    </ion-segment>
+	    <ion-buttons slot="end" class="nextbtn" routerLink="/tabs/home">
+			Next <ion-icon name="chevron-forward-circle-outline"></ion-icon> 
+		</ion-buttons>
+	</div>
+</div>
+
+
+
+<div [ngSwitch]="categorytab">
+    	<ion-list *ngSwitchCase="'category'">
+           
+           	<!-- <ngx-masonry [ordered]="true" [options]="myOptions"> -->
+           		<ion-row>
+			       <ng-container >
+			        <ion-col size-lg="6" size-md="6"  size-sm="12" size="12" *ngFor="let cat of categories;let i = index;">
+					    <div category-sec>
+							<ion-list *ngIf="cat.sub_cat?.length == 0">
+							    <h3 category-head >
+								    <label class="category">{{cat.name}}
+										<!-- <input type="checkbox" id="checkbox"> 
+										<span> <ion-icon name="checkmark-done" ></ion-icon></span> -->
+								    </label>
+								     <ion-buttons slot="end" (click)="follow_unfollow_cat(cat, '1', i)" *ngIf="cat.cat_follow == 0 && cat.follow_status == true" >
+									    <!-- <img width="20px" src="../assets/img/category-follow.png"/> -->Follow
+									</ion-buttons>
+									<ion-buttons slot="end" (click)="follow_unfollow_cat(cat, '0', i)" *ngIf="cat.cat_follow == 1 && cat.follow_status == true">
+									    <!-- <img width="20px" src="../assets/img/category-follow2.png"/> -->Unfollow
+									</ion-buttons>
+								</h3>
+							</ion-list>	
+							<ion-list *ngIf="cat.sub_cat?.length > 0">   
+							    <h3 category-head>
+								   <label class="category">{{cat.name}}</label>
+								</h3>
+								<ng-container *ngIf="cat.sub_cat?.length > 0">
+									<ion-item lines="none" *ngFor="let sub_cat of cat.sub_cat;let sub_index = index;">
+										<ion-label>{{sub_cat.name}}</ion-label>
+										<!-- <ion-checkbox color="secondary" slot="start"></ion-checkbox> -->
+									  	<ion-buttons slot="end" (click)="follow_unfollow_sub_cat(sub_cat, '1', i, sub_index)" *ngIf="sub_cat.sub_cat_follow == 0 && sub_cat.follow_status == true">
+										    <!-- <img width="20px" src="assets/img/category-follow.png"/> -->Follow
+										</ion-buttons>
+										<ion-buttons slot="end" (click)="follow_unfollow_sub_cat(sub_cat, '0', i, sub_index)" *ngIf="sub_cat.sub_cat_follow == 1 && sub_cat.follow_status == true">
+										    <!-- <img width="20px" src="assets/img/category-follow2.png"/> -->Unfollow
+										</ion-buttons>
+									</ion-item>	
+								</ng-container>
+							</ion-list>				
+						</div>
+					</ion-col>
+
+					
+			      </ng-container>
+			    </ion-row>	
+	    
+
+           <!-- 	<ng-container *ngFor="let cat of categories;let i = index;">
+	           	
+			</ng-container> -->
+		
+        </ion-list>
+        <ion-list people *ngSwitchCase="'people'"> 
+		    <ion-row>	
+				<ion-col size-lg="6" size-md="6"  size-sm="12" size="12" *ngFor="let user of users; let i = index;">
+				   <ion-item lines="none">
+				   <ion-avatar style="cursor: pointer;" (click)="viewUser(user)">
+
+					<img *ngIf="errors.indexOf(user.image) == -1 && getimage(user.image) == true" src="{{user.image}}">
+			        <img *ngIf="errors.indexOf(user.image) == -1 && getimage(user.image) == false" src="{{IMAGES_URL + '/images/' + user.image}}">
+			       	<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user.image) >= 0" src="assets/img/default.png">
+
+				   </ion-avatar>
+						<ion-label (click)="viewUser(user)"  style="cursor: pointer;"  >{{user.name}} </ion-label>
+					 	<ion-buttons (click)="follow_unfollow_user(user, '1', i)" *ngIf="user.isFriend == 0">
+					   		<ion-icon name="person-add-outline"></ion-icon>
+					 	</ion-buttons>
+
+					 	<ion-buttons (click)="follow_unfollow_user(user, '0', i)" *ngIf="user.isFriend == 1">
+					   		<ion-icon name="person-add"></ion-icon>
+					 	</ion-buttons>
+					</ion-item>	
+				</ion-col>
+			</ion-row>	
+		</ion-list>
+</div>
+</div>
+</ion-content>

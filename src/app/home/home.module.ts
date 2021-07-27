@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
-
+import { GooglePlaceModule } from "ngx-google-places-autocomplete";
 import { HomePageRoutingModule } from './home-routing.module';
 import { YouTubePlayerModule } from "@angular/youtube-player";
 import { HomePage } from './home.page';
@@ -19,6 +19,6 @@ import { CommonPipeModule } from '../commonPipe.module';
     ReactiveFormsModule
   ],
   declarations: [HomePage],
-  exports: [CommonPipeModule]
+  exports: [CommonPipeModule, GooglePlaceModule]
 })
 export class HomePageModule {}

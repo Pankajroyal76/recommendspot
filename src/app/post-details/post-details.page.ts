@@ -10,6 +10,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { ImagepopupPage } from '../imagepopup/imagepopup.page';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 
+
 @Component({
   selector: 'app-post-details',
   templateUrl: './post-details.page.html',
@@ -172,14 +173,25 @@ export class PostDetailsPage implements OnInit {
 
     logout(){
       var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
+      var lat = localStorage.getItem('lat');
+      var lng = localStorage.getItem('long');
       localStorage.clear();
+
+      localStorage.setItem('lat', lat);
+      localStorage.setItem('long', lng);
       localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
       this.router.navigate(['/landing-page']);
     }
 
     async openImagePopup(image) {
-      this.photoViewer.show(image);
+      //this.photoViewer.show(image);
+      const modal = await this.modalController.create({
+        component: ImagepopupPage,
+        componentProps: { value: 123 }
+      });
+      return await modal.present();
     }
+
 
     getimage(img){
       if(this.errors.indexOf(img) == -1){

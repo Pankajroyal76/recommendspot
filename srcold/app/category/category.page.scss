@@ -1,0 +1,272 @@
+ion-content{
+--background:#f8f9fd  url(../../assets/img/pattern.png)  -160px -65px/contain no-repeat;
+[categorytab]
+{    max-width: 600px;
+    margin: 0 auto;
+
+	.catdic
+	{
+		background-color: #fff;
+		padding: 8px;
+		line-height: inherit;
+		display: block;
+		font-size: 13px;
+		border-radius: 5px;
+		margin-bottom: 10px;
+	}
+ ion-segment {
+    background:#ffffff;
+    border-radius: 30px;
+	padding: 5px;
+    margin-bottom: 10px;	 
+	ion-segment-button
+	{    text-transform: capitalize;
+	    min-height: 35px!important;
+    height: 30px!important;
+	color: #000;
+	&.segment-button-checked{
+    --indicator-color: transparent !important;
+    --indicator-color-checked: transparent !important;
+    background: var(--ion-color-secondary);
+    border-radius: 30px;--border-radius: 30px;
+    color: var(--ion-color-white);
+	   --color-checked: var(--ion-color-white)!important;
+    font-weight: 500;
+}
+}
+}
+}
+
+
+/*Follow Category/People Css Start*/
+.follow-category
+{    text-align: center;
+    min-height: 510px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0 , 0 , .07);
+	[followimg]
+	{
+	img
+	{
+	    max-width: 280px;
+    margin-bottom: 25px;
+	}
+  ion-button
+  {    min-height: 48px;
+  --box-shadow:none;
+  }
+}
+}
+/*Follow Category/People Css Ends*/
+ion-list
+{
+background:transparent;
+padding:0px;
+margin:0px;
+&[people]
+{
+  ion-item
+  {border-radius: 8px;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0 , 0 , .07);
+	ion-avatar
+	{
+	   width:65px;
+	   height:65px;
+	   margin-right:10px;
+	}
+	ion-buttons
+	{
+	 color:var(--ion-color-secondary);
+	 font-size:22px;
+	}
+  }
+}
+[category-sec]
+	{
+		background: var(--ion-color-white);
+		border-radius: 5px;
+		padding: 10px 10px 10px;
+		box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.05);
+		height: 100%;
+		/*margin: 0px 10px 20px 0px;*/
+		ion-list
+		{
+		    [category-head]
+			{
+				margin: 10px 0px 15px;
+				font-size: 14px;
+				border-bottom: 1px solid var(--ion-color-grey3);
+				padding: 0px 0px 12px;
+				position: relative;
+				z-index: 1;
+				display: flex;
+                justify-content: space-between;
+				text-transform:capitalize;
+                &:after
+				{
+				    position:absolute;
+					content:"";
+					bottom:-1px;
+					left:0px;
+					width:40px;
+					height:4px;
+					background:var(--ion-color-secondary);
+					z-index:-1;
+				}	
+              .category
+					{  cursor:pointer;
+  					   display: inline-block;
+                        position: relative;
+						    margin-right: 25px;
+                          input[type="checkbox"]
+						 {
+						   position: absolute;
+							opacity: 0;
+							cursor: pointer;
+							height: 0;
+							width: 0;
+							&:checked ~ span
+							{
+							border: 1px solid var(--ion-color-secondary);
+							background:var(--ion-color-secondary);
+							color:#fff;
+							ion-icon
+							{
+						      opacity:1!important;
+							}
+							}
+						 }
+						 input[type="checkbox"] ~ span
+						 {
+						    display: flex;
+                            align-items: center;
+						    position: absolute;
+							right: -25px;
+							top: 0;
+							color: var(--ion-color-secondary);
+							font-size: 16px;
+							width: 20px;
+							height: 20px;
+							border: 1px solid #ddd;
+							ion-icon
+							{
+						      opacity:0
+							}
+						 }
+						 
+					}	
+                ion-buttons
+				{
+				color: var(--ion-color-white);
+				cursor: pointer;
+				font-size: 10px;
+				background: var(--ion-color-secondary);
+				padding: 3px 8px;
+				border-radius: 30px;
+				margin-right: 0;
+				}					
+			}
+			ion-item
+			{
+				--padding-start: 6px;
+				--inner-padding-end: 6px;
+				--min-height: 42px;
+				border-bottom: 1px dashed var(--ion-color-ltgrey);		
+                --background: transparent;  
+               min-width:100%;  				
+				ion-label
+				{
+					font-size: 13px;
+					color: var(--ion-color-grey4);				
+				}
+				ion-buttons
+				{
+				color: var(--ion-color-white);
+    cursor: pointer;
+    font-size: 10px;
+    background: var(--ion-color-secondary);
+    padding: 3px 8px;
+    border-radius: 30px;
+    margin-right: 0;
+				}
+				ion-checkbox
+				{
+				    margin:0px 10px 0px 0px;
+				}
+			}
+		}
+	}
+	}
+@media (min-width:1025px)
+{
+	[headerWeb] 
+	{
+		[ritHeader] 
+		{
+			[proImg] 
+			{
+				[profileDropdown]
+				{
+				    z-index: 999;
+				}
+			}
+		}
+	}
+	.content-all-pst
+	{ 
+		.add-commnt
+		{
+			width:100%;
+			max-width:800px;
+		}	
+	}	
+}	
+}	
+
+.catHeader
+{
+	margin-bottom:10px;
+	display:flex;
+	align-items:center;
+	ion-segment{
+		margin-bottom:0 !important;
+		margin-right: 15px;
+	}
+}
+
+@media (max-width:767px){
+	.catHeader
+	{
+		.nextbtn{
+			display:none
+		}
+		ion-segment{
+			margin-right: 0px;
+		}
+	}	
+}
+
+iframe{
+	display : none !important;
+}
+
+.boxflex
+{
+    display: flex;
+    align-items: center;
+	.form-control {
+		margin: 0 10px;
+	}
+	& + &{
+		margin-top: 10px;
+	}
+}
+
+.masonry-item { width: 50%; }
+
+
+

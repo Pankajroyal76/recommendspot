@@ -1,0 +1,67 @@
+<div headerWeb>
+	<a href="javascript:void(0)" routerLink="/tabs/home" logo><!--Recommendspot--><img height="22px" src="assets/img/logo-white.png" alt="" ></a>
+	<div ritHeader>
+		<ul>
+			
+			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
+			<li><a routerLink="/category" href="javascript:void(0)">Categories</a></li>
+			<li (click)="gotofollowing()"><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
+			<li><a routerLink="/tabs/add-recommend" href="javascript:void(0)" (click)="gotToTop()">Add Recommendation</a></li>
+			 
+		</ul>
+		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge *ngIf="noti_count != '0'  && errors.indexOf(noti_count) == -1" color="secondary"><span >{{noti_count}}</span></ion-badge></a>
+		<span proImg>
+			<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
+	        <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
+	       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) >= 0" src="assets/img/default.png">
+
+			<p headerfixedheight routerLink="/tabs/profile"><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
+
+			<div profileDropdown>
+				<ul>
+					<li><a href="javascript:void(0)" routerLink="/profile-setting/{{user_id}}">Profile Settings</a></li>
+					<li><a href="javascript:void(0)" routerLink="/tabs/saved">Saved Recommedations</a></li>
+					<li (click)="logout()"><a href="javascript:void(0)">Logout</a></li>
+				</ul>
+			</div>
+		</span>
+	</div>
+</div>
+
+<ion-header>
+  <ion-toolbar color="secondary">
+  <ion-menu-button slot="start">
+<img height="15px" src="assets/img/menu.png"/>
+  </ion-menu-button>
+    <ion-title class="ion-text-center">Add  Recommendation</ion-title>
+	
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="ion-padding" #content [scrollEvents]="true">
+<div addrecommend>
+<div container>
+<div recommendinner>
+ <div heading>
+ <h2>Add Recommendation</h2>
+ <p>If you want to add local and global recommendations, then please feel free to click the buttons below</p>
+ </div>
+   <div btnbottom>  		
+
+   			<ion-button color="secondary" expand="full" shape="round" type="submit"  routerLink="/addlocalrecommendation">Add Local Recommendation</ion-button>
+   			<ion-button color="secondary" expand="full" shape="round" type="submit" fill="outline" routerLink="/add-recommendation">Add Global Recommendation</ion-button>
+   </div>
+</div>
+</div>
+</div>
+
+</ion-content>
+
+<div footerWeb>
+	<p>© 2021 Recommendspot. All rights reserved.</p>
+</div>
+
+
+
+

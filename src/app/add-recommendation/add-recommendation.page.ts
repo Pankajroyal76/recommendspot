@@ -12,7 +12,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/fo
 declare var window: any; 
 import {getLinkPreview} from 'link-preview-js';
 import { ModalController, ToastController, LoadingController , ActionSheetController, AlertController,NavController} from '@ionic/angular';
-import { NgxSpinnerService } from "ngx-spinner";
+
 import { Platform, IonContent } from '@ionic/angular'; 
 
 @Component({
@@ -62,7 +62,7 @@ export class AddRecommendationPage implements OnInit {
 	selected_cat: any = '';
 	is_linkdata = false;
 
-  	constructor(private spinner: NgxSpinnerService,private ref: ChangeDetectorRef,public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, private globalFooService: GlobalFooService,private formBuilder: FormBuilder, public sanitizer:DomSanitizer, public loadingController: LoadingController) { 
+  	constructor(private ref: ChangeDetectorRef,public apiService: ApiserviceService, public router: Router, private camera: Camera, private file: File, private filePath: FilePath,  private transfer: FileTransfer, private globalFooService: GlobalFooService,private formBuilder: FormBuilder, public sanitizer:DomSanitizer, public loadingController: LoadingController) { 
 
   		this.createForm();
   		this.expression = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
@@ -163,13 +163,17 @@ export class AddRecommendationPage implements OnInit {
   	onSegmentChange(e){
       console.log('event = ', e.detail.value);
       this.typeTab = e.detail.value;
-      this.spinner.show();
 
       this.ref.detectChanges();
   	}
   	logout(){
 	    var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
+	    var lat = localStorage.getItem('lat');
+	    var lng = localStorage.getItem('long');
 	    localStorage.clear();
+
+	    localStorage.setItem('lat', lat);
+	    localStorage.setItem('long', lng);
 	    localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
 	    this.router.navigate(['/landing-page']);
   	}
@@ -492,7 +496,7 @@ export class AddRecommendationPage implements OnInit {
 	      ]
 	    });
 	    await actionSheet.present();
-	  }
+  	}
 
 
 
@@ -580,7 +584,9 @@ export class AddRecommendationPage implements OnInit {
 	    	image: this.image,
 	    	user_id: localStorage.getItem('userId'),
 	    	add_user_type: 'user',
-	    	web_link_content: this.link_content
+	    	web_link_content: this.link_content,
+	    	recc_type: 'global',
+	    	recc_contact: ''
 	    }
 	  
 	    this.apiService.postData(dict,'addRecc').subscribe((result) => { 

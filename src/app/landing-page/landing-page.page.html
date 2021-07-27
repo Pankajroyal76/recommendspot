@@ -96,15 +96,15 @@
 		<ion-row>
 		    <ion-col size="12">
 				<div form-group>
-
-					<ion-item lines="none" (click)="presentAlert()">
+				<ion-button color="secondary" routerLink="/posts">Explore</ion-button>
+					<!--ion-item lines="none" (click)="presentAlert()"-->
 						<!-- <ion-label>
 							<span style="display: none;">Category</span>
 						</ion-label> -->
 						<!-- <ion-select value="allCategories" okText="Save" cancelText="Cancel" placeholder="Choose">
 							<ion-select-option value="{{cat._id}}" *ngFor="let cat of categories">{{cat.name}}</ion-select-option>
 						</ion-select> -->
-						<div class="categories">
+						<!--div class="categories">
 							<span *ngIf="categoriesChecked?.length == 0">Categories</span><ion-icon class="dropicon" name="caret-down-outline"></ion-icon>
 							<ng-container *ngIf="categoriesChecked?.length > 0">
 								<div><span *ngFor="let doc of categoriesCheck"><span *ngIf="doc.checked == true">{{doc.name}}<span *ngIf="categoriesCheck?.length > 1">,</span></span></span></div>
@@ -114,7 +114,7 @@
 
 
 
-			        <ion-buttons (click)="goto()">Go</ion-buttons>
+			        <ion-buttons (click)="goto()">Go</ion-buttons-->
 				</div>								
 			</ion-col>
 		</ion-row>

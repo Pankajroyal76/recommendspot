@@ -6,8 +6,9 @@ import { Router } from '@angular/router';
 declare var Branch;
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-import { MenuController, AlertController , Platform, IonContent} from '@ionic/angular';
+import { ModalController, MenuController, AlertController , Platform, IonContent} from '@ionic/angular';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ImagepopupPage } from '../imagepopup/imagepopup.page';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
@@ -36,8 +37,9 @@ export class ProfilePage implements OnInit {
   index: any = -1;
   play_video = false;
   player: any;
+  profiletab = "Local";
   
-  	constructor(public sanitizer:DomSanitizer,private ref: ChangeDetectorRef,private globalFooService: GlobalFooService,public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private iab: InAppBrowser, public alertController: AlertController, private platform: Platform) { 
+  	constructor(public sanitizer:DomSanitizer,private ref: ChangeDetectorRef,private globalFooService: GlobalFooService,public apiService: ApiserviceService, public router: Router,private socialSharing: SocialSharing, private iab: InAppBrowser, public alertController: AlertController, private platform: Platform, public modalController: ModalController) { 
       this.user_name = localStorage.getItem('user_name');
       this.user_image = localStorage.getItem('user_image');
       this.user_email = localStorage.getItem('user_email');
@@ -91,7 +93,12 @@ export class ProfilePage implements OnInit {
 
     logout(){
       var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
+      var lat = localStorage.getItem('lat');
+      var lng = localStorage.getItem('long');
       localStorage.clear();
+
+       localStorage.setItem('lat', lat);
+      localStorage.setItem('long', lng);
       localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
       this.router.navigate(['/landing-page'], { replaceUrl: true });
     }
@@ -345,7 +352,7 @@ export class ProfilePage implements OnInit {
 
   	getData(){
      
-      this.apiService.postData({'userId': localStorage.getItem('userId'), 'loggedUserId': localStorage.getItem('userId'), add_user_type: 'user'},'influencerProfile').subscribe((result) => {
+      this.apiService.postData({'userId': localStorage.getItem('userId'), 'loggedUserId': localStorage.getItem('userId'), add_user_type: 'user', recc_type: this.profiletab == 'Local' ? 'local' : 'global'},'influencerProfile').subscribe((result) => {
         
         this.ref.detectChanges();
         console.log(result)
@@ -447,14 +454,16 @@ export class ProfilePage implements OnInit {
     this.selectedItemm = -1;
       localStorage.setItem('item', JSON.stringify(post));
       localStorage.setItem('postId', post._id);
-      this.router.navigate(['/post-details'], { replaceUrl: true });
+      //this.router.navigate(['/post-details'], { replaceUrl: true });
+      this.router.navigate(['/post-details']);
   }
 
   viewComments(post){
     this.selectedItemm = -1;
     localStorage.setItem('item', JSON.stringify(post));
     localStorage.setItem('postId', post._id);
-    this.router.navigate(['/comments'], { replaceUrl: true });
+    //this.router.navigate(['/comments'], { replaceUrl: true });
+    this.router.navigate(['/comments']);
   }
 
 
@@ -593,6 +602,23 @@ export class ProfilePage implements OnInit {
       });
 
       await alert.present();
+  }
+
+  onSegmentChange(event){
+    console.log(event);
+    this.profiletab = event.detail.value;
+    this.getData();
+  }
+
+
+  async openImagePopup(image) {
+    //this.photoViewer.show(image);
+    const modal = await this.modalController.create({
+      component: ImagepopupPage,
+      componentProps: { value: image },
+      cssClass: 'imgMod'
+    });
+    return await modal.present();
   }
   
 }

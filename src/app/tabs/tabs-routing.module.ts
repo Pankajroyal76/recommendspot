@@ -15,6 +15,10 @@ const routes: Routes = [
         loadChildren: () => import('../home/home.module').then(m => m.HomePageModule)
       },
       {
+        path: 'saved',
+        loadChildren: () => import('../saved-posts/saved-posts.module').then(m => m.SavedPostsPageModule)
+      },
+      {
         path: 'profile',
         loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule)
       },
@@ -27,6 +31,13 @@ const routes: Routes = [
       }, {
         path: 'notification',
         loadChildren: () => import('../notification/notification.module').then(m => m.NotificationPageModule)
+      },{
+        path: 'addlocalrecommendation',
+        loadChildren: () => import('../addlocalrecommendation/addlocalrecommendation.module').then(m => m.AddlocalrecommendationPageModule)
+      },
+	  {
+        path: 'add-recommend',
+        loadChildren: () => import('../add-recommend/add-recommend.module').then(m => m.AddRecommendPageModule)
       },
       {
         path: '',

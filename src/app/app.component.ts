@@ -11,6 +11,9 @@ import { FCM } from '@ionic-native/fcm/ngx';
 import {ConnectionService} from 'ng-connection-service';
 declare var Branch;
 
+declare var google;
+
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -92,13 +95,23 @@ export class AppComponent {
     });
 
     this.globalFooService.getObservable().subscribe((data) => {
-            console.log('Data received', data);
-            this.user_name = localStorage.getItem('user_name');
-            this.user_image = localStorage.getItem('user_image');
-            this.user_email = localStorage.getItem('user_email');
-            this.user_medium = localStorage.getItem('user_medium');
+        console.log('Data received', data);
+        this.user_name = localStorage.getItem('user_name');
+        this.user_image = localStorage.getItem('user_image');
+        this.user_email = localStorage.getItem('user_email');
+        this.user_medium = localStorage.getItem('user_medium');
 
-        });
+    });
+
+    navigator.geolocation.getCurrentPosition(function(value){
+            // alert('Location accessed')
+            console.log(value)
+            console.log(value.coords.latitude,value.coords.longitude.toString());
+            localStorage.setItem('lat', value.coords.latitude.toString());
+            localStorage.setItem('long', value.coords.longitude.toString());
+    },function(){
+           //alert('User not allowed')
+    },{timeout:10000});
   }
 
 
@@ -154,6 +167,8 @@ export class AppComponent {
       this.notificationCount();
       this.branchInit();
       this.fcmNotification();
+
+      
       
 
       
@@ -187,7 +202,12 @@ export class AppComponent {
 
   logout(){
     var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
+    var lat = localStorage.getItem('lat');
+    var lng = localStorage.getItem('long');
     localStorage.clear();
+
+    localStorage.setItem('lat', lat);
+    localStorage.setItem('long', lng);
     localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
     this.router.navigate(['/landing-page']);
   }

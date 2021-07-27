@@ -1,0 +1,65 @@
+<div headerWeb>
+	<a href="javascript:void(0)" routerLink="/tabs/home" logo><!--Recommendspot--><img height="22px" src="assets/img/logo-white.png" alt="" ></a>
+	<div ritHeader>
+		<ul>
+			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
+			<li><a routerLink="/category" href="javascript:void(0)">Categories</a></li>
+			<li (click)="gotofollowing()"><a routerLink="/tabs/following" href="javascript:void(0)" (click)="gotToTop()">Following</a></li>
+			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
+			 
+		</ul>
+		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge *ngIf="noti_count != '0'  && errors.indexOf(noti_count) == -1" color="secondary"><span *ngIf="noti_count != '0'">{{noti_count}}</span></ion-badge></a>
+		<span proImg>
+			<img   routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
+	        <img   routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
+	       <img  routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) >= 0" src="assets/img/default.png">
+
+			<p headerfixedheight routerLink="/tabs/profile"><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
+			<div profileDropdown>
+				<ul>
+					<li><a href="javascript:void(0)" routerLink="/profile-setting/{{user_id}}">Profile Settings</a></li>
+					<li (click)="logout()"><a href="javascript:void(0)">Logout</a></li>
+				</ul>
+			</div>
+		</span>
+	</div>
+</div>
+
+<ion-header>
+  <ion-toolbar color="secondary">
+  <ion-menu-button slot="start">
+<img height="15px" src="assets/img/menu.png"/>
+  </ion-menu-button>
+    <ion-title class="ion-text-center">Following</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding" #content [scrollEvents]="true">
+
+	<div container>
+ <ion-list>
+    <ion-item  lines="none" *ngFor="let item of listing; let i = index;">
+	  <ion-thumbnail (click)="viewUser(item)">
+	    <!-- <img *ngIf="errors.indexOf(item.image) == -1 && item.medium == 'simple'" src="{{IMAGES_URL + '/images/' + item.image}}">
+	    <img *ngIf="errors.indexOf(item.image) == -1 && item.medium != 'simple'" src="{{item.image}}"> -->
+	    <img *ngIf="errors.indexOf(item.image) == -1 && getimage(item.image) == true" src="{{item.image}}">
+	 	<img *ngIf="errors.indexOf(item.image) == -1 && getimage(item.image) == false" src="{{IMAGES_URL + '/images/' + item.image}}">
+	 	<img *ngIf="errors.indexOf(item.image) >= 0" src="assets/img/default.png">
+	  </ion-thumbnail>
+	  <ion-label (click)="viewUser(item)">
+	    <h2>{{item.name}}</h2>
+	  </ion-label>
+	  <ion-button shape="round" fill="outline" color="secondary" (click)="presentAlertConfirm(item, i)">Unfollow</ion-button>
+    </ion-item>
+	 
+  </ion-list>
+
+  <div class="no-record" *ngIf="listing?.length == 0 && is_response == true">
+	You are not following anyone
+</div>
+</div>
+
+
+</ion-content>
+<div footerWeb>
+	<p>© 2021 Recommendspot. All rights reserved.</p>
+</div>

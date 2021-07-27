@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { PostPageRoutingModule } from './post-routing.module';
-
+import { GooglePlaceModule } from "ngx-google-places-autocomplete";
 import { PostPage } from './post.page';
 import { CommonPipeModule } from '../commonPipe.module';
 
@@ -14,7 +14,7 @@ import { CommonPipeModule } from '../commonPipe.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    CommonPipeModule,
+    CommonPipeModule,GooglePlaceModule,
     PostPageRoutingModule,
     ReactiveFormsModule,
    // NgxSocialShareModule

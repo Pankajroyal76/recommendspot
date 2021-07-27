@@ -7,7 +7,7 @@
 			<!-- routerLink="/category" -->
 			<li (click)="gotocat()"><a   href="javascript:void(0)">Categories</a></li>
 			<li (click)="gotofollowing()"><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
-			<li><a routerLink="/tabs/add-recommendation" href="javascript:void(0)">Add Recommendation</a></li>
+			<li><a routerLink="/tabs/add-recommend" href="javascript:void(0)">Add Recommendation</a></li>
 			 
 		</ul>
 
@@ -32,6 +32,7 @@
 			<div profileDropdown>
 				<ul>
 					<li><a href="javascript:void(0)" routerLink="/profile-setting/{{user_id}}">Profile Settings</a></li>
+					<li><a href="javascript:void(0)" routerLink="/tabs/saved">Saved Recommedations</a></li>
 					<li (click)="logout()"> <a href="javascript:void(0)">Logout</a></li>
 				</ul>
 			</div>			
@@ -47,12 +48,12 @@
 		<ion-title class="ion-text-center">Discover
 			
 		</ion-title>
-		<ion-buttons addbtn slot="end" routerLink="/tabs/add-recommendation"><ion-icon name="add-outline"></ion-icon></ion-buttons>
+		<ion-buttons addbtn slot="end" routerLink="/tabs/add-recommend"><ion-icon name="add-outline"></ion-icon></ion-buttons>
 	</ion-toolbar>
 </ion-header>
 
 <ion-content #content [scrollEvents]="true" (click)="closeshare()">
-	<div class="search homesearch">
+	<div class="search homesearch ion-hide-md-up">
 		<!-- (ngSubmit)="search()"  -->
 		<!-- <ion-item lines="none" displayabovePhn style="    background: #fff;border-radius: 50px;margin-bottom: 10px;font-size: 13px;" >
 		<ion-label style="display: none;"><span>Select Category</span></ion-label>
@@ -62,7 +63,7 @@
 					
 			</ion-select>
 		</ion-item> -->
-		<form [formGroup]="authForm"  (ngSubmit)="setFilteredLocations(authForm.value.keyword)">
+		<!-- <form [formGroup]="authForm"  (ngSubmit)="setFilteredLocations(authForm.value.keyword)">
 			<ion-row>
 				<ion-col  size="12" size-lg="12"  style="margin: 0;padding: 0;">
 					<ion-searchbar class="ellipsis" placeholder="Search category,genres,title..." formControlName="keyword" sortbyPhn (keyup.enter)="setFilteredLocations(authForm.value.keyword)" (ionInput)="onSearchChange($event)">
@@ -73,13 +74,14 @@
 
 					</ion-searchbar>
 				</ion-col>
-				<!-- <ion-col  size="2" style="margin: 0;padding: 0;" sortbyPhn>
+				<previous> <ion-col  size="2" style="margin: 0;padding: 0;" sortbyPhn>
 					<ion-icon class="icon-dots sorticon" name="funnel-outline" style="float: right;" (click)="presentAlertRadio()"></ion-icon>
-				</ion-col> -->
+				</ion-col>
+			</previous>
 			</ion-row>		
 			
-		</form>
-		<ion-item lines="none" sortbyWeb>
+		</form> -->
+		<!-- <ion-item lines="none" sortbyWeb>
 
 
 			<ion-label><span>Sort By</span></ion-label>
@@ -89,7 +91,7 @@
 				<ion-select-option value="Comments"> Comments   </ion-select-option>
 				<ion-select-option value="Random"> Random   </ion-select-option>
 			</ion-select>
-		</ion-item>
+		</ion-item> -->
 
 		<!-- <ion-item lines="none" sortbyPhn>
 
@@ -124,7 +126,13 @@
 			<ion-row>
 				<ion-col size="12">
 					<ion-segment [(ngModel)]="profiletab" (ionChange)="onSegmentChange($event)" >
-						<ion-segment-button value="Basic">
+						<ion-segment-button value="Local">
+							Local
+						</ion-segment-button>
+						<ion-segment-button value="Global">
+							Global
+						</ion-segment-button>
+						<!-- <ion-segment-button value="Basic">
 							For You
 						</ion-segment-button>
 						<ion-segment-button value="Today">
@@ -132,7 +140,7 @@
 						</ion-segment-button>
 						<ion-segment-button value="Saved">
 							Saved
-						</ion-segment-button>
+						</ion-segment-button> -->
 					</ion-segment>			
 				</ion-col>	
 
@@ -164,9 +172,175 @@
 
 
 					<div>
+						<ion-list *ngIf="profiletab === 'Local'">
+					
+							<div localsearch>
+								<form [formGroup]="authSearchForm"  >
+						  			<ion-row>
+						  				<ion-col size="12" size-lg="6">
+						  					<ion-item lines="none">
+						  						<ion-icon name="search-outline"></ion-icon>
+						  						<ion-input placeholder="What are you looking for" formControlName="keyword" ></ion-input>
+						  						<!-- (ionInput)="setFilteredLocalLocations(authSearchForm.value.keyword)" -->
 
-						<ion-list *ngIf="posts?.length > 0 && is_response == true">
+						  					</ion-item>
+						  				</ion-col>
+						  				<ion-col [attr.size]="errors.indexOf(authSearchForm.value.keyword) == -1 && errors.indexOf(authSearchForm.value.location) == -1 ? 10 : 12" [attr.size-lg]="errors.indexOf(authSearchForm.value.keyword) == -1 && errors.indexOf(authSearchForm.value.location) == -1 ? 5 : 6">
+						  					<ion-item lines="none">
+						   						<ion-icon name="location-outline"></ion-icon>
+						   						<!-- <ion-input placeholder="Location"></ion-input> -->
+						   						<input placeholder="Location" class="autocomplete height34" ngx-google-places-autocomplete [options]='options' #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)" formControlName="location"/>
+						   					</ion-item>
+					  					</ion-col>
+					  					<ion-col size="2" size-lg="1" *ngIf="errors.indexOf(authSearchForm.value.keyword) == -1 && errors.indexOf(authSearchForm.value.location) == -1">
+					  						<!-- <ion-item lines="none"> -->
+					  							<ion-buttons (click)="searchLocalRecc(false, '')" class="gobutton"><ion-icon name="arrow-forward-circle-outline"></ion-icon></ion-buttons>
+					  						<!-- </ion-item> -->
+					  					</ion-col>
+						  			</ion-row>
+					  			</form>
+							</div>
+							<div localcategories>
+
+							
+								<ion-slides [options]="slideOpts2">
+									<ion-slide  (click)="selectCatForLocalFeed(doc, 'Today')"><ion-buttons [ngClass]="{'selected-cat': profiletab1local == 'Today'}">All</ion-buttons></ion-slide>
+
+									<ng-container *ngFor="let doc of latest_categories; let i = index;">
+										<ion-slide *ngIf="doc.type == '1'" (click)="selectCatForLocalFeed(doc, i)"><ion-buttons  [ngClass]="{'selected-cat': filter_cat_array_local.indexOf(doc._id) >= 0}">{{doc.name}}</ion-buttons></ion-slide>
+									</ng-container>
+								</ion-slides>					 
+					
+							</div>
+
+					
+							<ion-card localfeed *ngFor="let doc of local_posts; let i = index;">
+								<ion-grid class="ion-no-padding">
+									<ion-row>
+										<ion-col size-lg="4" size-sm="4" size="4" *ngIf="errors.indexOf(doc.image) == -1">
+											<div localimg >
+												<img src="{{IMAGES_URL + '/images/' + doc.image}}" (click)="openImagePopup(doc.image)"/>
+												<!-- <span>{{doc.category}}</span> -->
+											</div>
+					 					</ion-col>
+					 					<ion-col [attr.size-lg]="errors.indexOf(doc.image) == -1 ? 8 : 12" size-sm="8" size="8">
+											<div postmain>
+					   							<ion-item lines="none" class="ion-no-padding">
+					   								<ion-avatar  (click)="viewUser(doc)" style="cursor:pointer;">
+														<img *ngIf="errors.indexOf(doc.user_image) == -1 && getimage(doc.user_image) == true" src="{{doc.user_image}}">
+														<img *ngIf="errors.indexOf(doc.user_image) == -1 && getimage(doc.user_image) == false" src="{{IMAGES_URL + '/images/' + doc.user_image}}">
+														<img *ngIf="errors.indexOf(doc.user_image) >= 0" src="assets/img/default.png">
+													</ion-avatar>
+						   							<ion-label>
+							   							<h2>{{doc.user_name}}</h2>
+							   							<span  (click)="viewPost(doc)" class=" mobshow desshow" *ngIf="doc.category != ''">
+															<span class="str">{{doc.category}}
+															</span>
+
+														</span>
+						   								<p local-location><ion-icon name="location-outline"></ion-icon> {{doc.location}}</p>
+						   								<p slot="end" localdate>{{doc.created_at  | dateAgo}}</p>
+						   							</ion-label>
+						   								<!-- <p slot="end" localdate>{{doc.created_at  | dateAgo}}</p> -->
+					   							</ion-item> 
+					   							<div postcontent>
+											      	<h3 routerLink="/localrecommenddetail">{{doc.title}} </h3>
+												  	<p routerLink="/localrecommenddetail">{{doc.description}}</p>
+						  							
+						  							
+					   							</div>
+					   						</div>
+					   					</ion-col>
+
+					   					<ion-col size="12" postmain>
+											<div class="postlikecomt">
+														<ion-row style="width: 100%;">
+															<ion-col size="6">
+																<span class="padding-8 commentstitle" *ngIf="doc.likes.length > 0" style="float: left;"><ion-icon name="thumbs-up"></ion-icon> {{doc.likes.length}} </span>
+															</ion-col>
+
+															<ion-col size="6" class="ion-text-right">
+																<span style="cursor:pointer;" class="padding-8 commentstitle" *ngIf="doc.comment_count > 0" (click)="viewComments(doc)">{{doc.comment_count}} <span *ngIf="doc.comment_count == 1">Comment</span><span *ngIf="doc.comment_count > 1">Comments</span> </span>
+															</ion-col> 
+
+														</ion-row>
+													</div>
+													
+													<div class="savelater" *ngIf="doc.fav == '0'" (click)="addRemoveReccomdation('local',doc, '1', i)">
+														<ion-icon   class="heart-fav" name="bookmark-outline" ></ion-icon>
+										 					Save For Later
+													</div>
+													
+													<div class="savelater" *ngIf="doc.fav == '1'" (click)="addRemoveReccomdation('local',doc, '0', i)">
+										
+														<ion-icon  style="cursor:pointer;" class="heart-fav fav-save" name="bookmark"></ion-icon> <b>Save For Later</b>
+													</div>
+						  							
+						  							<div iconssocial class="iconfx">
+						               					<div post-fav-icon>
+															<ion-buttons class="socl-btn" (click)="like('local', doc.likes, doc.dislikes, i, doc)">
+
+																<ion-icon name="{{isLikedPost(doc.likes)}}"  [ngClass]="{'liked': isLikedPost(doc.likes) == 'thumbs-up'}"></ion-icon><!--  {{item.likes.length}}  -->Like
+															</ion-buttons>
+
+														</div>
+
+														<div post-fav-icon>
+															<ion-buttons class="socl-btn" (click)="viewComments(doc)" style="cursor: pointer;">
+																<ion-icon name="chatbubble-outline"></ion-icon> Comment
+															</ion-buttons>
+														</div>
+
+
+														<div post-fav-icon (click)="openUpdateShare(i)" style="cursor: pointer;">
+															<ion-icon   class="heart-fav" name="arrow-redo-outline" ></ion-icon> Share
+														</div> 
+														<ul class="list-post-edit sharedrop displaynonediv" id="doc{{i}}" [class.displaydiv]="selectedItemmShare == i">
+
+															<li> <a  (click)="viewPostSocial(doc, 'http://www.facebook.com/share.php?u=https://recommendspot.com/#/post-details/')"><ion-icon name="logo-facebook"></ion-icon> Facebook</a> </li>
+															<li> <a  (click)="viewPostSocial(doc, 'https://twitter.com/share?url=https://recommendspot.com/#/post-details/&amp;text=aa&amp;hashtags=YOUR_HASHTAGS')" ><ion-icon name="logo-twitter"></ion-icon> Twitter</a> </li>
+														<li> <a  (click)="viewPostSocial(doc, 'https://web.whatsapp.com/send?text=https://recommendspot.com/#/post-details/')" ><ion-icon name="logo-whatsapp"></ion-icon> Whatsapp</a> </li>
+														<li> <a  (click)="viewPostSocial(doc, 'https://plus.google.com/share?url=https://recommendspot.com/#/post-details/')" ><ion-icon name="logo-google"></ion-icon> Google</a> </li>
+														<li> <a  (click)="viewPostSocial(doc, 'http://www.linkedin.com/shareArticle?mini=true&amp;url=https://recommendspot.com/#/post-details/')" ><ion-icon name="logo-linkedin"></ion-icon> Linkdin</a> </li>
+													</ul>
+														
+													
+						  							</div>
+					 					</ion-col>
+					   				</ion-row>
+					   			</ion-grid>
+				   			</ion-card> 
+						</ion-list>
+
+                      	<!-- <ion-segment [(ngModel)]="profiletab1" (ionChange)="onSegmentChange($event)" *ngIf="profiletab != 'Local'"> -->
+							<!-- <ion-segment-button value="Basic">
+									For You
+							</ion-segment-button>
+							<ion-segment-button value="Today">
+								All
+							</ion-segment-button>
+							<ion-segment-button value="Saved">
+								Saved
+							</ion-segment-button>
+						</ion-segment> -->
+
+
+						<div localcategories *ngIf="profiletab != 'Local'">
+							<ion-slides [options]="slideOpts2">
+								<ion-slide  (click)="selectCatForGlobalFeed(doc, 'Basic')"><ion-buttons [ngClass]="{'selected-cat': profiletab1 == 'Basic'}">For You</ion-buttons></ion-slide>
+
+								<ion-slide  (click)="selectCatForGlobalFeed(doc, 'Today')"><ion-buttons [ngClass]="{'selected-cat': profiletab1 == 'Today'}">All</ion-buttons></ion-slide>
+
+								<ng-container *ngFor="let doc of latest_categories; let i = index;">
+									<ion-slide *ngIf="doc.type == '2'" (click)="selectCatForGlobalFeed(doc, i)"><ion-buttons  [ngClass]="{'selected-cat': filter_cat_array_global.indexOf(doc._id) >= 0}">{{doc.name}}</ion-buttons></ion-slide>
+								</ng-container>
+							</ion-slides>					 
+				
+						</div>
+						<ion-list *ngIf="profiletab != 'Local' && posts?.length > 0 && is_response == true">
 							<ion-card post-sec-mn *ngFor="let item of posts; let i = index;" >
+
+								
 								<div class="post-name post-sec">	
 									<ion-item lines="none">
 
@@ -291,7 +465,7 @@
 								</div>
 
 								<div class="post-img" *ngIf="errors.indexOf(item.image) == -1 || item.image"  style="cursor:pointer;">
-									<img (click)="viewPost(item)"  src="{{IMAGES_URL + '/images/' + item.image}}">
+									<img  (click)="openImagePopup(item.image)" src="{{IMAGES_URL + '/images/' + item.image}}">
 
 									<!--ng-container >
 										<ion-icon  class="heart-icon" name="bookmark-outline" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)"></ion-icon>
@@ -315,11 +489,11 @@
 									</div>
 
 									<ion-row style="cursor:pointer;">
-										<div class="savelater" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation(item, '1', i)">
+										<div class="savelater" *ngIf="item.fav == '0'" (click)="addRemoveReccomdation('global', item, '1', i)">
 											<ion-icon   class="heart-fav" name="bookmark-outline" ></ion-icon>
 											 Save For Later
 										</div>
-										<div class="savelater" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation(item, '0', i)">
+										<div class="savelater" *ngIf="item.fav == '1'" (click)="addRemoveReccomdation('global',item, '0', i)">
 											
 											<ion-icon  style="cursor:pointer;" class="heart-fav fav-save" name="bookmark"></ion-icon> <b>Save For Later</b>
 										</div>
@@ -338,7 +512,7 @@
 
 											<div post-fav-icon>
 
-												<ion-button class="socl-btn" (click)="like(item.likes, item.dislikes, i)">
+												<ion-button class="socl-btn" (click)="like('global', item.likes, item.dislikes, i, item)">
 
 													<ion-icon name="{{isLikedPost(item.likes)}}"  [ngClass]="{'liked': isLikedPost(item.likes) == 'thumbs-up'}"></ion-icon><!--  {{item.likes.length}}  -->Like
 												</ion-button>
@@ -467,13 +641,23 @@
 						</div>
 					</div>
 
-					<div class="follow-category" *ngIf="allposts?.length == 0 && is_response == true && (profiletab === 'Saved' || profiletab === 'Today')">
+					<div class="follow-category" *ngIf="local_posts?.length == 0 && is_response == true && (profiletab === 'Local')">
 						<div class="no-record" followimg>
 						<!-- <img style="max-width: 100%;" src="assets/img/nodata.png"/> -->
 						No recommendations yet.
 							
 						</div>
 					</div>
+
+
+					<div class="follow-category" *ngIf="posts?.length == 0 && is_response == true && (profiletab === 'Global')">
+						<div class="no-record" followimg>
+						<!-- <img style="max-width: 100%;" src="assets/img/nodata.png"/> -->
+						No recommendations yet.
+							
+						</div>
+					</div>
+
 
 					<!-- <div class="no-record" *ngIf="posts?.length == 0 && is_response == true">
 						No Record Found
@@ -482,10 +666,18 @@
 			</ion-row>
 		</div>
 
-		  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="is_response == true && authForm.value.keyword == '' && allposts?.length > 10">
+		  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="is_response == true && authForm.value.keyword == '' && allposts?.length > 10 && profiletab == 'Global'">
 		    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
 		    </ion-infinite-scroll-content>
 		  </ion-infinite-scroll>
+		  <!-- {{is_response}}
+		  {{totaldata}}
+		  {{profiletab}}
+		  {{is_response == true && totaldata > 10 && profiletab == 'Local'}}
+		  <ion-infinite-scroll (ionInfinite)="doInfiniteLocal($event)" *ngIf="is_response == true && totaldata > 10 && profiletab == 'Local'">
+		    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
+		    </ion-infinite-scroll-content>
+		  </ion-infinite-scroll> -->
 		
 	</div>
 </ion-content>

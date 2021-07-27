@@ -1,6 +1,6 @@
 import { Component, OnInit , Input} from '@angular/core';
 import { config } from '../services/config';
-import { ModalController} from '@ionic/angular'; 
+import { ModalController, NavParams} from '@ionic/angular'; 
 
 @Component({
   selector: 'app-imagepopup',
@@ -11,11 +11,17 @@ export class ImagepopupPage implements OnInit {
 	
 	IMAGES_URL: any = config.IMAGES_URL;
 	@Input() image: string;
+	image_value : any;
 
-  	constructor(public modalController: ModalController) { }
+  	constructor(public modalController: ModalController,public navParams: NavParams) { 
+
+  		this.image_value = navParams.get('value');
+  		console.log(this.image_value)
+
+  	}
 
   	ngOnInit() {
-  		console.log(this.image);
+  		console.log(this.image_value);
   	}
 
   	dismiss() {

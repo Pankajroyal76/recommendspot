@@ -39,6 +39,7 @@ export class UserProfilePage implements OnInit {
   index = -1;
   play_video = false;
   player: any;
+  profiletab = 'Local';
   	
   	constructor(public sanitizer:DomSanitizer,private ref: ChangeDetectorRef,public apiService: ApiserviceService, public router: Router, private globalFooService: GlobalFooService, private iab: InAppBrowser, private socialSharing: SocialSharing,public location: Location, private platform: Platform) { 
 
@@ -300,7 +301,12 @@ export class UserProfilePage implements OnInit {
 
     logout(){
       var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
+      var lat = localStorage.getItem('lat');
+      var lng = localStorage.getItem('long');
       localStorage.clear();
+
+       localStorage.setItem('lat', lat);
+      localStorage.setItem('long', lng);
       localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
       this.router.navigate(['/landing-page'], { replaceUrl: true });
     }
@@ -410,7 +416,7 @@ export class UserProfilePage implements OnInit {
          this.apiService.presentLoading();
       }
      
-      this.apiService.postData({'userId': localStorage.getItem('clicked_user_id'), 'loggedUserId': localStorage.getItem('userId') , add_user_type: this.add_user_type},'influencerProfile').subscribe((result) => {
+      this.apiService.postData({'userId': localStorage.getItem('clicked_user_id'), 'loggedUserId': localStorage.getItem('userId') , add_user_type: this.add_user_type , recc_type: this.profiletab == 'Local' ? 'local' : 'global'},'influencerProfile').subscribe((result) => {
         this.apiService.stopLoading();
         this.ref.detectChanges();
         console.log(result)
@@ -488,6 +494,11 @@ export class UserProfilePage implements OnInit {
   	}
 
     like(likesArray,dislikesArray, index){
+
+      if(this.errors.indexOf(localStorage.getItem('userId')) >= 0){
+        this.apiService.presentToast('Please login', 'danger');
+        return;
+      }
       let IsLiked = false;
       let likeId = null;
       for(var i=0; i < likesArray.length; i++)
@@ -651,7 +662,10 @@ export class UserProfilePage implements OnInit {
     }
 
     addRemoveReccomdation(item, type, index){
-
+      if(this.errors.indexOf(localStorage.getItem('userId')) >= 0){
+        this.apiService.presentToast('Please login', 'danger');
+        return;
+      }
       let dict ={
         user_id: localStorage.getItem('userId'),
         recc_id: item._id, 
@@ -747,5 +761,11 @@ export class UserProfilePage implements OnInit {
       });
 
       await alert.present();
+  }
+
+  onSegmentChange(event){
+    console.log(event);
+    this.profiletab = event.detail.value;
+    this.getData();
   }
 }

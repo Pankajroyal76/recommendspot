@@ -1,0 +1,33 @@
+<div mobileTabs>
+<ion-tabs>
+
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="following" (click)="setFollowing()">
+      <!-- <ion-icon name="person-add-outline"></ion-icon> -->
+	  <img src="assets/img/following.png" alt="" />
+      <ion-label>Following</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="add-recommendation">
+      <!-- <ion-icon name="chatbox-ellipses-outline"></ion-icon> -->
+	  <img src="assets/img/add-recc.png" alt="" />	  
+      <ion-label>Add Reccomendation</ion-label> 
+    </ion-tab-button>
+ <ion-tab-button tab="home"  home>
+      <ion-icon name="home-outline"></ion-icon>
+     
+    </ion-tab-button>
+    <ion-tab-button tab="notification">
+      <!-- <ion-icon name="notifications-outline"></ion-icon> -->
+	  <img src="assets/img/notification-icon.png" alt="" />	  
+      <ion-label>Notification</ion-label>
+    </ion-tab-button>
+	 <ion-tab-button tab="profile" (click)="viewProfile()">
+      <!-- <ion-icon name="person-outline"></ion-icon> -->
+	  <img src="assets/img/profile-icon.png" alt="" />	  
+      <ion-label>Profile</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+
+</ion-tabs>
+</div>

@@ -161,7 +161,12 @@ export class CommentsPage implements OnInit {
 
     logout(){
 	    var categoryCheck = JSON.parse(localStorage.getItem('categoriesCheck'));
+      var lat = localStorage.getItem('lat');
+      var lng = localStorage.getItem('long');
       localStorage.clear();
+
+      localStorage.setItem('lat', lat);
+      localStorage.setItem('long', lng);
       localStorage.setItem('categoriesCheck', JSON.stringify(categoryCheck));
 	    this.router.navigate(['/landing-page']);
   	}

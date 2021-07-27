@@ -41,15 +41,13 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 
 
 //modules
-import { NgxSpinnerModule } from "ngx-spinner";
-import { NgxMasonryModule } from 'ngx-masonry'
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule,NgxSpinnerModule, 
+  imports: [BrowserModule, 
   IonicModule.forRoot(), 
-  AppRoutingModule,NgxMasonryModule,
+  AppRoutingModule,
   HttpModule,
   AngularFireModule.initializeApp(environments.firebase),
   AngularFireAuthModule,

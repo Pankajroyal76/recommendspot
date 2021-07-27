@@ -197,6 +197,10 @@ ion-searchbar {
     [displayabovePhn]{
         display: none;
     }
+
+    [displayonPhn]{
+        padding: 15px 15px 30px !important; 
+    }
     ion-content .search{
         display: flex;
         align-items: center;
@@ -494,3 +498,46 @@ img:focus {
     color: #000;
 }
 
+
+.autocomplete{
+    width: 100%;
+    border: none;
+}
+
+.autocomplete:focus {
+outline: none;
+
+}
+
+.imgMod {
+    .modal-wrapper
+    {
+        width: 100%;
+        max-width: 480px;
+        margin: 0 auto;
+        height: 349px;
+    }
+    ion-content
+    {
+        --background:transparent
+    }
+    img
+    {
+        height: 345px;
+        width:100%;
+        object-fit:cover
+    }
+
+    .closeModal 
+    {
+        position: absolute;
+        right: 4px;
+        top: 7px;
+        font-size: 29px;
+        color: red;
+        cursor:pointer
+    }
+
+
+}
+   

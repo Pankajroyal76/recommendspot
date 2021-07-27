@@ -21,7 +21,7 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () => IsLoggedIn == 'true' ? import("./tabs/tabs.module").then((m) => m.TabsPageModule) : import('./landing-page/landing-page.module').then( m => m.LandingPagePageModule) ,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard] 
   },
 
 
@@ -93,7 +93,28 @@ const routes: Routes = [
     path: 'category',
     loadChildren: () => import('./category/category.module').then( m => m.CategoryPageModule),
     canActivate: [AuthGuard] 
+  },
+  {
+    path: 'local',
+    loadChildren: () => import('./local/local.module').then( m => m.LocalPageModule)
+  },
+  {
+    path: 'addlocalrecommendation',
+    loadChildren: () => import('./addlocalrecommendation/addlocalrecommendation.module').then( m => m.AddlocalrecommendationPageModule)
+  },
+  {
+    path: 'add-recommend',
+    loadChildren: () => import('./add-recommend/add-recommend.module').then( m => m.AddRecommendPageModule)
+  },
+  {
+    path: 'localrecommenddetail',
+    loadChildren: () => import('./localrecommenddetail/localrecommenddetail.module').then( m => m.LocalrecommenddetailPageModule)
+  },
+  {
+    path: 'saved-posts',
+    loadChildren: () => import('./saved-posts/saved-posts.module').then( m => m.SavedPostsPageModule)
   }
+
 
 ];
 @NgModule({
