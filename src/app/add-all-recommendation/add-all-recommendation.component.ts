@@ -1,27 +1,19 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from "@angular/core";
-import { ApiserviceService } from "../services/apiservice.service";
-import { GlobalFooService } from "../services/globalFooService.service";
-import { config } from "../services/config";
-import { Router } from "@angular/router";
-import { DomSanitizer } from "@angular/platform-browser";
-import {
-  ModalController,
-  ToastController,
-  LoadingController,
-  ActionSheetController,
-  AlertController,
-  NavController,
-  IonContent,
-} from "@ionic/angular";
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { DomSanitizer } from "@angular/platform-browser";
+import { Router } from "@angular/router";
+import { IonContent, LoadingController } from "@ionic/angular";
 import { GooglePlaceDirective } from "ngx-google-places-autocomplete";
+import { config } from "../services/config";
+import { ApiserviceService } from "srcold/app/services/apiservice.service";
+import { GlobalFooService } from "srcold/app/services/globalFooService.service";
 declare var google: any;
 @Component({
-  selector: "app-add-recommend",
-  templateUrl: "./add-recommend.page.html",
-  styleUrls: ["./add-recommend.page.scss"],
+  selector: "app-add-all-recommendation",
+  templateUrl: "./add-all-recommendation.component.html",
+  styleUrls: ["./add-all-recommendation.component.scss"],
 })
-export class AddRecommendPage implements OnInit {
+export class AddAllRecommendationComponent implements OnInit {
   authForm: FormGroup;
   user_name: any;
   user_image: any;
@@ -123,7 +115,6 @@ export class AddRecommendPage implements OnInit {
   }
   public handleAddressChange(address) {
     // Do some stuff
-    console.log(address);
     this.authForm.patchValue({
       location: address.formatted_address,
     });
@@ -136,7 +127,6 @@ export class AddRecommendPage implements OnInit {
     geocoder.geocode({ address: address }, (results, status) => {
       this.latitude = results[0].geometry.location.lat();
       this.longitude = results[0].geometry.location.lng();
-      console.log("lat: " + this.latitude + ", long: " + this.longitude);
     });
   }
 
@@ -172,7 +162,6 @@ export class AddRecommendPage implements OnInit {
 
   getSubCategory(event) {
     this.subcategories = [];
-    console.log(event);
     this.authForm.patchValue({
       subcategory: "",
     });
@@ -235,9 +224,7 @@ export class AddRecommendPage implements OnInit {
   }
 
   add_local_recc() {
-    console.log(this.authForm.value);
     this.is_submit = true;
-
     if (
       this.errors.indexOf(this.authForm.value.title) >= 0 ||
       this.errors.indexOf(this.authForm.value.description) >= 0 ||
@@ -258,11 +245,11 @@ export class AddRecommendPage implements OnInit {
     var dict = {
       user_id: localStorage.getItem("userId"),
     };
+
     this.apiService.postData(dict, "categories").subscribe(
       (result) => {
         this.apiService.stopLoading();
         this.ref.detectChanges();
-        console.log(result);
         if (result.status == 1) {
           this.categories = result.data;
           //this.category = this.categories[0]._id;
@@ -289,7 +276,6 @@ export class AddRecommendPage implements OnInit {
     frmData.append("file", this.image_file, this.image_file.name);
     this.apiService.postData(frmData, "uploadReccImage").subscribe(
       (result) => {
-        console.log(result);
         this.image = result;
         this.ref.detectChanges();
         this.profileImageSubmit();
@@ -304,7 +290,6 @@ export class AddRecommendPage implements OnInit {
   }
 
   profileImageSubmit() {
-    console.log(this.authForm.value);
     this.apiService.presentLoading();
     var dict = {
       //   	title: this.authForm.value.title,
@@ -338,50 +323,54 @@ export class AddRecommendPage implements OnInit {
         type: "Point",
         coordinates: [this.longitude, this.latitude],
       },
-      recc_type: "global",
+      recc_type: "local",
     };
-
-    this.apiService.postData(dict, "addRecc").subscribe(
-      (result) => {
-        if (result.status == 1) {
-          this.authForm.value.description = "";
-          this.is_submit = false;
-          this.live_image_url = "";
-          this.imgBlob = "";
-          this.live_file_name = "";
-
-          this.authForm.reset();
-          // this.authForm.value.type = 'Photo';
-          // this.authForm.value.category = '';
-          // this.authForm.value.web_link = '';
-          this.link_content = "";
-
-          this.is_live_image_updated = false;
-          this.image = "";
-
-          this.apiService.presentToast(result.msg, "success");
-          this.apiService.stopLoading();
-          this.ref.detectChanges();
-          this.globalFooService.publishSomeData({
-            foo: { data: "", page: "updateprofile" },
-          });
-          this.router.navigate(["/tabs/home"]);
-        } else {
+    var isLogin = localStorage.getItem("IsLoggedIn");
+    if (isLogin) {
+      this.apiService.postData(dict, "addRecc").subscribe(
+        (result) => {
+          if (result.status == 1) {
+            this.authForm.value.description = "";
+            this.is_submit = false;
+            this.live_image_url = "";
+            this.imgBlob = "";
+            this.live_file_name = "";
+            this.authForm.reset();
+            // this.authForm.value.type = 'Photo';
+            // this.authForm.value.category = '';
+            // this.authForm.value.web_link = '';
+            this.link_content = "";
+            this.is_live_image_updated = false;
+            this.image = "";
+            this.apiService.presentToast(result.msg, "success");
+            this.apiService.stopLoading();
+            this.ref.detectChanges();
+            this.globalFooService.publishSomeData({
+              foo: { data: "", page: "updateprofile" },
+            });
+            this.router.navigate(["/landing-page"]);
+          } else {
+            this.apiService.presentToast(
+              "Error while sending request,Please try after some time",
+              "success"
+            );
+            this.apiService.stopLoading();
+          }
+        },
+        (err) => {
           this.apiService.presentToast(
-            "Error while sending request,Please try after some time",
-            "success"
+            "Technical error,Please try after some time",
+            "danger"
           );
           this.apiService.stopLoading();
         }
-      },
-      (err) => {
-        this.apiService.presentToast(
-          "Technical error,Please try after some time",
-          "danger"
-        );
-        this.apiService.stopLoading();
-      }
-    );
+      );
+    } else {
+      this.apiService.stopLoading();
+      setTimeout(() => {
+        this.apiService.presentToast("Please Login To Access Page", "danger");
+      }, 800);
+    }
   }
 
   uploadImages(event) {
@@ -393,7 +382,6 @@ export class AddRecommendPage implements OnInit {
       if (self.allowedMimes.indexOf(image_file.type) == -1) {
         this.image_error = true;
       } else {
-        console.log("type is");
         self.image_file = image_file;
         self.image_url = window.URL.createObjectURL(image_file);
         self.is_image_uploaded = true;
@@ -402,7 +390,6 @@ export class AddRecommendPage implements OnInit {
   }
 
   checklink(link) {
-    console.log(link);
     var self = this;
     // var target = link;
     // $.ajax({
@@ -426,8 +413,6 @@ export class AddRecommendPage implements OnInit {
       (result) => {
         this.ref.detectChanges();
         this.stopLoading();
-        console.log(result);
-
         if (result.data != null) {
           this.opencontent = true;
           this.link_content = result;

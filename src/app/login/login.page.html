@@ -3,62 +3,103 @@
     <ion-title>login</ion-title>
   </ion-toolbar>
 </ion-header-->
-<ion-content  class="ion-padding">
-
-	<div container>
-<div loginform>
-<div logo  class="ion-text-center">
-  <img src="assets/img/logo.png"/>
-  <h2>Sign in to continue</h2>
-</div>
-<form [formGroup]="authForm" (keyup.enter)="login()">
-<div form-group>
-<label>Email</label>
-<ion-item lines="none">
-<ion-label>
-<ion-icon name="mail-outline"></ion-icon>
-</ion-label>
-<ion-input clearOnEdit="false" type="email"  placeholder="Enter Email"  formControlName="email"></ion-input>
-</ion-item>
-<span error *ngIf="errors.indexOf(authForm.value.email) >= 0 && is_submit == true">Please enter your email</span>
-<span error *ngIf="errors.indexOf(authForm.value.email) == -1 && !reg_exp.test(authForm.value.email) && is_submit == true">Please enter valid email</span>
-</div>
-<div form-group>
-<label>Password</label>
-<ion-item lines="none">
-<ion-label>
-<ion-icon name="lock-closed-outline"></ion-icon>
-</ion-label>
-<ion-input clearOnEdit="false" type="password"  placeholder="Enter Password"  formControlName="password">  </ion-input>
-
-</ion-item>
-<span error *ngIf="errors.indexOf(authForm.value.password) >= 0 && is_submit == true">Please enter your password</span>
-<span error *ngIf="errors.indexOf(authForm.value.password) == -1 && is_submit == true && !withoutspace.test(authForm.value.password)">Please enter valid password containing no space</span>
-</div>
-<div form-group forgot class="ion-text-right">
-<a routerLink="/forgotpassword" href="javascript:void(0)">Forgot Password ?</a>
-</div>
-<div login-btn>
-<ion-button type="submit" expand="full" color="secondary"  shape="round" (click)="login()">
-Login
-</ion-button>
-</div>
-</form>
-<div btn-signup class="ion-text-center">
-<p>Don't have an account ? <a routerLink="/signup" href="javascript:void(0)">Sign Up Here</a></p>
-
-</div>
-<div btn-facebook class="ion-text-center">
-<ion-button expand="full" color="primary"  shape="round" (click)="facebookLogin()">
-<span fb-icon><img src="assets/img/fb.png"/></span> Login With Facebook
-</ion-button>
-
-</div>
-<div btn-google class="ion-text-center">
-<ion-button expand="full" shape="round" (click)="googleLogin()">
-<span fb-icon><ion-icon name="logo-google"></ion-icon></span> Login With Google
-</ion-button>
-
-</div>
-</div></div>
+<ion-content class="ion-padding">
+  <div container>
+    <div loginform>
+      <div logo class="ion-text-center">
+        <img src="assets/img/logo.png" />
+        <h2>Sign in to continue</h2>
+      </div>
+      <form [formGroup]="authForm" (keyup.enter)="login()">
+        <div form-group>
+          <label>Email</label>
+          <ion-item lines="none">
+            <ion-label>
+              <ion-icon name="mail-outline"></ion-icon>
+            </ion-label>
+            <ion-input
+              clearOnEdit="false"
+              type="email"
+              placeholder="Enter Email"
+              formControlName="email"
+            ></ion-input>
+          </ion-item>
+          <span
+            error
+            *ngIf="errors.indexOf(authForm.value.email) >= 0 && is_submit == true"
+            >Please enter your email</span
+          >
+          <span
+            error
+            *ngIf="errors.indexOf(authForm.value.email) == -1 && !reg_exp.test(authForm.value.email) && is_submit == true"
+            >Please enter valid email</span
+          >
+        </div>
+        <div form-group>
+          <label>Password</label>
+          <ion-item lines="none">
+            <ion-label>
+              <ion-icon name="lock-closed-outline"></ion-icon>
+            </ion-label>
+            <ion-input
+              clearOnEdit="false"
+              type="password"
+              placeholder="Enter Password"
+              formControlName="password"
+            >
+            </ion-input>
+          </ion-item>
+          <span
+            error
+            *ngIf="errors.indexOf(authForm.value.password) >= 0 && is_submit == true"
+            >Please enter your password</span
+          >
+          <span
+            error
+            *ngIf="errors.indexOf(authForm.value.password) == -1 && is_submit == true && !withoutspace.test(authForm.value.password)"
+            >Please enter valid password containing no space</span
+          >
+        </div>
+        <div form-group forgot class="ion-text-right">
+          <a routerLink="/forgotpassword" href="javascript:void(0)"
+            >Forgot Password ?</a
+          >
+        </div>
+        <div login-btn>
+          <ion-button
+            type="submit"
+            expand="full"
+            color="secondary"
+            shape="round"
+            (click)="login()"
+          >
+            Login
+          </ion-button>
+        </div>
+      </form>
+      <div btn-signup class="ion-text-center">
+        <p>
+          Don't have an account ?
+          <a routerLink="/signup" href="javascript:void(0)">Sign Up Here</a>
+        </p>
+      </div>
+      <div btn-facebook class="ion-text-center">
+        <ion-button
+          expand="full"
+          color="primary"
+          shape="round"
+          (click)="facebookLogin()"
+        >
+          <span fb-icon><img src="assets/img/fb.png" /></span> Login With
+          Facebook
+        </ion-button>
+      </div>
+      <div btn-google class="ion-text-center">
+        <ion-button expand="full" shape="round" (click)="googleLogin()">
+          <span fb-icon><ion-icon name="logo-google"></ion-icon></span> Login
+          With Google
+        </ion-button>
+      </div>
+    </div>
+  </div>
 </ion-content>

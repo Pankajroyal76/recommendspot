@@ -1,5 +1,9 @@
 <div headerWeb>
-  <a href="javascript:void(0)" routerLink="/tabs/home" logo
+  <a
+    href="javascript:void(0)"
+    [routerLink]="['//landing-page']"
+    routerLinkActive="router-link-active"
+    logo
     ><!--Recommendspot--><img
       height="22px"
       src="assets/img/logo-white.png"
@@ -7,31 +11,23 @@
   /></a>
   <div ritHeader>
     <ul>
-      <li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
-      <li>
-        <a routerLink="/category" href="javascript:void(0)">Categories</a>
-      </li>
-      <li (click)="gotofollowing()">
-        <a routerLink="/tabs/following" href="javascript:void(0)">Following</a>
-      </li>
-      <li>
-        <a
-          routerLink="/tabs/add-recommend"
-          href="javascript:void(0)"
-          (click)="gotToTop()"
+      <!-- <li>
+        <a routerLink="/tabs/add-recommend" href="javascript:void(0)"
           >Add Recommendation</a
         >
-      </li>
+      </li> -->
+      <li><a routerLink="/login" href="javascript:void(0)">Login</a></li>
+      <li><a routerLink="/signup" href="javascript:void(0)">Signup</a></li>
     </ul>
-    <a href="javascript:void(0)" routerLink="/tabs/notification" noti
+    <!-- <a href="javascript:void(0)" routerLink="/tabs/notification" noti
       ><ion-icon name="notifications-sharp"></ion-icon
       ><ion-badge
         *ngIf="noti_count != '0'  && errors.indexOf(noti_count) == -1"
         color="secondary"
         ><span>{{noti_count}}</span></ion-badge
       ></a
-    >
-    <span proImg>
+    > -->
+    <!-- <span proImg>
       <img
         routerLink="/tabs/profile"
         *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true"
@@ -67,17 +63,10 @@
               >Saved Recommedations</a
             >
           </li>
-          <li>
-            <a
-              href="javascript:void(0)"
-              routerLink="/see-friends-recomendations"
-              >See Friends Recommedations</a
-            >
-          </li>
           <li (click)="logout()"><a href="javascript:void(0)">Logout</a></li>
         </ul>
       </div>
-    </span>
+    </span> -->
   </div>
 </div>
 
@@ -89,7 +78,40 @@
     <ion-title class="ion-text-center">Add Recommendation</ion-title>
   </ion-toolbar>
 </ion-header>
-
+<!-- <ion-content class="ion-padding" #content [scrollEvents]="true">
+  <div addrecommend>
+    <div container>
+      <div recommendinner>
+        <div heading>
+          <h2>Add Recommendation</h2>
+          <p>
+            If you want to add local and global recommendations, then please
+            feel free to click the buttons below
+          </p>
+        </div>
+        <div btnbottom>
+          <ion-button
+            color="secondary"
+            expand="full"
+            shape="round"
+            type="submit"
+            routerLink="/addlocalrecommendation"
+            >Add Local Recommendation</ion-button
+          >
+          <ion-button
+            color="secondary"
+            expand="full"
+            shape="round"
+            type="submit"
+            fill="outline"
+            routerLink="/add-recommendation"
+            >Add Global Recommendation</ion-button
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content> -->
 <ion-content class="ion-padding" #content [scrollEvents]="true">
   <div localrecommend>
     <div container>

@@ -1,49 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>RecommendSpot</title>
 
-<head>
-  <meta charset="utf-8"/>
-  <title>RecommendSpot</title>
+    <base href="/" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="theme-color" content="#f16334" />
+    <meta
+      name="viewport"
+      content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
 
+    <link rel="icon" type="image/png" href="assets/icon/favicon.png" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
 
-  <base href="/"/>
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> 
-  <meta name="color-scheme" content="light dark"/>
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
-  <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#f16334">
-  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <meta name="format-detection" content="telephone=no"/>
-  <meta name="msapplication-tap-highlight" content="no"/>
+    <!-- add to homescreen for ios -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="theme-color" content="#f16334" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="theme-color" content="#f16334" />
+  </head>
 
-  <link rel="icon" type="image/png" href="assets/icon/favicon.png"/>
+  <body>
+    <app-root></app-root>
 
-  <!-- add to homescreen for ios -->
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
-  <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#f16334">
-  <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#f16334">
-</head>
-
-<body>
-  <app-root></app-root>
-
-  <noscript>Please enable JavaScript to continue using this application.</noscript>
-  <script src="https://www.youtube.com/AIzaSyByt0iualnRPVfZIT3kBbVI9bw2uDNwAZg"></script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-      .then(() => console.log('service worker installed'))
-      .catch(err => console.log('Error', err));
-  }
-</script>
-<script src="http://www.youtube.com/player_api"></script>
-<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script>
-<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=visualization,drawing,geometry,places&key=AIzaSyCk_zrE74VOviFJ-kx_tSwbRmrZH-JxAJI">
-  </script>
-</body>
-
+    <noscript
+      >Please enable JavaScript to continue using this application.</noscript
+    >
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://www.youtube.com/AIzaSyByt0iualnRPVfZIT3kBbVI9bw2uDNwAZg"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("service-worker.js")
+          .then(() => console.log("service worker installed"))
+          .catch((err) => console.log("Error", err));
+      }
+    </script>
+    <script src="http://www.youtube.com/player_api"></script>
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script>
+    <script
+      type="text/javascript"
+      src="http://maps.googleapis.com/maps/api/js?libraries=visualization,drawing,geometry,places&key=AIzaSyCk_zrE74VOviFJ-kx_tSwbRmrZH-JxAJI"
+    ></script>
+  </body>
 </html>

@@ -1,62 +1,131 @@
 <div headerWeb>
-	<a href="javascript:void(0)" routerLink="/tabs/home" logo><!--Recommendspot--><img height="22px" src="assets/img/logo-white.png" alt="" ></a>
-	<div ritHeader [style.height]="errors.indexOf(user_id) >= 0 ? '66px' : '' ">
-		<ul>
-			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
-			<li><a routerLink="/category" href="javascript:void(0)">Categories</a></li>
-			<li (click)="gotofollowing()"><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
-			<li><a routerLink="/tabs/add-recommend" href="javascript:void(0)">Add Recommendation</a></li>
-			 
-		</ul>
-		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge *ngIf="noti_count != '0'  && errors.indexOf(noti_count) == -1" color="secondary"><span *ngIf="noti_count != '0'">{{noti_count}}</span></ion-badge></a>
-		<span proImg *ngIf="errors.indexOf(user_id) == -1">
-			<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
-	       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
-	      <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) >= 0" src="assets/img/default.png">
+  <a href="javascript:void(0)" routerLink="/tabs/home" logo
+    ><!--Recommendspot--><img
+      height="22px"
+      src="assets/img/logo-white.png"
+      alt=""
+  /></a>
+  <div ritHeader [style.height]="errors.indexOf(user_id) >= 0 ? '66px' : '' ">
+    <ul>
+      <li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
+      <li>
+        <a routerLink="/category" href="javascript:void(0)">Categories</a>
+      </li>
+      <li (click)="gotofollowing()">
+        <a routerLink="/tabs/following" href="javascript:void(0)">Following</a>
+      </li>
+      <li>
+        <a routerLink="/tabs/add-recommend" href="javascript:void(0)"
+          >Add Recommendation</a
+        >
+      </li>
+    </ul>
+    <a href="javascript:void(0)" routerLink="/tabs/notification" noti
+      ><ion-icon name="notifications-sharp"></ion-icon
+      ><ion-badge
+        *ngIf="noti_count != '0'  && errors.indexOf(noti_count) == -1"
+        color="secondary"
+        ><span *ngIf="noti_count != '0'">{{noti_count}}</span></ion-badge
+      ></a
+    >
+    <span proImg *ngIf="errors.indexOf(user_id) == -1">
+      <img
+        routerLink="/tabs/profile"
+        *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true"
+        src="{{user_image}}"
+      />
+      <img
+        routerLink="/tabs/profile"
+        *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false"
+        src="{{IMAGES_URL + '/images/' + user_image}}"
+      />
+      <img
+        routerLink="/tabs/profile"
+        *ngIf="errors.indexOf(user_image) >= 0"
+        src="assets/img/default.png"
+      />
 
-			 <p headerfixedheight routerLink="/tabs/profile"><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
-			<div profileDropdown>
-				<ul>
-					<li><a href="javascript:void(0)" routerLink="/profile-setting">Profile Settings</a></li>
-					<li><a href="javascript:void(0)" routerLink="/tabs/saved">Saved Recommedations</a></li>
-					<li (click)="logout()"><a href="javascript:void(0)">Logout</a></li>
-				</ul>
-			</div>
-		</span>
-	</div>
+      <p headerfixedheight routerLink="/tabs/profile">
+        <span class="username">{{user_name}} </span
+        ><small>{{user_email}}</small>
+      </p>
+      <div profileDropdown>
+        <ul>
+          <li>
+            <a href="javascript:void(0)" routerLink="/profile-setting"
+              >Profile Settings</a
+            >
+          </li>
+          <li>
+            <a href="javascript:void(0)" routerLink="/tabs/saved"
+              >Saved Recommedations</a
+            >
+          </li>
+          <li>
+            <a
+              href="javascript:void(0)"
+              routerLink="/see-friends-recomendations"
+              >See Friends Recommedations</a
+            >
+          </li>
+          <li (click)="logout()"><a href="javascript:void(0)">Logout</a></li>
+        </ul>
+      </div>
+    </span>
+  </div>
 </div>
 <ion-header class="ion-no-border heder-main" align-title="center">
-	<ion-toolbar color="secondary">
-		
-    	<ion-back-button slot="start">
-        </ion-back-button> 
-		<ion-title class="ion-text-center"> Comments </ion-title>
-	</ion-toolbar>
+  <ion-toolbar color="secondary">
+    <ion-back-button slot="start"> </ion-back-button>
+    <ion-title class="ion-text-center"> Comments </ion-title>
+  </ion-toolbar>
 </ion-header>
 <ion-content>
-	<div container>
-		<div class="content-all-pst">
-			<div class="commnts" *ngFor="let doc of comments; let i = index;">
-				<img *ngIf="errors.indexOf(doc.image) == -1 && getimage(doc.image) == true" src="{{doc.image}}" class="adm-usr">
-				<img *ngIf="errors.indexOf(doc.image) == -1 && getimage(doc.image) == false" src="{{IMAGES_URL + '/images/' + doc.image}}" class="adm-usr">
-				<img *ngIf="errors.indexOf(doc.image) >= 0" src="assets/img/default.png" class="adm-usr">
-				<h5> {{doc.user}} <span class="time-al"> {{doc.created_on| dateAgo}} </span> </h5>
-				<p> {{doc.comment}} </p>
-			</div>
-			<div class="follow-category" *ngIf="comments?.length == 0 && is_response == true">
-				<div followimg class="no-record">
-				<!-- <img style="max-width: 100%; padding: 60px;" src="assets/img/nodata.png"/> -->
-				No Comments Yet.
-					
-				</div>
-			</div>
-			
-			<div class="add-commnt" *ngIf="errors.indexOf(user_id) == -1">
-				<form [formGroup]="authForm" (keyup.enter)="postComment()">
-					<ion-input placeholder="Add comment here..." formControlName="comment"></ion-input>
-					<a class="btn-send" (click)="postComment()"> <ion-icon name="send-outline"></ion-icon> </a>
-				</form>
-			</div>
-		</div>
-	</div>
+  <div container>
+    <div class="content-all-pst">
+      <div class="commnts" *ngFor="let doc of comments; let i = index;">
+        <img
+          *ngIf="errors.indexOf(doc.image) == -1 && getimage(doc.image) == true"
+          src="{{doc.image}}"
+          class="adm-usr"
+        />
+        <img
+          *ngIf="errors.indexOf(doc.image) == -1 && getimage(doc.image) == false"
+          src="{{IMAGES_URL + '/images/' + doc.image}}"
+          class="adm-usr"
+        />
+        <img
+          *ngIf="errors.indexOf(doc.image) >= 0"
+          src="assets/img/default.png"
+          class="adm-usr"
+        />
+        <h5>
+          {{doc.user}}
+          <span class="time-al"> {{doc.created_on| dateAgo}} </span>
+        </h5>
+        <p>{{doc.comment}}</p>
+      </div>
+      <div
+        class="follow-category"
+        *ngIf="comments?.length == 0 && is_response == true"
+      >
+        <div followimg class="no-record">
+          <!-- <img style="max-width: 100%; padding: 60px;" src="assets/img/nodata.png"/> -->
+          No Comments Yet.
+        </div>
+      </div>
+
+      <div class="add-commnt" *ngIf="errors.indexOf(user_id) == -1">
+        <form [formGroup]="authForm" (keyup.enter)="postComment()">
+          <ion-input
+            placeholder="Add comment here..."
+            formControlName="comment"
+          ></ion-input>
+          <a class="btn-send" (click)="postComment()">
+            <ion-icon name="send-outline"></ion-icon>
+          </a>
+        </form>
+      </div>
+    </div>
+  </div>
 </ion-content>

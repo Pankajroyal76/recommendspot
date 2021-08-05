@@ -1,143 +1,243 @@
 <div headerWeb>
-	<a href="javascript:void(0)" routerLink="/tabs/home" logo><!--Recommendspot--><img height="22px" src="assets/img/logo-white.png" alt="" ></a>
-	<div ritHeader>
-		<ul>
-			
-			<li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
-			<li><a routerLink="/category" href="javascript:void(0)">Categories</a></li>
-			<li (click)="gotofollowing()"><a routerLink="/tabs/following" href="javascript:void(0)">Following</a></li>
-			<li><a routerLink="/tabs/add-recommend" href="javascript:void(0)" (click)="gotToTop()">Add Recommendation</a></li>
-			 
-		</ul>
-		<a href="javascript:void(0)" routerLink="/tabs/notification" noti><ion-icon name="notifications-sharp"></ion-icon><ion-badge *ngIf="noti_count != '0'  && errors.indexOf(noti_count) == -1" color="secondary"><span >{{noti_count}}</span></ion-badge></a>
-		<span proImg> 
-			<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true" src="{{user_image}}">
-	        <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false" src="{{IMAGES_URL + '/images/' + user_image}}">
-	       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user_image) >= 0" src="assets/img/default.png">
+  <a href="javascript:void(0)" routerLink="/tabs/home" logo
+    ><!--Recommendspot--><img
+      height="22px"
+      src="assets/img/logo-white.png"
+      alt=""
+  /></a>
+  <div ritHeader>
+    <ul>
+      <li><a routerLink="/tabs/home" href="javascript:void(0)">Home</a></li>
+      <li>
+        <a routerLink="/category" href="javascript:void(0)">Categories</a>
+      </li>
+      <li (click)="gotofollowing()">
+        <a routerLink="/tabs/following" href="javascript:void(0)">Following</a>
+      </li>
+      <li>
+        <a
+          routerLink="/tabs/add-recommend"
+          href="javascript:void(0)"
+          (click)="gotToTop()"
+          >Add Recommendation</a
+        >
+      </li>
+    </ul>
+    <a href="javascript:void(0)" routerLink="/tabs/notification" noti
+      ><ion-icon name="notifications-sharp"></ion-icon
+      ><ion-badge
+        *ngIf="noti_count != '0'  && errors.indexOf(noti_count) == -1"
+        color="secondary"
+        ><span>{{noti_count}}</span></ion-badge
+      ></a
+    >
+    <span proImg>
+      <img
+        routerLink="/tabs/profile"
+        *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == true"
+        src="{{user_image}}"
+      />
+      <img
+        routerLink="/tabs/profile"
+        *ngIf="errors.indexOf(user_image) == -1 && getimage(user_image) == false"
+        src="{{IMAGES_URL + '/images/' + user_image}}"
+      />
+      <img
+        routerLink="/tabs/profile"
+        *ngIf="errors.indexOf(user_image) >= 0"
+        src="assets/img/default.png"
+      />
 
-			<p headerfixedheight routerLink="/tabs/profile"><span class="username">{{user_name}} </span><small>{{user_email}}</small></p>
+      <p headerfixedheight routerLink="/tabs/profile">
+        <span class="username">{{user_name}} </span
+        ><small>{{user_email}}</small>
+      </p>
 
-			<div profileDropdown>
-				<ul>
-					<li><a href="javascript:void(0)" routerLink="/profile-setting/{{user_id}}">Profile Settings</a></li>
-					<li><a href="javascript:void(0)" routerLink="/tabs/saved">Saved Recommedations</a></li>
-					<li (click)="logout()"><a href="javascript:void(0)">Logout</a></li>
-				</ul>
-			</div>
-		</span>
-	</div>
+      <div profileDropdown>
+        <ul>
+          <li>
+            <a
+              href="javascript:void(0)"
+              routerLink="/profile-setting/{{user_id}}"
+              >Profile Settings</a
+            >
+          </li>
+          <li>
+            <a href="javascript:void(0)" routerLink="/tabs/saved"
+              >Saved Recommedations</a
+            >
+          </li>
+          <li>
+            <a
+              href="javascript:void(0)"
+              routerLink="/see-friends-recomendations"
+              >See Friends Recommedations</a
+            >
+          </li>
+          <li (click)="logout()"><a href="javascript:void(0)">Logout</a></li>
+        </ul>
+      </div>
+    </span>
+  </div>
 </div>
 
 <ion-header>
-  	<ion-toolbar color="secondary">
-  	<!-- <ion-menu-button slot="start">
+  <ion-toolbar color="secondary">
+    <!-- <ion-menu-button slot="start">
 		<img height="15px" src="assets/img/menu.png"/>
   	</ion-menu-button> -->
-  	<ion-back-button slot="start">
-        </ion-back-button> 
+    <ion-back-button slot="start"> </ion-back-button>
     <ion-title class="ion-text-center">Add Local Recommendation</ion-title>
-	
-  	</ion-toolbar>
+  </ion-toolbar>
 </ion-header>
 
-
 <ion-content class="ion-padding" #content [scrollEvents]="true">
-	<div localrecommend>
-		<div container>
-			<form [formGroup]="authForm" (keyup.enter)="add_local_recc()">
-				<div form-group>
-		    		<label>Title</label>
-					<ion-item lines="none">
-						<ion-icon name="person-circle-outline"></ion-icon>
-						<ion-input  placeholder="Name of product , person ,place" formControlName="title"></ion-input>
-					</ion-item>
-					<span error *ngIf="errors.indexOf(authForm.value.title) >= 0 && is_submit == true">Please enter title</span>
-				</div>
-				<ion-row>
-				<ion-col size="12" size-lg="6">
-				<div form-group>
-			 		<label>Location</label>
-					<ion-item lines="none">
-						<ion-label style="min-width:30px">
-							<ion-icon name="location-outline"></ion-icon>
-						</ion-label>
-						<!-- <ion-input  placeholder="Enter Location"></ion-input> -->
-						<input formControlName="location" class="autocomplete" ngx-google-places-autocomplete [options]='options' #placesRef="ngx-places" (onAddressChange)="handleAddressChange($event)"/>
+  <div localrecommend>
+    <div container>
+      <form [formGroup]="authForm" (keyup.enter)="add_local_recc()">
+        <div form-group>
+          <label>Title</label>
+          <ion-item lines="none">
+            <ion-icon name="person-circle-outline"></ion-icon>
+            <ion-input
+              placeholder="Name of product , person ,place"
+              formControlName="title"
+            ></ion-input>
+          </ion-item>
+          <span
+            error
+            *ngIf="errors.indexOf(authForm.value.title) >= 0 && is_submit == true"
+            >Please enter title</span
+          >
+        </div>
+        <ion-row>
+          <ion-col size="12" size-lg="6">
+            <div form-group>
+              <label>Location</label>
+              <ion-item lines="none">
+                <ion-label style="min-width: 30px">
+                  <ion-icon name="location-outline"></ion-icon>
+                </ion-label>
+                <!-- <ion-input  placeholder="Enter Location"></ion-input> -->
+                <input
+                  formControlName="location"
+                  class="autocomplete"
+                  ngx-google-places-autocomplete
+                  [options]="options"
+                  #placesRef="ngx-places"
+                  (onAddressChange)="handleAddressChange($event)"
+                />
+              </ion-item>
 
-					</ion-item>
+              <span
+                error
+                *ngIf="errors.indexOf(authForm.value.location) >= 0 && is_submit == true"
+                >Please select location</span
+              >
+            </div>
+          </ion-col>
+          <ion-col size="12" size-lg="6">
+            <div form-group>
+              <label>Recommendations Contact Info</label>
+              <ion-item lines="none">
+                <ion-label>
+                  <ion-icon name="call-outline"></ion-icon>
+                </ion-label>
 
-					<span error *ngIf="errors.indexOf(authForm.value.location) >= 0 && is_submit == true">Please select location</span>
-				</div>
-			</ion-col>
-				<ion-col size="12" size-lg="6">
-         <div form-group>
-			 		<label>Recommendations Contact Info</label>
-					<ion-item lines="none">
-						<ion-label>
-							<ion-icon name="call-outline"></ion-icon>
-						</ion-label>
-					
-						<ion-input  placeholder="Recommendations Contact Info" formControlName="recc_contact"></ion-input>
+                <ion-input
+                  placeholder="Recommendations Contact Info"
+                  formControlName="recc_contact"
+                ></ion-input>
+              </ion-item>
 
-					</ion-item>
+              <span
+                error
+                *ngIf="errors.indexOf(authForm.value.recc_contact) >= 0 && is_submit == true"
+                >Please enter recommendation contact info</span
+              >
+            </div>
+          </ion-col>
+        </ion-row>
+        <div form-group>
+          <label>Description</label>
+          <ion-item lines="none">
+            <ion-textarea
+              formControlName="description"
+              rows="3"
+              placeholder="Whats your recommendation?"
+            ></ion-textarea>
+          </ion-item>
 
-					<span error *ngIf="errors.indexOf(authForm.value.recc_contact) >= 0 && is_submit == true">Please enter recommendation contact info</span>
+          <span
+            error
+            *ngIf="errors.indexOf(authForm.value.description) >= 0 && is_submit == true"
+            >Please enter description</span
+          >
+        </div>
 
-				</div>
-			</ion-col>
-			</ion-row>
-				<div form-group>
-			    	<label>Description</label>
-					<ion-item lines="none">
-						<ion-textarea formControlName="description" rows="3" placeholder="Whats your recommendation?" ></ion-textarea>
-					</ion-item>
+        <div form-group uploadimg>
+          <label>Image</label>
+          <div add-recc>
+            <label for="resume"
+              ><ion-icon name="cloud-upload-outline"></ion-icon
+              ><span>Upload Image Here</span></label
+            >
+            <input
+              type="file"
+              name="resume"
+              id="resume"
+              style="display: none"
+              (change)="uploadImages($event)"
+            />
 
-					<span error *ngIf="errors.indexOf(authForm.value.description) >= 0 && is_submit == true">Please enter description</span>
-				</div>
-				
-				
-				
+            <img
+              *ngIf="errors.indexOf(image_url) == -1"
+              [src]="sanitizer.bypassSecurityTrustUrl(image_url)"
+            />
+          </div>
+          <!-- <span error *ngIf="errors.indexOf(image_file) >= 0 && is_submit == true">Please select image</span> -->
+        </div>
 
-				
-				<div form-group  uploadimg >
-			    	<label>Image</label>
-					<div add-recc>
-						<label for="resume" ><ion-icon name="cloud-upload-outline"></ion-icon><span>Upload Image Here</span></label>
-						<input type="file" name="resume" id="resume" style="display:none" (change)="uploadImages($event)"/>
+        <div form-group>
+          <label>Category</label>
+          <ion-item lines="none">
+            <ion-label>
+              <ion-icon name="layers-outline"></ion-icon>
+              <span style="display: none">Category</span>
+            </ion-label>
+            <ion-select
+              interface="alert"
+              placeholder="Select"
+              formControlName="category"
+            >
+              <ion-select-option
+                *ngFor="let doc of categories;let i = index;"
+                value="{{doc._id}}"
+                >{{doc.name}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
 
-						<img *ngIf="errors.indexOf(image_url) == -1" [src]="sanitizer.bypassSecurityTrustUrl(image_url)" />
-					</div>
-					<!-- <span error *ngIf="errors.indexOf(image_file) >= 0 && is_submit == true">Please select image</span> -->
-				</div>
+          <span
+            error
+            *ngIf="errors.indexOf(authForm.value.category) >= 0 && is_submit == true"
+            >Please choose category</span
+          >
+        </div>
 
-
-				<div form-group>
-		 			<label>Category</label>
-					<ion-item lines="none">
-						<ion-label>
-							<ion-icon name="layers-outline"></ion-icon>
-							<span style="display: none;">Category</span>
-						</ion-label>
-						<ion-select interface="alert"  placeholder="Select" formControlName="category">
-							<ion-select-option *ngFor="let doc of categories;let i = index;" value="{{doc._id}}">{{doc.name}} </ion-select-option>
-							
-						</ion-select>
-					</ion-item>
-
-					<span error *ngIf="errors.indexOf(authForm.value.category) >= 0 && is_submit == true">Please choose category</span>
-				</div>
-				
-				<ion-button color="secondary" expand="full" shape="round" type="submit" (click)="add_local_recc()">Add Local Recommendation</ion-button>
-			</form>
-		</div>
-	</div>
-
+        <ion-button
+          color="secondary"
+          expand="full"
+          shape="round"
+          type="submit"
+          (click)="add_local_recc()"
+          >Add Local Recommendation</ion-button
+        >
+      </form>
+    </div>
+  </div>
 </ion-content>
 
 <div footerWeb>
-	<p>© 2021 Recommendspot. All rights reserved.</p>
+  <p>© 2021 Recommendspot. All rights reserved.</p>
 </div>
-
-
-
-

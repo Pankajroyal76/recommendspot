@@ -1,8 +1,22 @@
 <div headerwebs>
-	<a href="javascript:void(0)" routerLink="/tabs/home" logo><!--Recommendspot--><img height="22px" src="assets/img/logo-white.png" alt="" ></a>
-	<div ritHeader style="height: 66px;">
-		<ul>
-			<!-- <li search-head class="dropdown-dots">
+  <ion-toolbar color="secondary">
+    <!-- <ion-menu-button slot="start">
+      <img height="15px" src="assets/img/menu.png" />
+    </ion-menu-button> -->
+    <!-- <ion-title class="ion-text-center">Discover </ion-title> -->
+    <!-- <ion-buttons addbtn slot="end" routerLink="/tabs/add-recommend"
+      ><ion-icon name="add-outline"></ion-icon
+    ></ion-buttons> -->
+  </ion-toolbar>
+  <a href="javascript:void(0)" routerLink="/add-all-recommendation" logo
+    ><!--Recommendspot--><img
+      height="22px"
+      src="assets/img/logo-white.png"
+      alt=""
+  /></a>
+  <div ritHeader style="height: 66px">
+    <ul>
+      <!-- <li search-head class="dropdown-dots">
 			<a href="javascript:void(0)" (click)="hide()"><ion-icon name="search-outline"></ion-icon></a>
 			<ul class="list-post-fl" *ngIf="hideMe">
 			    <div class="search">
@@ -10,23 +24,41 @@
 			    </div>
 			</ul>			
 			</li> -->
-			<!-- <li><a routerLink="/category" href="javascript:void(0)">Category</a></li> -->
-			<li><a routerLink="/login" href="javascript:void(0)">Login</a></li>
-			<li><a routerLink="/signup" href="javascript:void(0)">Signup</a></li>
-			<!-- <li><a routerLink="/posts" href="javascript:void(0)">Recommendations</a></li> -->
-			 
-		</ul>
-	</div>
+      <!-- <li><a routerLink="/category" href="javascript:void(0)">Category</a></li> -->
+      <li>
+        <a routerLink="/add-all-recommendation" href="javascript:void(0)">
+          <ion-icon
+            name="add-circle-outline"
+            style="font-size: 2.73em"
+          ></ion-icon
+        ></a>
+      </li>
+      <li><a routerLink="/login" href="javascript:void(0)">Login</a></li>
+      <li><a routerLink="/signup" href="javascript:void(0)">Signup</a></li>
+
+      <!-- <li><a routerLink="/posts" href="javascript:void(0)">Recommendations</a></li> -->
+    </ul>
+  </div>
 </div>
 
 <ion-header>
-	<ion-toolbar color="secondary">   
+  <!-- <ion-toolbar color="secondary">   
 		<ion-title class="ion-text-left"><img src="assets/img/logo-white.png" alt="" ></ion-title>
 		<ion-buttons  routerLink="/signup" slot="end">Sign Up
 		</ion-buttons>
-	</ion-toolbar>
-	
-	<!--div  class="drop-sec">
+	</ion-toolbar> -->
+
+  <ion-toolbar color="secondary">
+    <ion-menu-button slot="start">
+      <img height="15px" src="assets/img/menu.png" />
+    </ion-menu-button>
+    <ion-title class="ion-text-center">Discover </ion-title>
+    <ion-buttons addbtn slot="end" routerLink="/add-all-recommendation"
+      ><ion-icon name="add-outline"></ion-icon
+    ></ion-buttons>
+  </ion-toolbar>
+
+  <!--div  class="drop-sec">
 		<div  class="dropdown-dots">
 			<a  href="javascript:void(0)" class="search-btn" (click)="hide1()"> <ion-icon name="search-outline"></ion-icon> </a>
 			<ul class="search-mob" *ngIf="hideMe1">
@@ -45,27 +77,30 @@
 				<li><a routerLink="/posts" href="javascript:void(0)">Recommendations</a></li>
 			</ul>
 		</div>  
-	</div-->  
+	</div-->
 </ion-header>
 
 <ion-content>
-	<div banner>
-		<!-- <img src='../../assets/img/img1.jpg'>
+  <div banner>
+    <!-- <img src='../../assets/img/img1.jpg'>
 		 <div containers>
 		    <div slider-content>
 			    <h3>A community where people recommend things to others in life such as movies to watch, books to read, places to visit and much more</h3>
 			</div>
 		</div> -->
 
-		<ion-slides pager="true" [options]="slideOpts" class="swiper-no-swiping">
-			<ion-slide bg>
-			    <div containers>
-				    <div slider-content>
-					    <h3>A community where people recommend things to others in life such as movies to watch, books to read, places to visit and much more</h3>
-					</div>
-				</div>
-			</ion-slide> 
-			<!-- <ion-slide bg>
+    <ion-slides pager="true" [options]="slideOpts" class="swiper-no-swiping">
+      <ion-slide bg>
+        <div containers>
+          <div slider-content>
+            <h3>
+              A community where people recommend things to others in life such
+              as movies to watch, books to read, places to visit and much more
+            </h3>
+          </div>
+        </div>
+      </ion-slide>
+      <!-- <ion-slide bg>
 			    <div containers>
 				    <div slider-content>
 					    <h3>Have You Tried Something Really Exciting That You Had To Share With Others?</h3>
@@ -90,21 +125,39 @@
 					</div>
 				</div>
 			</ion-slide> -->
-		</ion-slides>
-	</div>
-	<div categories-sec>
-		<ion-row>
-		    <ion-col size="12">
-				<div form-group>
-				<ion-button color="secondary" routerLink="/posts">Explore</ion-button>
-					<!--ion-item lines="none" (click)="presentAlert()"-->
-						<!-- <ion-label>
+    </ion-slides>
+  </div>
+  <div categories-sec>
+    <ion-row>
+      <ion-col size="12">
+        <div form-group>
+          <ion-button color="secondary" routerLink="/posts">Explore</ion-button>
+          <!-- <div form-group>
+            <label>Search</label>
+            <ion-item lines="none">
+              <ion-label>
+                <ion-icon name="search-outline"></ion-icon>
+              </ion-label>
+              <ion-input clearOnEdit="false" placeholder="Search"></ion-input>
+            </ion-item>
+          </div>
+          <div form-group>
+            <label>Location</label>
+            <ion-item lines="none">
+              <ion-label>
+                <ion-icon name="location-outline"></ion-icon>
+              </ion-label>
+              <ion-input clearOnEdit="false" placeholder="Location"></ion-input>
+            </ion-item>
+          </div> -->
+          <!--ion-item lines="none" (click)="presentAlert()"-->
+          <!-- <ion-label>
 							<span style="display: none;">Category</span>
 						</ion-label> -->
-						<!-- <ion-select value="allCategories" okText="Save" cancelText="Cancel" placeholder="Choose">
+          <!-- <ion-select value="allCategories" okText="Save" cancelText="Cancel" placeholder="Choose">
 							<ion-select-option value="{{cat._id}}" *ngFor="let cat of categories">{{cat.name}}</ion-select-option>
 						</ion-select> -->
-						<!--div class="categories">
+          <!--div class="categories">
 							<span *ngIf="categoriesChecked?.length == 0">Categories</span><ion-icon class="dropicon" name="caret-down-outline"></ion-icon>
 							<ng-container *ngIf="categoriesChecked?.length > 0">
 								<div><span *ngFor="let doc of categoriesCheck"><span *ngIf="doc.checked == true">{{doc.name}}<span *ngIf="categoriesCheck?.length > 1">,</span></span></span></div>
@@ -115,141 +168,202 @@
 
 
 			        <ion-buttons (click)="goto()">Go</ion-buttons-->
-				</div>								
-			</ion-col>
-		</ion-row>
-	</div>
-	<div rightspot>
-	    <div containers>
-		    <ion-row>
-				<ion-col size="12">
-			    <div spot-head>
-				    <h2>Welcome to RecommendSpot</h2>
-				</div>
-			</ion-col>
-			    <ion-col size="12" size-sm="6" size-lg="4" class="mb-15">
-				    <div spot-content>
-					   
-					    <!-- <p>Have you tried something really good/exciting that you had to share/recommend what you just tried with others?</p> -->
-					    <p>Have you tried something really exciting that you had to share with others?</p>
-						   <h4>You're at the right SPOT</h4>
-					</div>
-				</ion-col>
-			  <ion-col size="12" size-sm="6" size-lg="4" class="mb-15">
-				    <div spot-content>
-					    <!-- <p>Do you ever ask for netflix, hulu, books,services,fun events, games, great food and other recommendations from people?</p> -->
-					    <p>Do you ask for recommendations from others?</p>
-					    <h4>You're at the right SPOT</h4>
-					</div>
-				</ion-col>
-				 <ion-col size="12" size-sm="6" size-lg="4" class="mb-15">
-				    <div spot-content>
-					    <!-- <p>Do you get bored and want to experience great new things you might possibly love?</p> -->
-					    <p>Will you like to discover new things you will love and meet new people?</p>
-					    <h4>You're at the right SPOT</h4>
-					</div>
-				</ion-col>
-				
-			</ion-row>
-		</div>
-	</div>
-	<div loginsignup class="ion-hide-md-up">
-	    <div containers>
-		   
-						<div btn-facebook class="ion-text-center">
-						<ion-button expand="full" color="primary"  shape="round" (click)="facebookLogin()">
-						<span fb-icon><img src="assets/img/fb.png"/></span> Login With Facebook
-						</ion-button>
-						</div>
-						<div btn-google class="ion-text-center">
-						<ion-button expand="full" shape="round" (click)="googleLogin()">
-						<span fb-icon><ion-icon name="logo-google"></ion-icon></span> Login With Google
-						</ion-button>
-						</div>
-						<div login-btn>
-							<ion-button type="submit" expand="full" color="secondary"  shape="round" routerLink="/signup" >
-							Sign Up
-							</ion-button>
-							</div>
-			
-		</div>
-	</div>
-	<div how-works-sec>
-	    <div containers>
-		    <ion-row>
-			<ion-col size="12">
-			    <div how-work-head>
-				    <h2>How It Works</h2>
-				</div>
-			</ion-col>
-			    <ion-col size="12" size-sm="6" size-lg="3" class="mb-15">
-				    <div work-content>
-					    <span><ion-icon name="log-in-outline"></ion-icon></span>
-					    <h4>Sign Up</h4>
-					</div>
-				</ion-col>
-			    <ion-col size="12" size-sm="6" size-lg="3" class="mb-15">
-				    <div work-content>
-					    <span><ion-icon name="layers-outline"></ion-icon></span>
-					    <h4>Follow Categories Of Your Interest</h4>
-					</div>
-				</ion-col>
-			    <ion-col size="12" size-sm="6" size-lg="3" class="mb-15">
-				    <div work-content>
-					    <span><ion-icon name="people-outline"></ion-icon></span>
-					    <h4>Follow Friends , Celebrities And The World</h4>
-					</div>
-				</ion-col>
-			    <ion-col size="12" size-sm="6" size-lg="3" class="mb-15">
-				    <div work-content>
-					    <span><ion-icon name="person-add-outline"></ion-icon></span>
-					    <h4>Add Recommendations</h4>
-					</div>
-				</ion-col>
-			</ion-row>
-		</div>
-	</div>
-	<div new-users-sec>
-	    <div containers>
-		    <ion-row>
-				<ion-col size="12">
-					<div new-users-head>
-						<h2>New Users</h2>
-					</div>
-				</ion-col>			
-				<ion-col size="12">
-					<ion-slides pager="true" [options]="slideOpts1">
-						<ion-slide *ngFor="let user of users;">			
-							<div new-users-mn>
-								<!-- <img src="assets/img/user1.jpg" alt="" /> -->
-								<img routerLink="/tabs/profile" *ngIf="errors.indexOf(user.image) == -1 && getimage(user.image) == true" src="{{user.image}}">
-						        <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user.image) == -1 && getimage(user.image) == false" src="{{IMAGES_URL + '/images/' + user.image}}">
-						       <img routerLink="/tabs/profile" *ngIf="errors.indexOf(user.image) >= 0" src="assets/img/default.png">
-								<h4>{{user.name}}</h4>
-								<p *ngIf="errors.indexOf(user.bio) == -1">{{user.bio}}</p>
-								<p userlocation *ngIf="errors.indexOf(user.location) == -1"><ion-icon name="location-outline"></ion-icon> {{user.location}}</p>
-							</div>
-						</ion-slide>
-						
-						
-					</ion-slides>				
-				</ion-col>
-			</ion-row>
-		</div>
-	</div>
-<div footerwebs>
-	<div containers>
-	<ion-row>
-		<ion-col order1 size="12" size-md="6" class="ion-text-left ion-align-items-center">
-			<p>© 2021 Recommendspot. All rights reserved.</p>	
-		</ion-col>
-		<ion-col order2 size="12" size-md="6" class="ion-text-right ion-align-self-center">
-			<ul>
-			    <li><a routerLink="/login" href="javascript:void(0)">Login</a></li>
-			    <li><a routerLink="/signup" href="javascript:void(0)">Sign Up</a></li>
-			</ul>	
-		</ion-col>
-	</ion-row>
-	</div>
-</div>	
+        </div>
+      </ion-col>
+    </ion-row>
+    <!-- <ion-slides [options]="slideOpts2">
+      <ion-slide (click)="selectCatForGlobalFeed(doc, 'Basic')"
+        ><ion-buttons [ngClass]="{'selected-cat': profiletab1 == 'Basic'}"
+          >For You</ion-buttons
+        ></ion-slide
+      >
+
+      <ion-slide (click)="selectCatForGlobalFeed(doc, 'Today')"
+        ><ion-buttons [ngClass]="{'selected-cat': profiletab1 == 'Today'}"
+          >All</ion-buttons
+        ></ion-slide
+      >
+
+      <ng-container *ngFor="let doc of categories; let i = index;">
+        <ion-slide
+          ><ion-buttons (click)="selectCatForGlobalFeed(doc, i)"
+            >{{doc.name}}</ion-buttons
+          ></ion-slide
+        >
+      </ng-container>
+    </ion-slides> -->
+  </div>
+  <div rightspot>
+    <div containers>
+      <ion-row>
+        <ion-col size="12">
+          <div spot-head>
+            <h2>Welcome to RecommendSpot</h2>
+          </div>
+        </ion-col>
+        <ion-col size="12" size-sm="6" size-lg="4" class="mb-15">
+          <div spot-content>
+            <!-- <p>Have you tried something really good/exciting that you had to share/recommend what you just tried with others?</p> -->
+            <p>
+              Have you tried something really exciting that you had to share
+              with others?
+            </p>
+            <h4>You're at the right SPOT</h4>
+          </div>
+        </ion-col>
+        <ion-col size="12" size-sm="6" size-lg="4" class="mb-15">
+          <div spot-content>
+            <!-- <p>Do you ever ask for netflix, hulu, books,services,fun events, games, great food and other recommendations from people?</p> -->
+            <p>Do you ask for recommendations from others?</p>
+            <h4>You're at the right SPOT</h4>
+          </div>
+        </ion-col>
+        <ion-col size="12" size-sm="6" size-lg="4" class="mb-15">
+          <div spot-content>
+            <!-- <p>Do you get bored and want to experience great new things you might possibly love?</p> -->
+            <p>
+              Will you like to discover new things you will love and meet new
+              people?
+            </p>
+            <h4>You're at the right SPOT</h4>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+  <div loginsignup class="ion-hide-md-up">
+    <div containers>
+      <div btn-facebook class="ion-text-center">
+        <ion-button
+          expand="full"
+          color="primary"
+          shape="round"
+          (click)="facebookLogin()"
+        >
+          <span fb-icon><img src="assets/img/fb.png" /></span> Login With
+          Facebook
+        </ion-button>
+      </div>
+      <div btn-google class="ion-text-center">
+        <ion-button expand="full" shape="round" (click)="googleLogin()">
+          <span fb-icon><ion-icon name="logo-google"></ion-icon></span> Login
+          With Google
+        </ion-button>
+      </div>
+      <div login-btn>
+        <ion-button
+          type="submit"
+          expand="full"
+          color="secondary"
+          shape="round"
+          routerLink="/signup"
+        >
+          Sign Up
+        </ion-button>
+      </div>
+    </div>
+  </div>
+  <div how-works-sec>
+    <div containers>
+      <ion-row>
+        <ion-col size="12">
+          <div how-work-head>
+            <h2>How It Works</h2>
+          </div>
+        </ion-col>
+        <ion-col size="12" size-sm="6" size-lg="3" class="mb-15">
+          <div work-content>
+            <span><ion-icon name="log-in-outline"></ion-icon></span>
+            <h4>Sign Up</h4>
+          </div>
+        </ion-col>
+        <ion-col size="12" size-sm="6" size-lg="3" class="mb-15">
+          <div work-content>
+            <span><ion-icon name="layers-outline"></ion-icon></span>
+            <h4>Follow Categories Of Your Interest</h4>
+          </div>
+        </ion-col>
+        <ion-col size="12" size-sm="6" size-lg="3" class="mb-15">
+          <div work-content>
+            <span><ion-icon name="people-outline"></ion-icon></span>
+            <h4>Follow Friends , Celebrities And The World</h4>
+          </div>
+        </ion-col>
+        <ion-col size="12" size-sm="6" size-lg="3" class="mb-15">
+          <div work-content>
+            <span><ion-icon name="person-add-outline"></ion-icon></span>
+            <h4>Add Recommendations</h4>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+  <div new-users-sec>
+    <div containers>
+      <ion-row>
+        <ion-col size="12">
+          <div new-users-head>
+            <h2>New Users</h2>
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <ion-slides pager="true" [options]="slideOpts1">
+            <ion-slide *ngFor="let user of users;">
+              <div new-users-mn>
+                <!-- <img src="assets/img/user1.jpg" alt="" /> -->
+                <img
+                  routerLink="/tabs/profile"
+                  *ngIf="errors.indexOf(user.image) == -1 && getimage(user.image) == true"
+                  src="{{user.image}}"
+                />
+                <img
+                  routerLink="/tabs/profile"
+                  *ngIf="errors.indexOf(user.image) == -1 && getimage(user.image) == false"
+                  src="{{IMAGES_URL + '/images/' + user.image}}"
+                />
+                <img
+                  routerLink="/tabs/profile"
+                  *ngIf="errors.indexOf(user.image) >= 0"
+                  src="assets/img/default.png"
+                />
+                <h4>{{user.name}}</h4>
+                <p *ngIf="errors.indexOf(user.bio) == -1">{{user.bio}}</p>
+                <p userlocation *ngIf="errors.indexOf(user.location) == -1">
+                  <ion-icon name="location-outline"></ion-icon>
+                  {{user.location}}
+                </p>
+              </div>
+            </ion-slide>
+          </ion-slides>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+  <div footerwebs>
+    <div containers>
+      <ion-row>
+        <ion-col
+          order1
+          size="12"
+          size-md="6"
+          class="ion-text-left ion-align-items-center"
+        >
+          <p>© 2021 Recommendspot. All rights reserved.</p>
+        </ion-col>
+        <ion-col
+          order2
+          size="12"
+          size-md="6"
+          class="ion-text-right ion-align-self-center"
+        >
+          <ul>
+            <li><a routerLink="/login" href="javascript:void(0)">Login</a></li>
+            <li>
+              <a routerLink="/signup" href="javascript:void(0)">Sign Up</a>
+            </li>
+          </ul>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
 </ion-content>

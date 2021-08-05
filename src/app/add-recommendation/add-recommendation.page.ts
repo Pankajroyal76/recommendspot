@@ -314,12 +314,10 @@ export class AddRecommendationPage implements OnInit {
 
 
   	getSubCategories(cat_id){
-
   		this.presentLoading();
   		var dict = {
 	    	cat_id: cat_id
 	    }
-	  
 	    this.apiService.postData(dict,'subCategoryListingAdmin').subscribe((result) => { 
 	      this.ref.detectChanges();
 	      this.stopLoading();
@@ -359,7 +357,6 @@ export class AddRecommendationPage implements OnInit {
   	}
 
   	yourFunction(event){
-
   		this.subcategories = [];
   		console.log(event);
   		this.authForm.patchValue({
